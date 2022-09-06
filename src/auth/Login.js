@@ -1,68 +1,90 @@
-import React from 'react';
-
+import React,{ useState } from 'react';
+import '../App.css';
 import {
-            Box,
-            Container,
-            FormControl,
-            FormLabel,
-            FormHelperText,
-            Input,
-            Center,
-            Button,
-            Heading,
-            InputGroup,
-            InputRightElement,
+     Box,
+     Container,
+     FormControl,
+     FormLabel,
+     FormHelperText,
+     Input,
+     Center,
+     Button,
+     Heading,
+     InputGroup,
+    InputRightElement,
+    Avatar,
 
 } from '@chakra-ui/react'
 
-function PasswordInput() {
-            const [show, setShow] = React.useState(false)
-            const handleClick = () => setShow(!show)
-          
-            return (
-              <InputGroup size='md'>
-                <Input
-                  pr='4.5rem'
-                  type={show ? 'text' : 'password'}
-                  placeholder='Enter password'
-                />
-                <InputRightElement width='4.5rem'>
-                  <Button h='1.75rem' size='sm' onClick={handleClick}>
-                    {show ? 'Hide' : 'Show'}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-            )
-          }
 
-export default function Login() {
+
+
+ function Login() {
+    const [email,setEmail] = useState('');
+    const [password,setPassword] = useState('');
+    const [show, setShow] = React.useState(false)
+    const handleClick = () => setShow(!show)
+
+    function  handleSubmit() {
+      
+        alert('A name was submitted');
+       
+    }
+
+    function handleInputChange(props){
+        console.log(props.inputtype.data);
+    }
+
+
             return (
-                        <Container maxW='md' mt={"250px"} bg='' color='#262626'>
-                                    <Center h='100px' color='white'>
-                  <Box bg='white' borderWidth='1px' boxShadow='2xl' w='100%' p={4} color='grey' borderRadius={'7px'}>
-                        <FormControl>
-                        <Heading  mt={"30px"} color='gray' fontWeight={'normal'}>
-                                  
-                                    Sign In
-                                    
-                        </Heading>
+             
+               <Container id='login_container'  maxW='md' mt={340}   color='#262626'>
+                                   
+                 <Center h='100px'  color='white' >
+                  <Box id='login'>
+                    <form onSubmit={handleSubmit} method='post'>
+                        <FormControl >
+                    <Center mt={4} ><Avatar w={'100px'} h={'100px'} src='https://bit.ly/broken-link' /></Center>
+                     
                      <FormLabel  mt={"20px"}>Email</FormLabel>
-                        <Input type='email' borderRadius={'3px'} size="md" autoFocus />
-                       <FormLabel>Password</FormLabel>
-                     {/*  <Input type='password'  borderRadius={'3px'} size="sm"/> */}
-                        <PasswordInput/>
+                        <Input type='email' borderRadius={'3px'}  required  name ='email' placeholder='Enter Email' inputtype ='email' onChange={handleInputChange}  autoFocus />
+                       <FormLabel mt={5}>Password</FormLabel>
+                       <InputGroup size='md'>
+                            <Input
+                            pr='4.5rem'
+                            type={show ? 'text' : 'password'}
+                            placeholder='Enter password'
+                            name ='password'
+                            required
+                            />
+                            <InputRightElement width='4.5rem'>
+                            <Button h='1.75rem' size='sm' onClick={handleClick}>
+                                {show ? 'Hide' : 'Show'}
+                            </Button>
+                            </InputRightElement>
+                        </InputGroup>
                       
 
-                        <Button colorScheme='blue' w="100%" mt={"10px"} mb={"10px"}>Log in</Button>
+                        <Button type='submit' colorScheme='blue' w="100%" mt={5} mb={"10px"}>Log in</Button>
 
-                        <FormHelperText>No Account? Click Here</FormHelperText>
-                         </FormControl>
+                        <FormHelperText>
+                            No Account? 
+                            <Button ml={2} colorScheme='teal' variant='link'>
+                            Register here
+                             </Button>
+
+                        </FormHelperText>
+                        </FormControl>
                        
+                    </form>
+                     </Box>
 
-                                                </Box>
                                     </Center>
 
-                        </Container>
-
+                </Container>
+              
+              
             );
 }
+
+export default Login;
