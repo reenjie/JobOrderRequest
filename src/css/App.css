@@ -1,5 +1,6 @@
 
-  #login{
+ @import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz@8..144&display=swap');
+ #login{
     background-color: ghostwhite;
     width: 100%;
     padding: 30px;
@@ -75,7 +76,7 @@
     width: 100%;
     color: rgba(85, 85, 97, 0.959);
     transition: all ease 0.24s;
-    font-size: 16px;
+    font-size: 14px;
     
   }
   .sidebar-links ul li span {
@@ -99,6 +100,13 @@
 
   .sidebar-links ul li:hover span i {
     animation: swing 0.5s;
+    
+  }
+  .active{
+    background-color: #bbd1d1;
+  }
+  .title{
+    font-family: 'Roboto Flex', sans-serif;
   }
 
   #profile_menu_item {

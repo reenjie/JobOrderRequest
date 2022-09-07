@@ -1,11 +1,11 @@
-import AdminLayout from "../layouts/admin_layout";
+import AdminLayout from "../../components/layouts/admin_layout";
 import Sidebar from "./Sidebar";
 
 function RenderPage() {
-  return <div>asdaasdasds</div>;
+  return <div>Requestor accomplished</div>;
 }
 
-function Dashboard() {
+function R_Accomplished() {
   return (
     <>
       <AdminLayout
@@ -16,4 +16,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default R_Accomplished;

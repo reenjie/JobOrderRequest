@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../App.css";
+import "../../css/App.css";
 import {
   Box,
   Container,
@@ -21,14 +21,9 @@ import { Link } from "react-router-dom";
 function Register() {
   /* const [email, setEmail] = useState(""); */
 
-
   function handleSubmit() {}
 
-  return (
-    <Container  maxW="md" mt={340} color="#262626">
-      
-    </Container>
-  );
+  return <Container maxW="md" mt={340} color="#262626"></Container>;
 }
 
 export default Register;

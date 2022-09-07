@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../App.css";
+import "../../css/App.css";
 import {
   Box,
   Container,
@@ -100,9 +100,12 @@ function Login() {
 
               <FormHelperText>
                 No Account?
-             <Link to={'../register'}> <Button ml={2} colorScheme="teal" variant="link">
-                  Register here
-                </Button></Link>
+                <Link to={"../register"}>
+                  {" "}
+                  <Button ml={2} colorScheme="teal" variant="link">
+                    Register here
+                  </Button>
+                </Link>
               </FormHelperText>
             </FormControl>
           </form>

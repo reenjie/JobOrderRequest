@@ -17,21 +17,38 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
-import "../App.css";
+import "../../css/App.css";
 import { Link } from "react-router-dom";
-function Sidebar() {
+import logo from "../../images/zcmc_logo.png";
+
+function Sidebar(props) {
   return (
     <div className="sidebar-links" id="sblink">
       <Stack mb={3}>
-        <Center mt={50}>
+        {/* zcmc_logo */}
+        <Center>
+          {" "}
+          <Stack>
+            <Center>
+              <Image boxSize="50px" mt={5} src={logo} alt="ZCMC LOGO" />
+            </Center>
+            <Text fontSize="sm" ml={2} mt={2} color={"teal.700"}>
+              Zamboanga City Medical Center
+            </Text>
+          </Stack>
+        </Center>
+
+        <Center bg={"blackAlpha.300"}>
           <Avatar
             size="xl"
             name="Christian Nwamba"
             src="https://bit.ly/code-beast"
+            mt={2}
+            mb={2}
           />
-          <Flex mb={5}>
+          <Flex mb={5} mt={2}>
             <Box ml="3">
-              <Text fontWeight="bold" id="username">
+              <Text fontWeight="bold" color={"blackAlpha.700"}>
                 Caimor Reenjay
               </Text>
               <Text fontSize="xs" id="usertype">
@@ -40,6 +57,7 @@ function Sidebar() {
             </Box>
           </Flex>
         </Center>
+
         <Menu>
           <MenuButton
             textAlign={"right"}
@@ -83,6 +101,9 @@ function Sidebar() {
 
       <Stack direction="row" mb="1">
         <ul>
+          <Text ml={10} color="teal" as={"em"} fontSize="xs">
+            REPORTS
+          </Text>
           <Link to="../Admin/Dashboard">
             <li>
               <Container>
@@ -94,23 +115,43 @@ function Sidebar() {
               </Container>
             </li>{" "}
           </Link>
-          <Link to="../Admin/Schools">
+
+          <Text ml={10} color="teal" as={"em"} fontSize="xs">
+            MANAGE
+          </Text>
+
+          <Link to="../Admin/Department">
             {" "}
             <li>
               <Container>
                 <span>
                   {" "}
-                  <i className="fas fa-school"></i> Schools
+                  <i className="fas fa-building"></i> Department
                 </span>
               </Container>
             </li>{" "}
           </Link>
-          <Link to="../Admin/Pending">
+
+          <Link to="../Admin/Services">
             {" "}
             <li>
               <Container>
                 <span>
-                  <i className="fas fa-clock"></i> Pending{" "}
+                  <i className="fas fa-cogs"></i> Services{" "}
+                </span>
+              </Container>
+            </li>{" "}
+          </Link>
+
+          <Link to="../Admin/Accounts">
+            {" "}
+            <li>
+              <Container>
+                <span>
+                  <i className="fas fa-users"></i> Accounts{" "}
+                  <Badge ml="1" colorScheme="green">
+                    New
+                  </Badge>{" "}
                 </span>
               </Container>
             </li>{" "}

@@ -1,14 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import { ChakraProvider } from '@chakra-ui/react'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./css/index.css";
+import { ChakraProvider } from "@chakra-ui/react";
 
-import Routing from './routes/web';
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import Routing from "./components/routes/web";
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <ChakraProvider>
-        <Routing />
+    <Routing />
   </ChakraProvider>
 );
-
-
