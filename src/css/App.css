@@ -109,6 +109,11 @@
     font-family: 'Roboto Flex', sans-serif;
   }
 
+  #red {
+    color: rgb(155, 56, 56);
+    font-weight: bolder;
+  }
+
   #profile_menu_item {
     background-color: rgb(32, 21, 75);
   }

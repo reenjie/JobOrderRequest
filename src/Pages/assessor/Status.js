@@ -1,8 +1,12 @@
 import AdminLayout from "../../components/layouts/admin_layout";
 import Sidebar from "./Sidebar";
-
+import Headings from "../../components/layouts/heading";
 function RenderPage() {
-  return <div>Job Status Assessor</div>;
+  return (
+    <>
+      <Headings title="JOB STATUS" />
+    </>
+  );
 }
 
 function A_Status() {

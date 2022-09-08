@@ -1,8 +1,12 @@
 import AdminLayout from "../../components/layouts/admin_layout";
 import Sidebar from "./Sidebar";
-
+import Headings from "../../components/layouts/heading";
 function RenderPage() {
-  return <div>Requestor history</div>;
+  return (
+    <>
+      <Headings title="HISTORY" />
+    </>
+  );
 }
 
 function R_History() {
