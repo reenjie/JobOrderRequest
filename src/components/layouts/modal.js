@@ -34,9 +34,13 @@ function OpenModal(props) {
         <ModalOverlay />
         <ModalContent userSelect={"none"}>
           <ModalHeader color={"blackAlpha.700"}>{props.title}</ModalHeader>
-          <ModalCloseButton id="closemodal" />
+          <ModalCloseButton />
           <ModalBody color={"gray.600"}>{props.mbody}</ModalBody>
-          <ModalFooter></ModalFooter>
+          <ModalFooter>
+            <Button id="modalClose" display={"none"} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

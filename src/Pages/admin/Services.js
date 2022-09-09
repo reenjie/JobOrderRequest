@@ -21,7 +21,6 @@ import React, { useEffect, useState } from "react";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import Headings from "../../components/layouts/heading";
 import Table_striped from "../../components/layouts/table_striped";
-import Delete_Modal from "../../components/layouts/delete_modal";
 
 function RenderPage() {
   const [services, setServices] = useState([]);
@@ -91,7 +90,6 @@ function RenderPage() {
           <Button variant={"ghost"} size="sm" color="green.400">
             <EditIcon />
           </Button>
-          <Delete_Modal note="This will delete all data." />
         </Td>
       </Tr>
     ));

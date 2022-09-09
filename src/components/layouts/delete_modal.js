@@ -9,18 +9,24 @@ import {
   Button,
   Text,
   Stack,
-  Input,
 } from "@chakra-ui/react";
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/react";
 import React from "react";
-import "../../css/App.css";
-
+import { DeleteIcon } from "@chakra-ui/icons";
 function Delete_Modal(props) {
   const OverlayOne = () => (
     <ModalOverlay
       bg="blackAlpha.300"
       backdropFilter="blur(10px) hue-rotate(90deg)"
+    />
+  );
+
+  const OverlayTwo = () => (
+    <ModalOverlay
+      bg="none"
+      backdropFilter="auto"
+      backdropInvert="80%"
+      backdropBlur="2px"
     />
   );
 
@@ -34,7 +40,6 @@ function Delete_Modal(props) {
           setOverlay(<OverlayOne />);
           onOpen();
         }}
-        ml={2}
         variant={"ghost"}
         size="sm"
         color="red.400"
@@ -44,7 +49,7 @@ function Delete_Modal(props) {
 
       <Modal isCentered isOpen={isOpen} onClose={onClose}>
         {overlay}
-        <ModalContent userSelect={"none"}>
+        <ModalContent>
           <ModalHeader>Are you sure?</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -55,17 +60,13 @@ function Delete_Modal(props) {
               <Text>
                 Please Type "<span id="red">DELETE</span>" to Confirm
               </Text>
-
-              <Input
-                placeholder=""
-                textTransform={"uppercase"}
-                size="md"
-                autoFocus
-              />
+              {props.confirm}
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
+            <Button id="btnmodalClose" onClick={onClose}>
+              Close
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
