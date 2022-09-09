@@ -11,24 +11,21 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
-function OpenModal(props) {
+import { EditIcon } from "@chakra-ui/icons";
+function Edit_Modal(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <Button
-        colorScheme="teal"
-        mb={10}
-        size={"sm"}
-        fontSize={14}
-        variant="outline"
+        variant={"ghost"}
+        size="sm"
+        color="green.400"
         key={"xl"}
         m={4}
         onClick={onOpen}
       >
-        <Text mr={2}> {props.btnTitle} </Text>
-        <i className="fas fa-plus-circle"></i>
+        <EditIcon />
       </Button>
       <Modal onClose={onClose} size={"xl"} isOpen={isOpen}>
         <ModalOverlay />
@@ -47,4 +44,4 @@ function OpenModal(props) {
   );
 }
 
-export default OpenModal;
+export default Edit_Modal;

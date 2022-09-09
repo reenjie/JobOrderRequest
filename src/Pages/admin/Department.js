@@ -22,14 +22,18 @@ import React, { useEffect, useState } from "react";
 import { EditIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
 import Headings from "../../components/layouts/heading";
 import Table_striped from "../../components/layouts/table_striped";
-import OpenModal from "../../components/layouts/modal";
+import Add_Modal from "../../components/layouts/add_modal";
 import { useNavigate } from "react-router-dom";
 import Delete_Modal from "../../components/layouts/delete_modal";
+import Edit_Modal from "../../components/layouts/edit_modal";
 function RenderPage() {
   const [department, setDepartments] = useState([]);
   const [alerts, setAlerts] = useState();
+  const [deptval, setDeptval] = useState();
+  const [wsuval, setWsuval] = useState();
 
   const navigate = useNavigate();
+
   useEffect(() => {
     Axios.post("http://localhost/JOBREQUEST/api/admin/getdepartment.php").then(
       (req) => {
@@ -46,6 +50,7 @@ function RenderPage() {
     ],
   };
 
+  //Delete Functions
   const handleKeyup = (e) => {
     const value = e.target.value;
     const id = e.currentTarget.dataset.itemid;
@@ -91,6 +96,7 @@ function RenderPage() {
     );
   }
 
+  // Add
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -117,32 +123,44 @@ function RenderPage() {
     });
   }
 
-  const tableBody = () => {
-    return department.map((row) => (
-      <Tr>
-        <Td fontWeight={"bold"} color="blackAlpha.700">
-          {row.dept_name}
-        </Td>
-        <Td>{row.ward_sec_unit}</Td>
-        <Td>
-          <Button variant={"ghost"} size="sm" color="green.400">
-            <EditIcon />
-          </Button>
-          <Delete_Modal
-            confirm={
-              <Confirm_Delete
-                item_id={row.PK_departmentID}
-                table="department"
-              />
-            }
-            note="All data connected to it will be deleted as well."
-          />
-        </Td>
-      </Tr>
-    ));
-  };
+  function handleUpdate(e) {
+    e.preventDefault();
 
-  const ModalBody = () => {
+    const deptname = e.target.department.value;
+    const wsu = e.target.wsu.value;
+    const id = e.target.id.value;
+    document
+      .getElementById(id)
+      .setAttribute("style", "background-color:#eda2a7");
+    Axios.post(" http://localhost/JOBREQUEST/api/admin/update_department.php", {
+      dname: deptname,
+      wsu: wsu,
+      id: id,
+    }).then((req) => {
+      //setDepartments(req.data);
+      if (req.data.status == 1) {
+        Axios.post(
+          "http://localhost/JOBREQUEST/api/admin/getdepartment.php"
+        ).then((req) => {
+          setDepartments(req.data);
+        });
+
+        document.getElementById("modalClose").click();
+        setAlerts("Updated Successfully.");
+
+        setTimeout(() => {
+          setAlerts("");
+        }, 2000);
+      } else if (req.data.status == 2) {
+        setAlerts("No Changes Made.");
+        setTimeout(() => {
+          setAlerts("");
+        }, 2000);
+      }
+    });
+  }
+
+  const Add_Modal_Body = () => {
     return (
       <>
         <Container maxW="container.xl">
@@ -170,6 +188,74 @@ function RenderPage() {
     );
   };
 
+  const Edit_Modal_Body = (props) => {
+    return (
+      <>
+        <Container maxW="container.xl">
+          <FormControl>
+            <form method="post" onSubmit={handleUpdate}>
+              <Stack spacing={3}>
+                <Text>Department :</Text>
+                <Input
+                  placeholder=""
+                  size="md"
+                  name="department"
+                  defaultValue={props.department}
+                  required
+                />
+                <Text>Ward / Section / Unit :</Text>
+                <Input
+                  placeholder=""
+                  size="md"
+                  name="wsu"
+                  required
+                  defaultValue={props.wsu}
+                />
+                <Input name="id" value={props.dp_id} type="hidden" />
+                <Button type="submit" variant="solid" colorScheme="blue">
+                  Update
+                </Button>
+              </Stack>
+            </form>
+          </FormControl>
+        </Container>
+      </>
+    );
+  };
+
+  const tableBody = () => {
+    return department.map((row) => (
+      <Tr id={row.PK_departmentID}>
+        <Td fontWeight={"bold"} color="blackAlpha.700">
+          {row.dept_name}
+        </Td>
+        <Td color="blackAlpha.700">{row.ward_sec_unit}</Td>
+        <Td>
+          <Edit_Modal
+            btnTitle="UPDATE"
+            title="Edit Department "
+            mbody={
+              <Edit_Modal_Body
+                department={row.dept_name}
+                wsu={row.ward_sec_unit}
+                dp_id={row.PK_departmentID}
+              />
+            }
+          />
+          <Delete_Modal
+            confirm={
+              <Confirm_Delete
+                item_id={row.PK_departmentID}
+                table="department"
+              />
+            }
+            note="All data connected to it will be deleted as well."
+          />
+        </Td>
+      </Tr>
+    ));
+  };
+
   return (
     <>
       {" "}
@@ -182,10 +268,10 @@ function RenderPage() {
           borderRadius="6"
           boxShadow="md"
         >
-          <OpenModal
+          <Add_Modal
             btnTitle="ADD"
-            title="ADD Department"
-            mbody={<ModalBody />}
+            title="Add Department  "
+            mbody={<Add_Modal_Body />}
           />
 
           {alerts && (
@@ -197,7 +283,6 @@ function RenderPage() {
 
           <Table_striped table_header={tableheader} table_body={tableBody} />
         </Box>
-        {/*  */}
       </Container>
     </>
   );
