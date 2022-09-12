@@ -10,18 +10,18 @@
   }
 
   #sideBar{
-     width: 280px;
+     width: 240px;
      height: 100vh;
      background-color: rgb(255, 255, 255);
      box-shadow: 0 4px 4px 0 rgba(71, 69, 69, 0.2), 0 3px 10px 0 rgba(128, 124, 124, 0.19);
     position: fixed;
   
-    z-index: 1;
+    z-index: 10;
     transition: all ease 0.5s;
   }
 
   .Wrap {
-    margin-left: 300px;
+    margin-left: 250px;
     transition: all ease 0.5s;
   }
   .topbar {
@@ -29,17 +29,17 @@
     height: 50px;
     background-color: rgb(200, 203, 204);
     position: fixed;
-    z-index: 0; 
+    z-index: 1; 
   }
   #mainPage {
    
-   padding-top: 80px;
+   padding-top: 50px;
 
     
   }
 
   #btnopen_close {
-   margin-left: 280px;
+   margin-left: 240px;
    margin-top: -7px;
     font-size: 25px;
     transition: all .2s;
@@ -80,7 +80,7 @@
     
   }
   .sidebar-links ul li span {
-    margin-left: 30px;
+    margin-left: 10px;
     word-spacing: 15px;
   }
 

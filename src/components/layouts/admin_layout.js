@@ -17,16 +17,16 @@ function handleClick() {
   const togglebtn = document.getElementById("btnopen_close");
 
   const wsize = sb.offsetWidth;
-  if (wsize == 280) {
+  if (wsize == 240) {
     sb.style.width = "0";
     sblink.style.display = "none";
     mainwrap.style.marginLeft = "20px";
     togglebtn.style.marginLeft = "20px";
   } else {
-    sb.style.width = "280px";
+    sb.style.width = "240px";
     sblink.style.display = "block";
-    mainwrap.style.marginLeft = "300px";
-    togglebtn.style.marginLeft = "280px";
+    mainwrap.style.marginLeft = "260px";
+    togglebtn.style.marginLeft = "260px";
   }
 }
 function AdminLayout(props) {
@@ -44,6 +44,9 @@ function AdminLayout(props) {
         >
           <HamburgerIcon id="humicon" />
         </button>
+        <span className="title" style={{ fontWeight: "bold", color: "gray" }}>
+          {props.Page_title}
+        </span>
       </div>
       <div className="Wrap" id="wrap">
         <div id="mainPage">{props.Page_Contents}</div>

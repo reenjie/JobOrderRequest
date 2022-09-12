@@ -20,7 +20,6 @@ import {
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { EditIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
-import Headings from "../../components/layouts/heading";
 import Table_striped from "../../components/layouts/table_striped";
 import Add_Modal from "../../components/layouts/add_modal";
 import { useNavigate } from "react-router-dom";
@@ -259,8 +258,7 @@ function RenderPage() {
   return (
     <>
       {" "}
-      <Headings title="DEPARTMENT" />
-      <Container mt={10} maxW="container.xl">
+      <Container mt={10} maxW="container.xxl">
         <Box
           borderWidth={1}
           p="10"
@@ -268,18 +266,17 @@ function RenderPage() {
           borderRadius="6"
           boxShadow="md"
         >
-          <Add_Modal
-            btnTitle="ADD"
-            title="Add Department  "
-            mbody={<Add_Modal_Body />}
-          />
-
           {alerts && (
             <Alert status="success" id="" variant="left-accent">
               <AlertIcon />
               <Text color={"blackAlpha.600"}>{alerts}</Text>
             </Alert>
           )}
+          <Add_Modal
+            btnTitle="ADD"
+            title="Add Department  "
+            mbody={<Add_Modal_Body />}
+          />
 
           <Table_striped table_header={tableheader} table_body={tableBody} />
         </Box>
@@ -294,6 +291,7 @@ function Department() {
       <AdminLayout
         Sidebar_elements={<Sidebar />}
         Page_Contents={<RenderPage />}
+        Page_title="DEPARTMENT"
       />
     </>
   );

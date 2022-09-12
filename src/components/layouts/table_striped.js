@@ -16,7 +16,7 @@ export default function Table_striped(props) {
   const header = Theader.map((tableheader) => <Th>{tableheader.th}</Th>);
   return (
     <TableContainer userSelect={"none"}>
-      <Table variant="striped" colorScheme="blue" size={"md"}>
+      <Table variant="striped" colorScheme="blue" size={"sm"}>
         <Thead>{header}</Thead>
         <Tbody fontSize={14}>{Tbody}</Tbody>
         <Tfoot></Tfoot>

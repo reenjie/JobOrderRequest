@@ -15,7 +15,7 @@ import R_Dashboard from "../../Pages/requestor/Dashboard";
 import R_Request from "../../Pages/requestor/Request";
 import R_Accomplished from "../../Pages/requestor/Accomplished";
 import R_History from "../../Pages/requestor/History";
-
+import Servicesoffer from "../../Pages/admin/Servicesoffer";
 export default function Routing() {
   return (
     <BrowserRouter>
@@ -28,6 +28,10 @@ export default function Routing() {
         <Route path="Admin/Department" element={<Department />} />
         <Route path="Admin/Services" element={<Services />} />
         <Route path="Admin/Accounts" element={<Accounts />} />
+        <Route
+          path="Servicesoffer?Data=trialonly"
+          element={<Servicesoffer />}
+        />
 
         {/*  ASSESSOR  */}
         <Route path="Assessor/Dashboard" element={<A_Dashboard />} />
