@@ -149,7 +149,6 @@ function RenderPage() {
   return (
     <>
       {" "}
-      <Headings title="ACCOUNTS" />
       <Container mt={10} maxW="container.xxl">
         <Box
           borderWidth={1}
@@ -172,6 +171,7 @@ function Accounts() {
       <AdminLayout
         Sidebar_elements={<Sidebar />}
         Page_Contents={<RenderPage />}
+        Page_title="ACCOUNTS"
       />
     </>
   );

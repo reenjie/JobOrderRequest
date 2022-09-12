@@ -29,7 +29,7 @@ export default function Routing() {
         <Route path="Admin/Services" element={<Services />} />
         <Route path="Admin/Accounts" element={<Accounts />} />
         <Route
-          path="Servicesoffer?Data=trialonly"
+          path="Admin/Services/Servicesoffer/:serviceid/Manage-ServicesOffers/:servicename"
           element={<Servicesoffer />}
         />
 

@@ -27,7 +27,10 @@ import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import Delete_Modal from "../../components/layouts/delete_modal";
 import Table_striped from "../../components/layouts/table_striped";
 import Add_Modal from "../../components/layouts/add_modal";
+import Edit_Modal from "../../components/layouts/edit_modal";
+import moment from "moment";
 import { Link } from "react-router-dom";
+
 function RenderPage() {
   const [services, setServices] = useState([]);
   const [servicesoffer, setServicesoffer] = useState([]);
@@ -47,7 +50,12 @@ function RenderPage() {
   }, []);
 
   const tableheader = {
-    thead: [{ th: "Name" }, { th: "Created" }, { th: "Action" }],
+    thead: [
+      { th: "Name" },
+      { th: "Created" },
+      { th: "Modified" },
+      { th: "Action" },
+    ],
   };
 
   // Add
@@ -66,6 +74,38 @@ function RenderPage() {
         });
         document.getElementById("modalClose").click();
         setAlerts("Saved Successfully.");
+        setTimeout(() => {
+          setAlerts("");
+        }, 2000);
+      }
+    });
+  }
+
+  function handleUpdate(e) {
+    e.preventDefault();
+
+    const service = e.target.services.value;
+    const id = e.target.id.value;
+    Axios.post(" http://localhost/JOBREQUEST/api/admin/update_services.php", {
+      service: service,
+      id: id,
+    }).then((req) => {
+      //setDepartments(req.data);
+      if (req.data.status == 1) {
+        Axios.post(
+          "http://localhost/JOBREQUEST/api/admin/getservices.php"
+        ).then((req) => {
+          setServices(req.data);
+        });
+
+        document.getElementById("modalClose").click();
+        setAlerts("Updated Successfully.");
+
+        setTimeout(() => {
+          setAlerts("");
+        }, 2000);
+      } else if (req.data.status == 2) {
+        setAlerts("No Changes Made.");
         setTimeout(() => {
           setAlerts("");
         }, 2000);
@@ -97,6 +137,41 @@ function RenderPage() {
                   colorScheme="teal"
                 >
                   Add
+                </Button>
+              </Stack>
+            </form>
+          </FormControl>
+        </Container>
+      </>
+    );
+  };
+
+  const Edit_Modal_Body = (props) => {
+    return (
+      <>
+        <Container maxW="container.xl">
+          <FormControl>
+            <form method="post" onSubmit={handleUpdate}>
+              <Stack spacing={3}>
+                <Text>Services :</Text>
+                <Input
+                  placeholder=""
+                  size="md"
+                  name="services"
+                  required
+                  defaultValue={props.service}
+                  autoFocus
+                />
+                <Spacer />
+                <Input name="id" value={props.id} type="hidden" />
+                <Button
+                  type="submit"
+                  variant="solid"
+                  w={140}
+                  float="right"
+                  colorScheme="teal"
+                >
+                  Update
                 </Button>
               </Stack>
             </form>
@@ -168,20 +243,28 @@ function RenderPage() {
                     color={"teal.500"}
                   >
                     Services Offers
+                    {console.log(servicesoffer)}
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
               </h2>
               <AccordionPanel>
-                <Container maxW={"xs"}>
-                  <UnorderedList fontWeight={"normal"}>
+                <Container maxW={"xl"}>
+                  <UnorderedList fontWeight={"normal"} listStyleType="circle">
                     {servicesoffer.map((offers) => {
                       if (offers.FK_serviceID == row.PK_servicesID) {
                         return <ListItem>{offers.name}</ListItem>;
                       }
                     })}
                   </UnorderedList>
-                  <Link to="/Servicesoffer?Data=trialonly">
+                  <Link
+                    to={
+                      "/Admin/Services/Servicesoffer/" +
+                      row.PK_servicesID +
+                      "/Manage-ServicesOffers/" +
+                      row.name
+                    }
+                  >
                     <Button
                       mt="2"
                       variant="ghost"
@@ -196,12 +279,18 @@ function RenderPage() {
             </AccordionItem>
           </Accordion>
         </Td>
-        <Td>{row.created_at}</Td>
+        <Td>{moment(row.created_at).format("@hh:mm a MMMM DD,YYYY")}</Td>
+        <Td>{moment(row.updated_at).format("@hh:mm a MMMM DD,YYYY")}</Td>
         <Td>
-          <Button variant={"ghost"} size="sm" color="green.400">
-            <EditIcon />
-          </Button>
+          <Edit_Modal
+            btnTitle="UPDATE"
+            title="Edit Service "
+            mbody={
+              <Edit_Modal_Body service={row.name} id={row.PK_servicesID} />
+            }
+          />
           <Delete_Modal
+            note="All Services Offer will be Deleted. Do you still wish to proceed?"
             confirm={
               <Confirm_Delete item_id={row.PK_servicesID} table="services" />
             }
@@ -234,6 +323,13 @@ function RenderPage() {
             title="Add Services  "
             mbody={<Add_Modal_Body />}
           />
+          <Input
+            placeholder="Search Services .."
+            size="sm"
+            mb={5}
+            width="300px"
+          />
+
           <Table_striped table_header={tableheader} table_body={tableBody} />
         </Box>
         {/*  */}
