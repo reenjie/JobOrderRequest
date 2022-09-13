@@ -16,6 +16,8 @@ import R_Request from "../../Pages/requestor/Request";
 import R_Accomplished from "../../Pages/requestor/Accomplished";
 import R_History from "../../Pages/requestor/History";
 import Servicesoffer from "../../Pages/admin/Servicesoffer";
+import Add_User from "../../Pages/admin/Add_User";
+import Update_User from "../../Pages/admin/Update_User";
 export default function Routing() {
   return (
     <BrowserRouter>
@@ -28,9 +30,14 @@ export default function Routing() {
         <Route path="Admin/Department" element={<Department />} />
         <Route path="Admin/Services" element={<Services />} />
         <Route path="Admin/Accounts" element={<Accounts />} />
+        <Route path="Admin/Accounts/Add/New/User" element={<Add_User />} />
         <Route
           path="Admin/Services/Servicesoffer/:serviceid/Manage-ServicesOffers/:servicename"
           element={<Servicesoffer />}
+        />
+        <Route
+          path="Admin/Accounts/Update/:userid/User"
+          element={<Update_User />}
         />
 
         {/*  ASSESSOR  */}

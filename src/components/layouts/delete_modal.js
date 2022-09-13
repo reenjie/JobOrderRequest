@@ -64,7 +64,7 @@ function Delete_Modal(props) {
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <Button id="btnmodalClose" onClick={onClose}>
+            <Button id={"btnmodalClose"} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>

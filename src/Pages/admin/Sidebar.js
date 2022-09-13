@@ -20,8 +20,18 @@ import {
 import "../../css/App.css";
 import { Link } from "react-router-dom";
 import Zcmc_info from "../../components/layouts/info";
+import Axios from "axios";
+import React, { useEffect, useState } from "react";
 
 function Sidebar(props) {
+  const [alerto, setAlerto] = useState();
+  useEffect(() => {
+    Axios.post("http://localhost/JOBREQUEST/api/admin/getNewUsers.php").then(
+      (req) => {
+        setAlerto(req.data.length);
+      }
+    );
+  }, []);
   return (
     <div className="sidebar-links" id="sblink">
       <Zcmc_info usertype="admin" />
@@ -77,9 +87,11 @@ function Sidebar(props) {
               <Container>
                 <span>
                   <i className="fas fa-users"></i> Accounts{" "}
-                  <Badge ml="1" colorScheme="green">
-                    New
-                  </Badge>{" "}
+                  {alerto >= 1 && (
+                    <Badge ml="1" colorScheme="green">
+                      New
+                    </Badge>
+                  )}
                 </span>
               </Container>
             </li>{" "}

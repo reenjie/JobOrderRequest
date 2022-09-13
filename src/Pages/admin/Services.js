@@ -28,6 +28,7 @@ import Delete_Modal from "../../components/layouts/delete_modal";
 import Table_striped from "../../components/layouts/table_striped";
 import Add_Modal from "../../components/layouts/add_modal";
 import Edit_Modal from "../../components/layouts/edit_modal";
+
 import moment from "moment";
 import { Link } from "react-router-dom";
 
@@ -38,7 +39,11 @@ function RenderPage() {
   useEffect(() => {
     Axios.post("http://localhost/JOBREQUEST/api/admin/getservices.php").then(
       (req) => {
-        setServices(req.data);
+        if (req.data.length >= 1) {
+          setServices(req.data);
+        } else {
+          setServices([]);
+        }
       }
     );
 
@@ -70,7 +75,11 @@ function RenderPage() {
         Axios.post(
           "http://localhost/JOBREQUEST/api/admin/getservices.php"
         ).then((req) => {
-          setServices(req.data);
+          if (req.data.length >= 1) {
+            setServices(req.data);
+          } else {
+            setServices([]);
+          }
         });
         document.getElementById("modalClose").click();
         setAlerts("Saved Successfully.");
@@ -95,7 +104,11 @@ function RenderPage() {
         Axios.post(
           "http://localhost/JOBREQUEST/api/admin/getservices.php"
         ).then((req) => {
-          setServices(req.data);
+          if (req.data.length >= 1) {
+            setServices(req.data);
+          } else {
+            setServices([]);
+          }
         });
 
         document.getElementById("modalClose").click();
@@ -294,6 +307,7 @@ function RenderPage() {
             confirm={
               <Confirm_Delete item_id={row.PK_servicesID} table="services" />
             }
+            modalid={row.PK_servicesID}
           />
         </Td>
       </Tr>

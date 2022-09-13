@@ -21,8 +21,8 @@ import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { EditIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
 import Table_striped from "../../components/layouts/table_striped";
-import Add_Modal from "../../components/layouts/add_modal";
 import { useNavigate } from "react-router-dom";
+import Add_Modal from "../../components/layouts/add_modal";
 import Delete_Modal from "../../components/layouts/delete_modal";
 import Edit_Modal from "../../components/layouts/edit_modal";
 function RenderPage() {
@@ -36,7 +36,11 @@ function RenderPage() {
   useEffect(() => {
     Axios.post("http://localhost/JOBREQUEST/api/admin/getdepartment.php").then(
       (req) => {
-        setDepartments(req.data);
+        if (req.data.length >= 1) {
+          setDepartments(req.data);
+        } else {
+          setDepartments([]);
+        }
       }
     );
   }, []);
@@ -66,7 +70,11 @@ function RenderPage() {
           Axios.post(
             "http://localhost/JOBREQUEST/api/admin/getdepartment.php"
           ).then((req) => {
-            setDepartments(req.data);
+            if (req.data.length >= 1) {
+              setDepartments(req.data);
+            } else {
+              setDepartments([]);
+            }
             document.getElementById("btnmodalClose").click();
 
             setAlerts("Deleted Successfully.");
