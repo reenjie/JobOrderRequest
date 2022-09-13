@@ -16,11 +16,13 @@ import R_Request from "../../Pages/requestor/Request";
 import R_Accomplished from "../../Pages/requestor/Accomplished";
 import R_History from "../../Pages/requestor/History";
 import Servicesoffer from "../../Pages/admin/Servicesoffer";
+import FrontPage from "../../Pages/frontpage/FrontPage";
 export default function Routing() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
+        {/* Landing Page */}
+        <Route exact path="/" element={<FrontPage />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         {/*  ADMINISTRATOR   */}
