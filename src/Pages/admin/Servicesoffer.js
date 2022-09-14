@@ -25,14 +25,16 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbSeparator,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon, SearchIcon } from "@chakra-ui/icons";
 import Delete_Modal from "../../components/layouts/delete_modal";
-import Table_striped from "../../components/layouts/table_striped";
 import Add_Modal from "../../components/layouts/add_modal";
 import Edit_Modal from "../../components/layouts/edit_modal";
+import DataTable, { createTheme } from "react-data-table-component";
 import moment from "moment";
 
 function RenderPage() {
@@ -119,7 +121,6 @@ function RenderPage() {
           }
         });
 
-        document.getElementById("modalClose").click();
         setAlerts("Updated Successfully.");
 
         setTimeout(() => {
@@ -131,6 +132,7 @@ function RenderPage() {
           setAlerts("");
         }, 2000);
       }
+      document.getElementById("modalClose").click();
     });
   }
 
@@ -144,10 +146,12 @@ function RenderPage() {
                 <Text>Services :</Text>
                 <Input
                   placeholder=""
-                  size="md"
+                  size="sm"
                   autoFocus
                   name="services"
                   required
+                  fontSize={14}
+                  borderRadius={4}
                 />
                 <Spacer />
                 <Button
@@ -177,11 +181,13 @@ function RenderPage() {
                 <Text>Services :</Text>
                 <Input
                   placeholder=""
-                  size="md"
+                  size="sm"
                   name="services"
                   required
                   defaultValue={props.service}
                   autoFocus
+                  fontSize={14}
+                  borderRadius={4}
                 />
                 <Spacer />
                 <Input name="id" value={props.id} type="hidden" />
@@ -254,44 +260,159 @@ function RenderPage() {
     );
   }
 
-  const tableBody = () => {
-    if (servicesoffer.length >= 1) {
-      return servicesoffer.map((row) => (
-        <Tr>
-          <Td fontWeight={"bold"} color="blackAlpha.700">
-            {row.name}
-          </Td>
-          <Td>{moment(row.created_at).format("@hh:mm a MMMM DD,YYYY")}</Td>
-          <Td>{moment(row.updated_at).format("@hh:mm a MMMM DD,YYYY")}</Td>
-          <Td>
-            <Edit_Modal
-              btnTitle="UPDATE"
-              title="Edit Service "
-              mbody={<Edit_Modal_Body service={row.name} id={row.PK_soID} />}
-            />
-            <Delete_Modal
-              confirm={
-                <Confirm_Delete item_id={row.PK_soID} table="services_offer" />
-              }
-            />
-          </Td>
-        </Tr>
-      ));
-    } else {
-      return (
-        <Tr>
-          <Td
-            textAlign={"center"}
-            fontWeight={"bold"}
-            color="blackAlpha.700"
-            colSpan={3}
-          >
-            No data Found
-          </Td>
-        </Tr>
-      );
-    }
+  createTheme(
+    "Jobrequest",
+    {
+      text: {
+        primary: "#565c5f",
+        secondary: "#2aa198",
+      },
+      background: {
+        default: "transparent",
+      },
+      context: {
+        background: "#cb4b16",
+        text: "#FFFFFF",
+      },
+      divider: {
+        default: "#c0e1ed",
+      },
+      action: {
+        button: "red",
+        hover: "rgba(0,0,0,.08)",
+        disabled: "red",
+      },
+    },
+    "dark"
+  );
+
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: "20px", // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: "5px", // override the cell padding for head cells
+        paddingRight: "8px",
+        fontSize: "15px",
+        color: "#53737f",
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: "8px", // override the cell padding for data cells
+        paddingRight: "8px",
+      },
+    },
+    pagination: {
+      style: {
+        color: "#3686a3",
+      },
+      pageButtonsStyle: {
+        borderRadius: "50%",
+        height: "40px",
+        width: "40px",
+        padding: "8px",
+        margin: "px",
+        cursor: "pointer",
+        transition: "0.4s",
+
+        backgroundColor: "#78b6cc",
+
+        "&:hover:not(:disabled)": {
+          backgroundColor: "#88c1d6",
+        },
+        "&:focus": {
+          outline: "none",
+          backgroundColor: "yellow",
+          color: "red",
+        },
+      },
+    },
   };
+
+  const columns = [
+    {
+      name: "Name",
+      selector: (row) => (
+        <>
+          <Text fontWeight={"bold"} fontSize="14">
+            {row.name}
+          </Text>
+        </>
+      ),
+    },
+    {
+      name: "Created",
+      selector: (row) => (
+        <>{moment(row.created_at).format("@hh:mm a MMMM DD,YYYY")}</>
+      ),
+    },
+    {
+      name: "Modified",
+      selector: (row) => (
+        <>{moment(row.updated_at).format("@hh:mm a MMMM DD,YYYY")}</>
+      ),
+    },
+    {
+      name: "Action",
+      selector: (row) => (
+        <>
+          <Edit_Modal
+            btnTitle="UPDATE"
+            title="Edit Service "
+            mbody={<Edit_Modal_Body service={row.name} id={row.PK_soID} />}
+          />
+          <Delete_Modal
+            confirm={
+              <Confirm_Delete item_id={row.PK_soID} table="services_offer" />
+            }
+          />
+        </>
+      ),
+    },
+  ];
+
+  //Filtering
+  const [filterText, setFilterText] = useState("");
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const filteredItems = servicesoffer.filter((item) =>
+    item.name.toLowerCase().includes(filterText.toLowerCase())
+  );
+
+  const subHeaderComponentMemo = React.useMemo(() => {
+    const handleClear = () => {
+      if (filterText) {
+        setResetPaginationToggle(!resetPaginationToggle);
+        setFilterText("");
+      }
+    };
+
+    return (
+      <>
+        <Container maxW={"container.xxl"}>
+          <InputGroup float={"right"}>
+            <InputLeftElement
+              pointerEvents="none"
+              children={<SearchIcon color="gray.500" />}
+            />
+            <Input
+              placeholder="Filter By Name"
+              onChange={(e) => {
+                setFilterText(e.target.value);
+              }}
+              defaultValue={filterText}
+              fontSize={14}
+              width={350}
+              variant="flushed"
+            />
+          </InputGroup>
+        </Container>
+      </>
+    );
+  }, [filterText, resetPaginationToggle]);
 
   return (
     <>
@@ -325,13 +446,7 @@ function RenderPage() {
             <Text>ServicesOffer</Text>
           </BreadcrumbItem>
         </Breadcrumb>
-        <Box
-          borderWidth={1}
-          p="10"
-          bg={"cyan.50"}
-          borderRadius="6"
-          boxShadow="md"
-        >
+        <Box p="10" bg={"cyan.50"} borderRadius="6">
           {alerts && (
             <Alert status="success" id="" variant="left-accent">
               <AlertIcon />
@@ -345,7 +460,17 @@ function RenderPage() {
             mbody={<Add_Modal_Body />}
           />
 
-          <Table_striped table_header={tableheader} table_body={tableBody} />
+          <DataTable
+            columns={columns}
+            data={filteredItems}
+            // paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
+            subHeader
+            subHeaderComponent={subHeaderComponentMemo}
+            persistTableHead
+            theme="Jobrequest"
+            customStyles={customStyles}
+            pagination
+          />
         </Box>
         {/*  */}
       </Container>

@@ -60,6 +60,8 @@ function RenderPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    document.getElementById("btnsave").innerHTML = "Saving..";
+
     const usertype = e.target.usertype.value;
     const firstname = e.target.firstname.value;
     const lastname = e.target.lastname.value;
@@ -101,6 +103,7 @@ function RenderPage() {
         document.getElementById("unset_department").value = "";
         document.getElementById("unset_specialty").value = "";
         document.getElementById("unset_position").value = "";
+        document.getElementById("btnsave").innerHTML = "Save";
         setUsertype("");
       }
     });
@@ -327,6 +330,7 @@ function RenderPage() {
                           colorScheme="blue"
                           size={"sm"}
                           type="submit"
+                          id="btnsave"
                         >
                           {" "}
                           Save
