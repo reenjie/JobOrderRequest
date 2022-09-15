@@ -20,13 +20,13 @@ function handleClick() {
   if (wsize == 240) {
     sb.style.width = "0";
     sblink.style.display = "none";
-    mainwrap.style.marginLeft = "20px";
-    togglebtn.style.marginLeft = "20px";
+    mainwrap.style.marginLeft = "0px";
+    togglebtn.style.marginLeft = "0px";
   } else {
     sb.style.width = "240px";
     sblink.style.display = "block";
-    mainwrap.style.marginLeft = "260px";
-    togglebtn.style.marginLeft = "260px";
+    mainwrap.style.marginLeft = "240px";
+    togglebtn.style.marginLeft = "240px";
   }
 }
 function AdminLayout(props) {

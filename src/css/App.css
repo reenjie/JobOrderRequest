@@ -121,6 +121,9 @@
     margin-left: 20px;
   }
 
+  .box {
+    
+  }
 @media screen and (max-width:768px) {
   #login {
       width: 100%;
@@ -128,6 +131,7 @@
       box-shadow: unset;
       color: rgb(92, 91, 99);
   }
+  
 
   #sideBar{
    width: 0;
@@ -136,7 +140,7 @@
     display: none;
   }
   #wrap {
-    margin-left: 20px;
+    margin-left: 0px;
   }
   #btnopen_close{
     margin-left: 20px;

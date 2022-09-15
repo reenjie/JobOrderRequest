@@ -18,6 +18,7 @@ import R_History from "../../Pages/requestor/History";
 import Servicesoffer from "../../Pages/admin/Servicesoffer";
 import Add_User from "../../Pages/admin/Add_User";
 import Update_User from "../../Pages/admin/Update_User";
+import Worktype from "../../Pages/admin/Worktype";
 export default function Routing() {
   return (
     <BrowserRouter>
@@ -39,6 +40,8 @@ export default function Routing() {
           path="Admin/Accounts/Update/:userid/User"
           element={<Update_User />}
         />
+
+        <Route path="/Admin/Services/WorkTypes" element={<Worktype />} />
 
         {/*  ASSESSOR  */}
         <Route path="Assessor/Dashboard" element={<A_Dashboard />} />

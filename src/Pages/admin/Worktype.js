@@ -46,43 +46,36 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 
 function RenderPage() {
-  const [services, setServices] = useState([]);
-  const [servicesoffer, setServicesoffer] = useState([]);
+  const [worktypes, setWorktypes] = useState([]);
   const [alerts, setAlerts] = useState();
   useEffect(() => {
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getservices.php").then(
+    Axios.post("http://localhost/JOBREQUEST/api/admin/getWorktype.php").then(
       (req) => {
         if (req.data.length >= 1) {
-          setServices(req.data);
+          setWorktypes(req.data);
         } else {
-          setServices([]);
+          setWorktypes([]);
         }
       }
     );
-
-    Axios.post(
-      "http://localhost/JOBREQUEST/api/admin/getservicesoffer.php"
-    ).then((req) => {
-      setServicesoffer(req.data);
-    });
   }, []);
 
   // Add
   function handleSubmit(e) {
     e.preventDefault();
 
-    const service = e.target.services.value;
-    Axios.post(" http://localhost/JOBREQUEST/api/admin/saveservices.php", {
-      services: service,
+    const wt = e.target.wt.value;
+    Axios.post(" http://localhost/JOBREQUEST/api/admin/saveWorktype.php", {
+      wt: wt,
     }).then((req) => {
       if (req.data.status == 1) {
         Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getservices.php"
+          "http://localhost/JOBREQUEST/api/admin/getWorktype.php"
         ).then((req) => {
           if (req.data.length >= 1) {
-            setServices(req.data);
+            setWorktypes(req.data);
           } else {
-            setServices([]);
+            setWorktypes([]);
           }
         });
         document.getElementById("modalClose").click();
@@ -97,24 +90,23 @@ function RenderPage() {
   function handleUpdate(e) {
     e.preventDefault();
 
-    const service = e.target.services.value;
+    const wt = e.target.worktype.value;
     const id = e.target.id.value;
-    Axios.post(" http://localhost/JOBREQUEST/api/admin/update_services.php", {
-      service: service,
+    Axios.post(" http://localhost/JOBREQUEST/api/admin/update_worktype.php", {
+      wt: wt,
       id: id,
     }).then((req) => {
       //setDepartments(req.data);
       if (req.data.status == 1) {
         Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getservices.php"
+          "http://localhost/JOBREQUEST/api/admin/getWorktype.php"
         ).then((req) => {
           if (req.data.length >= 1) {
-            setServices(req.data);
+            setWorktypes(req.data);
           } else {
-            setServices([]);
+            setWorktypes([]);
           }
         });
-
         setAlerts("Updated Successfully.");
 
         setTimeout(() => {
@@ -137,12 +129,12 @@ function RenderPage() {
           <FormControl>
             <form method="post" onSubmit={handleSubmit}>
               <Stack spacing={3}>
-                <Text>Services :</Text>
+                <Text>WorkType :</Text>
                 <Input
                   placeholder=""
                   size="sm"
                   autoFocus
-                  name="services"
+                  name="wt"
                   required
                   fontSize={14}
                   borderRadius={4}
@@ -176,9 +168,9 @@ function RenderPage() {
                 <Input
                   placeholder=""
                   size="sm"
-                  name="services"
+                  name="worktype"
                   required
-                  defaultValue={props.service}
+                  defaultValue={props.worktype}
                   autoFocus
                   fontSize={14}
                   borderRadius={4}
@@ -217,9 +209,13 @@ function RenderPage() {
       }).then((req) => {
         if (req.data.status == 1) {
           Axios.post(
-            "http://localhost/JOBREQUEST/api/admin/getservices.php"
+            "http://localhost/JOBREQUEST/api/admin/getWorktype.php"
           ).then((req) => {
-            setServices(req.data);
+            if (req.data.length >= 1) {
+              setWorktypes(req.data);
+            } else {
+              setWorktypes([]);
+            }
             document.getElementById("btnmodalClose").click();
 
             setAlerts("Deleted Successfully.");
@@ -247,25 +243,6 @@ function RenderPage() {
       </>
     );
   }
-
-  const handleChangeStatus = (e) => {
-    //console.log(e.target.checked);
-    const s_status = e.target.checked == false ? 0 : 1;
-    const id = e.target.value;
-
-    Axios.post("http://localhost/JOBREQUEST/api/admin/changeStatus.php", {
-      id: id,
-      s_status: s_status,
-    }).then((req) => {
-      if (req.data.status == 1) {
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getservices.php"
-        ).then((req) => {
-          setServices(req.data);
-        });
-      }
-    });
-  };
 
   createTheme(
     "Jobrequest",
@@ -346,52 +323,7 @@ function RenderPage() {
       selector: (row) => (
         <>
           <Text fontWeight={"bold"} fontSize="14">
-            {row.name}
-            <Accordion allowToggle>
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box
-                      flex="1"
-                      fontSize={13}
-                      textAlign="left"
-                      color={"teal.500"}
-                    >
-                      Services Offers
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel>
-                  <Container maxW={"container.xxl"}>
-                    <UnorderedList fontWeight={"normal"} listStyleType="circle">
-                      {servicesoffer.map((offers) => {
-                        if (offers.FK_serviceID == row.PK_servicesID) {
-                          return <ListItem>{offers.name}</ListItem>;
-                        }
-                      })}
-                    </UnorderedList>
-                    <Link
-                      to={
-                        "/Admin/Services/Servicesoffer/" +
-                        row.PK_servicesID +
-                        "/Manage-ServicesOffers/" +
-                        row.name
-                      }
-                    >
-                      <Button
-                        mt="2"
-                        variant="ghost"
-                        size="sm"
-                        colorScheme={"teal"}
-                      >
-                        Manage
-                      </Button>
-                    </Link>
-                  </Container>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
+            {row.label}
           </Text>
         </>
       ),
@@ -410,67 +342,22 @@ function RenderPage() {
     },
 
     {
-      name: (
-        <>
-          <Popover placement="top">
-            <PopoverTrigger>
-              <span>
-                Detailed{" "}
-                <i
-                  style={{ marginLeft: "5px" }}
-                  className="fas fa-info-circle"
-                ></i>
-              </span>
-            </PopoverTrigger>
-            <PopoverContent p={5}>
-              <PopoverArrow />
-              <PopoverCloseButton />
-
-              <PopoverBody color={"red.400"}>
-                This Setting is to include the Serial Number and Model Number
-                When making a Job Request.
-              </PopoverBody>
-            </PopoverContent>
-          </Popover>
-        </>
-      ),
-      selector: (row) => (
-        <>
-          {row.isSM == 1 ? (
-            <Switch
-              onChange={handleChangeStatus}
-              value={row.PK_servicesID}
-              colorScheme="red"
-              isChecked
-            />
-          ) : (
-            <Switch
-              onChange={handleChangeStatus}
-              value={row.PK_servicesID}
-              colorScheme="red"
-            />
-          )}
-        </>
-      ),
-    },
-
-    {
       name: "Action",
       selector: (row) => (
         <>
           <Edit_Modal
             btnTitle="UPDATE"
-            title="Edit Service "
+            title="Edit WorkTypes "
             mbody={
-              <Edit_Modal_Body service={row.name} id={row.PK_servicesID} />
+              <Edit_Modal_Body worktype={row.label} id={row.PK_workTypeID} />
             }
           />
           <Delete_Modal
             note="All Services Offer will be Deleted. Do you still wish to proceed?"
             confirm={
-              <Confirm_Delete item_id={row.PK_servicesID} table="services" />
+              <Confirm_Delete item_id={row.PK_workTypeID} table="worktype" />
             }
-            modalid={row.PK_servicesID}
+            modalid={row.PK_workTypeID}
           />
         </>
       ),
@@ -480,8 +367,9 @@ function RenderPage() {
   //Filtering
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-  const filteredItems = services.filter((item) =>
-    item.name.toLowerCase().includes(filterText.toLowerCase())
+
+  const filteredItems = worktypes.filter((item) =>
+    item.label.toLowerCase().includes(filterText.toLowerCase())
   );
 
   const subHeaderComponentMemo = React.useMemo(() => {
@@ -501,7 +389,7 @@ function RenderPage() {
               children={<SearchIcon color="gray.500" />}
             />
             <Input
-              placeholder="Filter By Name"
+              placeholder="Filter By Worktypes"
               onChange={(e) => {
                 setFilterText(e.target.value);
               }}
@@ -530,14 +418,14 @@ function RenderPage() {
 
           <Add_Modal
             btnTitle="ADD"
-            title="Add Services  "
+            title="Add WorkTypes  "
             mbody={<Add_Modal_Body />}
           />
 
-          <Link to="/Admin/Services/WorkTypes">
+          <Link to="/Admin/Services">
             {" "}
             <Button variant={"ghost"} size="sm" colorScheme={"cyan"}>
-              Manage WorkTypes{" "}
+              Services
               <i style={{ marginLeft: "5px" }} className="fas fa-cogs"></i>
             </Button>
           </Link>
@@ -560,16 +448,16 @@ function RenderPage() {
   );
 }
 
-function Services() {
+function Worktype() {
   return (
     <>
       <AdminLayout
         Sidebar_elements={<Sidebar />}
         Page_Contents={<RenderPage />}
-        Page_title="SERVICES"
+        Page_title="WORKTYPE"
       />
     </>
   );
 }
 
-export default Services;
+export default Worktype;

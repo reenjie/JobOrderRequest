@@ -65,20 +65,6 @@ function RenderPage() {
     );
   }, []);
 
-  const tableheader = {
-    thead: [
-      { th: "Email" },
-      { th: "FirstName" },
-      { th: "LastName" },
-      { th: "Address&Contact" },
-      { th: "User Type" },
-      { th: "Department | Services" },
-      { th: "Specialty | Position" },
-      { th: "Status" },
-      { th: "Action" },
-    ],
-  };
-
   //Delete Functions
   const handleKeyup = (e) => {
     const value = e.target.value;
@@ -230,25 +216,6 @@ function RenderPage() {
     },
   };
 
-  const tableBody = () => {
-    if (users.length >= 1) {
-      return users.map((row) => (
-        <Tr color={"blackAlpha.700"}>
-          <Td userSelect="text" fontWeight={"bold"} color="blackAlpha.700"></Td>
-          <Td userSelect="text"></Td>
-          <Td userSelect="text"></Td>
-          <Td></Td>
-          <Td>
-            <Text textTransform={"uppercase"}></Text>
-          </Td>
-          <Td userSelect="text"></Td>
-          <Td userSelect="text"></Td>
-          <Td></Td>
-          <Td></Td>
-        </Tr>
-      ));
-    }
-  };
   const columns = [
     {
       name: "Email",
@@ -368,6 +335,7 @@ function RenderPage() {
                     message="Are you Sure?"
                     Confirm={HandleConfirm}
                     PassId={row.PK_userID}
+                    BtnColor={"cyan"}
                   />
                 </>
               );
@@ -392,8 +360,11 @@ function RenderPage() {
   //Filtering
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-  const filteredItems = users.filter((item) =>
-    item.firstname.toLowerCase().includes(filterText.toLowerCase())
+  const filteredItems = users.filter(
+    (item) =>
+      item.email.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.lastname.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.firstname.toLowerCase().includes(filterText.toLowerCase())
   );
 
   const subHeaderComponentMemo = React.useMemo(() => {
@@ -413,7 +384,7 @@ function RenderPage() {
               children={<SearchIcon color="gray.500" />}
             />
             <Input
-              placeholder="Filter By Department"
+              placeholder="Filter By Email , Firstname or Lastname"
               onChange={(e) => {
                 setFilterText(e.target.value);
               }}

@@ -35,13 +35,13 @@ function PopoverComponent(props) {
             variant={"outline"}
             borderColor={"blackAlpha.400"}
             size="sm"
-            color={"green.400"}
+            colorScheme={props.BtnColor}
           >
             {" "}
             {props.btntitle}
           </Button>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent textAlign="left">
           <PopoverHeader fontWeight="semibold">Confirmation</PopoverHeader>
           <PopoverArrow />
           <PopoverCloseButton />
@@ -53,7 +53,7 @@ function PopoverComponent(props) {
               </Button>
               <Button
                 onClick={props.Confirm}
-                colorScheme="blue"
+                colorScheme={props.BtnColor}
                 size={"sm"}
                 variant={"outline"}
                 data-id={props.PassId}
