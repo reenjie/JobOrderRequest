@@ -311,7 +311,7 @@ function RenderPage() {
       name: "Department",
       selector: (row) => (
         <>
-          <Text fontWeight={"bold"} fontSize="14">
+          <Text fontWeight={"bold"} fontSize="16">
             {row.dept_name}
           </Text>
         </>

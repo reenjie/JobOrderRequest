@@ -35,11 +35,23 @@ function RenderPage() {
   const [servicesoffer, setServicesoffer] = useState([]);
   const [users, setUsers] = useState([]);
   const [worktypes, setWorktypes] = useState([]);
+  const [department, setDepartments] = useState([]);
+  const [viewStatus, setViewStatus] = useState([]);
 
   useEffect(() => {
     window
       .matchMedia("(min-width: 768px)")
       .addEventListener("change", (e) => setMatches(e.matches));
+
+    Axios.post("http://localhost/JOBREQUEST/api/admin/getdepartment.php").then(
+      (req) => {
+        if (req.data.length >= 1) {
+          setDepartments(req.data);
+        } else {
+          setDepartments([]);
+        }
+      }
+    );
 
     Axios.post("http://localhost/JOBREQUEST/api/assessor/getrequests.php", {
       serviceID: "3",
@@ -79,64 +91,116 @@ function RenderPage() {
   }, []);
 
   const HandleConfirm = (e) => {
-    console.log(e.target.dataset.id);
-  };
+    const id = e.target.dataset.id;
+    const prioritization = e.target.dataset.prioritization;
+    const typeofrepair = e.target.dataset.typeofrepair;
+    const recommendation = e.target.dataset.recommendation;
+    Axios.post("http://localhost/JOBREQUEST/api/assessor/ApprovedRequest.php", {
+      id: id,
+      prioritization: prioritization,
+      typeofrepair: typeofrepair,
+      recommendation: recommendation,
+    }).then((req) => {
+      Axios.post("http://localhost/JOBREQUEST/api/assessor/getrequests.php", {
+        serviceID: "3",
+      }).then((req) => {
+        if (req.data.length >= 1) {
+          setRequest(req.data);
+        } else {
+          setRequest([]);
+        }
+      });
 
-  const handleRowClick = (e) => {
-    console.log(e);
+      setAlerts("Approved Successfully.");
+      setTimeout(() => {
+        setAlerts("");
+        window.location.reload();
+      }, 2000);
+
+      document.getElementById("btnmodalCloseview").click();
+    });
   };
 
   const ViewRequest = (props) => {
+    const [prioritization, setPrioritization] = useState("Urgent");
+    const [typeofrepair, setTypeofrepair] = useState("Major Repair");
+    const [recommendation, setRecommendation] = useState("In-House");
+    const [remarks, setRemarks] = useState();
+    const [assessedby, setAssessedby] = useState();
+
     return (
       <Box h={40} p={matches == true ? 10 : 0}>
         <Box mb={2}>
-          <Box bg="blackAlpha.200" p={10}>
-            <Center>
-              <Avatar
-                size="xl"
-                name="Christian Nwamba"
-                src="https://bit.ly/code-beast"
-                mb={2}
-              />
+          {users.map((row) => {
+            if (row.PK_userID == props.userID) {
+              return (
+                <>
+                  <Box bg="blackAlpha.200" p={10}>
+                    <Center>
+                      <Avatar
+                        size="xl"
+                        name={row.firstname + " " + row.lastname}
+                        src={row.photo}
+                        mb={2}
+                      />
 
-              <Box ml="3" userSelect={"text"}>
-                <Text fontWeight="bold" color={"blackAlpha.700"}>
-                  Caimor Reenjay
-                  <br />
-                  <span style={{ fontSize: "13px", fontWeight: "normal" }}>
-                    reenjie17@gmail.com
-                    {props.passId}
-                  </span>
-                  <br />
-                  <span
-                    style={{
-                      fontSize: "13px",
-                      fontWeight: "normal",
-                      userSelect: "",
-                    }}
-                  >
-                    09557653775
-                  </span>
-                  <br />
-                  <span
-                    style={{
-                      fontSize: "13px",
-                      fontWeight: "normal",
-                      userSelect: "",
-                    }}
-                  >
-                    LEAD DEVELOPER
-                  </span>
-                  <Text
-                    style={{ fontSize: "15px", fontWeight: "bold" }}
-                    color={"teal.500"}
-                  >
-                    MMS
-                  </Text>
-                </Text>
-              </Box>
-            </Center>
-          </Box>
+                      <Box ml="3" userSelect={"text"}>
+                        <Text
+                          fontWeight="bold"
+                          textTransform={"uppercase"}
+                          color={"blackAlpha.700"}
+                        >
+                          {row.firstname} {row.lastname}
+                          <br />
+                          <span
+                            style={{
+                              fontSize: "13px",
+                              fontWeight: "normal",
+                              textTransform: "lowercase",
+                            }}
+                          >
+                            {row.email}
+                          </span>
+                          <br />
+                          <span
+                            style={{
+                              fontSize: "13px",
+                              fontWeight: "normal",
+                              userSelect: "",
+                            }}
+                          >
+                            {row.contact_no}
+                          </span>
+                          <br />
+                          <span
+                            style={{
+                              fontSize: "13px",
+                              fontWeight: "normal",
+                              userSelect: "",
+                            }}
+                          >
+                            {row.specialty}
+                            <br />
+                            {row.position}
+                          </span>
+                          <Text
+                            style={{ fontSize: "15px", fontWeight: "bold" }}
+                            color={"teal.500"}
+                          >
+                            {department.map((dep) => {
+                              if (dep.PK_departmentID == row.FK_departmentID) {
+                                return <>{dep.dept_name}</>;
+                              }
+                            })}
+                          </Text>
+                        </Text>
+                      </Box>
+                    </Center>
+                  </Box>
+                </>
+              );
+            }
+          })}
 
           <Box flex="1" bg="teal.50" color={"blackAlpha.600"} p={5}>
             <Stack
@@ -146,16 +210,32 @@ function RenderPage() {
               float="right"
             >
               <Text fontWeight="normal">Date-Created</Text>
-              <Text fontWeight="normal">September 15 2022</Text>
-              <Text fontWeight="normal">@11:30 am</Text>
+              <Text fontWeight="normal">
+                {moment(props.created).format("MMMM DD,YYYY")}
+              </Text>
+              <Text fontWeight="normal">
+                {" "}
+                {moment(props.created).format("@hh:mm a")}
+              </Text>
               <br />
               <Text fontWeight="normal">Date-Received</Text>
-              <Text fontWeight="normal">September 15 2022</Text>
-              <Text fontWeight="normal">@11:30 am</Text>
+              <Text fontWeight="normal">
+                {" "}
+                {moment(props.received).format("MMMM DD,YYYY")}
+              </Text>
+              <Text fontWeight="normal">
+                {moment(props.received).format("@hh:mm a")}
+              </Text>
               <span>
-                <Badge variant="outline" colorScheme="green">
-                  PENDING REQUEST
-                </Badge>
+                {props.status == 1 ? (
+                  <Badge variant="outline" colorScheme="green">
+                    PENDING REQUEST
+                  </Badge>
+                ) : props.status == 0 ? (
+                  ""
+                ) : (
+                  ""
+                )}
               </span>
             </Stack>
             <Text color={"teal.400"} fontWeight="bold">
@@ -163,30 +243,66 @@ function RenderPage() {
             </Text>
 
             <Stack spacing={0} fontSize={15}>
-              <Text fontWeight="bold">New Installation/Fabrication</Text>
-              <Text fontWeight="normal">Air Condition Unit</Text>
+              <Text fontWeight="bold">
+                {worktypes.map((row) => {
+                  if (row.PK_workTypeID == props.workID) {
+                    return <>{row.label}</>;
+                  }
+                })}
+              </Text>
+              <Text fontWeight="normal">
+                {servicesoffer.map((row) => {
+                  if (row.PK_soID == props.serviceOfferID) {
+                    return <>{row.name}</>;
+                  }
+                })}
+
+                <span style={{ padding: "5px" }}>{props.others}</span>
+              </Text>
             </Stack>
 
-            <Stack mt={2} direction={["column", "row"]} ml={10} spacing="24px">
-              <Box>
-                <Text fontWeight="normal">Serial No.</Text>
-                <Text fontWeight="normal">465469835</Text>
-              </Box>
-              <Box>
-                <Text fontWeight="normal">Model No.</Text>
-                <Text fontWeight="normal">1064648556</Text>
-              </Box>
-            </Stack>
+            {props.serialno == "" ||
+            (props.serialno == null && props.modelno == "") ||
+            props.modelno == null ? (
+              ""
+            ) : (
+              <Stack
+                mt={2}
+                direction={["column", "row"]}
+                ml={10}
+                spacing="24px"
+              >
+                <Box>
+                  <Text fontWeight="normal">Serial No.</Text>
+                  <Text fontWeight="normal">{props.serialno}</Text>
+                </Box>
+                <Box>
+                  <Text fontWeight="normal">Model No.</Text>
+                  <Text fontWeight="normal">{props.modelno}</Text>
+                </Box>
+              </Stack>
+            )}
 
             <Stack mt={5} spacing="24px" ml={10}>
               <Box>
                 <Text>Prioritization</Text>
-                <RadioGroup defaultValue="0">
-                  <Stack spacing={5} direction="row">
-                    <Radio colorScheme="red" value="1">
+                <RadioGroup defaultValue="Urgent">
+                  <Stack
+                    spacing={5}
+                    direction="row"
+                    checked={prioritization === "male"}
+                    onChange={(e) => {
+                      setPrioritization(e.target.value);
+                    }}
+                  >
+                    <Radio colorScheme="red" value="Urgent">
                       Urgent
                     </Radio>
-                    <Radio colorScheme="green" value="2">
+                    <Radio
+                      colorScheme="green"
+                      value="Not Urgent"
+                      name="prioritization"
+                    >
                       Not Urgent
                     </Radio>
                   </Stack>
@@ -195,12 +311,28 @@ function RenderPage() {
 
               <Box>
                 <Text>Type of Repair</Text>
-                <RadioGroup defaultValue="0">
-                  <Stack spacing={5} direction="row">
-                    <Radio colorScheme="twitter" value="1">
+                <RadioGroup defaultValue="Major Repair">
+                  <Stack
+                    spacing={5}
+                    direction="row"
+                    onChange={(e) => {
+                      setTypeofrepair(e.target.value);
+                    }}
+                  >
+                    <Radio
+                      colorScheme="twitter"
+                      value="Major Repair"
+                      name="typeofrepair"
+                      required
+                    >
                       Major Repair
                     </Radio>
-                    <Radio colorScheme="yellow" value="2">
+                    <Radio
+                      colorScheme="yellow"
+                      value="Minor Repair"
+                      name="typeofrepair"
+                      required
+                    >
                       Minor Repair
                     </Radio>
                   </Stack>
@@ -209,12 +341,28 @@ function RenderPage() {
 
               <Box>
                 <Text>Recommendation</Text>
-                <RadioGroup defaultValue="0">
-                  <Stack spacing={5} direction="row">
-                    <Radio colorScheme="teal" value="1">
+                <RadioGroup defaultValue="In-House">
+                  <Stack
+                    spacing={5}
+                    direction="row"
+                    onChange={(e) => {
+                      setRecommendation(e.target.value);
+                    }}
+                  >
+                    <Radio
+                      colorScheme="teal"
+                      value="In-House"
+                      name="recommendation"
+                      required
+                    >
                       In-House
                     </Radio>
-                    <Radio colorScheme="orange" value="2">
+                    <Radio
+                      colorScheme="orange"
+                      value="Outsource"
+                      name="recommendation"
+                      required
+                    >
                       OutSource
                     </Radio>
                   </Stack>
@@ -227,7 +375,10 @@ function RenderPage() {
                 btntitle="Approve"
                 message="Are you Sure?"
                 Confirm={HandleConfirm}
-                PassId={"5"}
+                PassId={props.requestId}
+                prioritization={prioritization}
+                typeofrepair={typeofrepair}
+                recommendation={recommendation}
                 BtnColor={"cyan"}
               />
             </Container>
@@ -402,7 +553,23 @@ function RenderPage() {
       name: "Action",
       selector: (row) => (
         <>
-          <ViewRequestmodal Data={<ViewRequest passId={row.PK_requestID} />} />
+          <ViewRequestmodal
+            Data={
+              <ViewRequest
+                requestId={row.PK_requestID}
+                userID={row.FK_userID}
+                workID={row.FK_workID}
+                serviceOfferID={row.FK_serviceOfferID}
+                others={row.others}
+                serialno={row.serialno}
+                modelno={row.modelno}
+                photo={row.photo}
+                status={row.status}
+                created={row.created_at}
+                received={row.updated_at}
+              />
+            }
+          />
         </>
       ),
     },
@@ -411,7 +578,7 @@ function RenderPage() {
   return (
     <>
       <Box p={5}>
-        <Box p="5" bg={"cyan.50"} borderRadius="6" transition={"all ease 2s"}>
+        <Box p="5" bg={"gray.50"} borderRadius="6" transition={"all ease 2s"}>
           {alerts && (
             <Alert status="success" id="" variant="left-accent">
               <AlertIcon />

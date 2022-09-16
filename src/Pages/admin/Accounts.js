@@ -446,18 +446,10 @@ function RenderPage() {
 }
 
 function Accounts() {
-  const [alerto, setAlerto] = useState();
-  useEffect(() => {
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getNewUsers.php").then(
-      (req) => {
-        setAlerto(req.data.length);
-      }
-    );
-  }, []);
   return (
     <>
       <AdminLayout
-        Sidebar_elements={<Sidebar alerto={alerto} />}
+        Sidebar_elements={<Sidebar />}
         Page_Contents={<RenderPage />}
         Page_title="ACCOUNTS"
       />

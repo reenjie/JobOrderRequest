@@ -36,6 +36,7 @@ function PopoverComponent(props) {
             borderColor={"blackAlpha.400"}
             size="sm"
             colorScheme={props.BtnColor}
+            type="submit"
           >
             {" "}
             {props.btntitle}
@@ -57,6 +58,11 @@ function PopoverComponent(props) {
                 size={"sm"}
                 variant={"outline"}
                 data-id={props.PassId}
+                data-prioritization={props.prioritization}
+                data-typeofrepair={props.typeofrepair}
+                data-recommendation={props.recommendation}
+                data-remarks={props.remarks}
+                data-assessedby={props.assessedby}
               >
                 Yes
               </Button>

@@ -24,6 +24,14 @@ import Axios from "axios";
 import React, { useEffect, useState } from "react";
 
 function Sidebar(props) {
+  const [alerto, setAlerto] = useState();
+  useEffect(() => {
+    Axios.post("http://localhost/JOBREQUEST/api/admin/getNewUsers.php").then(
+      (req) => {
+        setAlerto(req.data.length);
+      }
+    );
+  }, []);
   return (
     <div className="sidebar-links" id="sblink">
       <Zcmc_info usertype="admin" />
@@ -79,7 +87,7 @@ function Sidebar(props) {
               <Container>
                 <span>
                   <i className="fas fa-users"></i> Accounts{" "}
-                  {props.alerto >= 1 && (
+                  {alerto >= 1 && (
                     <Badge ml="1" colorScheme="green">
                       New
                     </Badge>

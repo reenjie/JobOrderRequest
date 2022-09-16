@@ -124,6 +124,20 @@
   .box {
     
   }
+
+  .ul {
+    list-style: none;
+  }
+  .li{
+    padding: 10px;
+    font-size: 15px;
+   
+
+  }
+  .li:hover{
+    background-color: rgba(143, 162, 167, 0.185);
+    
+  }
 @media screen and (max-width:768px) {
   #login {
       width: 100%;

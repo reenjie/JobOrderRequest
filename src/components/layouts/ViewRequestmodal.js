@@ -34,11 +34,23 @@ function ViewRequestmodal(props) {
         <i className="fa fa-ellipsis-v"></i>
       </Button>
 
-      <Modal size={"xl"} isOpen={isOpen} onClose={onClose}>
+      <Modal
+        closeOnOverlayClick={false}
+        size={"xl"}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         {overlay}
         <ModalContent backgroundColor={"transparent"} shadow="none">
           <ModalCloseButton color={"white"} fontSize="25px" />
-          <ModalBody>{props.Data}</ModalBody>
+          <ModalBody>
+            {props.Data}
+            <Button
+              display={"none"}
+              id="btnmodalCloseview"
+              onClick={onClose}
+            ></Button>
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>
