@@ -63,6 +63,10 @@ function PopoverComponent(props) {
                 data-recommendation={props.recommendation}
                 data-remarks={props.remarks}
                 data-assessedby={props.assessedby}
+                data-years={props.years}
+                data-months={props.months}
+                data-weeks={props.weeks}
+                data-days={props.days}
               >
                 Yes
               </Button>

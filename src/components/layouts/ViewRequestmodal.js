@@ -8,6 +8,7 @@ import {
   ModalCloseButton,
   Button,
   Text,
+  Center,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import React from "react";
@@ -36,7 +37,7 @@ function ViewRequestmodal(props) {
 
       <Modal
         closeOnOverlayClick={false}
-        size={"xl"}
+        size={"full"}
         isOpen={isOpen}
         onClose={onClose}
       >

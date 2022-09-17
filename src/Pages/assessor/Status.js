@@ -26,10 +26,30 @@ import {
   Input,
   UnorderedList,
   ListItem,
+  Textarea,
+  Select,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { EditIcon, DeleteIcon, AddIcon, SearchIcon } from "@chakra-ui/icons";
 import DataTable, { createTheme } from "react-data-table-component";
+import moment from "moment";
+import ManageModal from "../../components/layouts/manage_modal";
+import {
+  Progress,
+  ProgressLabel,
+  CircularProgress,
+  CircularProgressLabel,
+} from "@chakra-ui/progress";
+
 import Axios from "axios";
 
 import "../../css/App.css";
@@ -186,6 +206,192 @@ function RenderPage() {
       },
     },
   };
+
+  function differrence(c, y, m, w, d) {
+    const totald = m * 31 + y * 365 + w * 7 + d;
+    const dtassess = moment(c).format("YYYY-MM-DD");
+    const totaldays = totald > 0 ? totald : 0;
+    const EndDate = moment(dtassess)
+      .add(totaldays, "days")
+      .format("YYYY-MM-DD");
+    const differeddate = moment(EndDate).diff(moment(), "days");
+    const fp = (differeddate / totald) * 100;
+    const pp = 100 - fp;
+    const percentage =
+      pp >= 100 ? 100 : differeddate == 0 ? 100 : Math.round(pp);
+
+    return (
+      <>
+        {/* AD: {dtassess}
+        <br />
+        ED : {EndDate}
+        <br />
+        Diff : {differeddate}
+        ||{totald} */}
+
+        <Flex>
+          <Progress
+            backgroundColor={"green.100"}
+            value={percentage}
+            hasStripe
+            colorScheme={"teal"}
+            style={{ width: "100px", height: "15px" }}
+          ></Progress>
+          <Text ml={2} color={"blackAlpha.600"}>
+            {percentage}%
+          </Text>
+        </Flex>
+      </>
+    );
+  }
+
+  const Manage = (props) => {
+    const id = props.requestID;
+
+    return request.map((row) => {
+      if (row.PK_requestID == id) {
+        return (
+          <>
+            <Box p={4}>
+              <Text fontWeight={"bold"} color={"blackAlpha.600"}>
+                Job Description
+              </Text>
+              <Text color={"blackAlpha.700"}>
+                {worktypes.map((wt) => {
+                  if (wt.PK_workTypeID == row.FK_workID) {
+                    return (
+                      <Text
+                        color={"teal.600"}
+                        fontSize={14}
+                        textTransform="uppercase"
+                        userSelect={"text"}
+                      >
+                        {wt.label}
+                      </Text>
+                    );
+                  }
+                })}
+                <br />
+                {servicesoffer.map((so) => {
+                  if (so.PK_soID == row.FK_serviceOfferID) {
+                    return (
+                      <Text
+                        color={"teal.800"}
+                        fontSize={14}
+                        textTransform="uppercase"
+                        userSelect={"text"}
+                      >
+                        {so.name}
+                      </Text>
+                    );
+                  }
+                })}
+                {row.others}
+                <br />
+                <br />
+              </Text>
+              <Text fontWeight={"bold"} color={"blackAlpha.600"}>
+                Requested By:
+              </Text>
+              {users.map((user) => {
+                if (user.PK_userID == row.FK_userID) {
+                  return (
+                    <Flex p={5}>
+                      <Avatar
+                        size="md"
+                        name={user.firstname + " " + user.lastname}
+                        src={user.photo}
+                        mb={2}
+                      />
+                      <Text
+                        ml={4}
+                        color={"blackAlpha.700"}
+                        textTransform="uppercase"
+                      >
+                        {user.firstname + " " + user.lastname}
+                        <br />
+                        <span
+                          style={{
+                            fontSize: "12px",
+                            textTransform: "lowercase",
+                          }}
+                        >
+                          {user.email}
+                        </span>
+                        <br />
+                        <span
+                          style={{
+                            fontSize: "12px",
+                            textTransform: "lowercase",
+                          }}
+                        >
+                          {user.contact_no}
+                        </span>
+                      </Text>
+                    </Flex>
+                  );
+                }
+              })}
+
+              <Stack>
+                <Box>
+                  <Select
+                    placeholder="Change Status"
+                    size={"sm"}
+                    color="blackAlpha.700"
+                    autoFocus
+                  >
+                    <option value="option2">Work On Going</option>
+                    <option value="option1">On Queue</option>
+                    <option value="option3">Accomplished</option>
+                  </Select>
+                </Box>
+                <Box ml={4}>
+                  <Text color={"blackAlpha.700"} fontSize={15}>
+                    Status Message:
+                  </Text>
+                  <Textarea defaultValue={""} color={"teal.500"} />
+                </Box>
+                <Box>
+                  <Text color={"blackAlpha.700"} fontSize={15}>
+                    Findings:
+                  </Text>
+                  <Textarea />
+                </Box>
+                <Box>
+                  <Text color={"blackAlpha.700"} fontSize={15}>
+                    Materials Needed:
+                  </Text>
+                  <Textarea />
+                </Box>
+                <Box>
+                  <Text color={"blackAlpha.700"} fontSize={15}>
+                    Estimated Unit Cost
+                  </Text>
+                  <Textarea />
+                </Box>
+
+                <Box>
+                  <Text color={"blackAlpha.700"} fontSize={15}>
+                    Total Estimated Unit Cost
+                  </Text>
+                  <Textarea />
+                </Box>
+
+                <Box>
+                  <Text color={"blackAlpha.700"} fontSize={15}>
+                    Remarks
+                  </Text>
+                  <Textarea />
+                </Box>
+              </Stack>
+            </Box>
+          </>
+        );
+      }
+    });
+  };
+
   const columns = [
     {
       name: "Type of Work",
@@ -237,6 +443,132 @@ function RenderPage() {
           <Badge variant="outline" colorScheme="green">
             Work On Going
           </Badge>
+        </>
+      ),
+    },
+  ];
+
+  const defaultcolumns = [
+    {
+      name: "Request",
+      selector: (row) => (
+        <>
+          {users.map((user) => {
+            if (user.PK_userID == row.FK_userID) {
+              return (
+                <Text
+                  color={"teal.600"}
+                  fontSize={14}
+                  textTransform="uppercase"
+                  userSelect={"text"}
+                >
+                  {user.firstname} {user.lastname}
+                  <br />
+                  <span
+                    style={{ fontSize: "12px", textTransform: "lowercase" }}
+                  >
+                    {user.email} #{user.contact_no}
+                  </span>
+                </Text>
+              );
+            }
+          })}
+        </>
+      ),
+    },
+    {
+      name: "Type of Work",
+      selector: (row) => (
+        <>
+          {worktypes.map((wt) => {
+            if (wt.PK_workTypeID == row.FK_workID) {
+              return (
+                <Text
+                  color={"teal.600"}
+                  fontSize={14}
+                  textTransform="uppercase"
+                  userSelect={"text"}
+                >
+                  {wt.label}
+                </Text>
+              );
+            }
+          })}
+        </>
+      ),
+    },
+    {
+      name: "Work",
+      selector: (row) => (
+        <>
+          {servicesoffer.map((so) => {
+            if (so.PK_soID == row.FK_serviceOfferID) {
+              return (
+                <Text
+                  color={"teal.600"}
+                  fontSize={14}
+                  textTransform="uppercase"
+                  userSelect={"text"}
+                >
+                  {so.name}
+                </Text>
+              );
+            }
+          })}
+          {row.others}
+        </>
+      ),
+    },
+    {
+      name: "Status",
+      selector: (row) => (
+        <>
+          <Badge variant="outline" colorScheme="green">
+            Work On Going
+          </Badge>
+
+          <Popover>
+            <PopoverTrigger>
+              <i
+                className="fas fa-info-circle"
+                style={{ marginLeft: "5px", color: "grey", cursor: "pointer" }}
+              ></i>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverHeader>Status Information:</PopoverHeader>
+              <PopoverBody p={5} color={"blue.600"}>
+                Do your job asshole
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </>
+      ),
+    },
+
+    {
+      name: "Time Frame Progress",
+
+      selector: (row) => (
+        <>
+          <Box>
+            {differrence(
+              row.dt_assessed,
+              row.tf_years,
+              row.tf_months,
+              row.tf_weeks,
+              row.tf_days
+            )}
+          </Box>
+        </>
+      ),
+    },
+    {
+      name: "Action",
+      selector: (row) => (
+        <>
+          <ManageModal info={<Manage requestID={row.PK_requestID} />} />
         </>
       ),
     },
@@ -408,6 +740,20 @@ function RenderPage() {
                             </Flex>
                           </Center>
                         </Box>
+
+                        <DataTable
+                          columns={columns}
+                          data={request.filter(
+                            (x) => x.FK_userID == userselect
+                          )}
+                          // paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
+
+                          // subHeaderComponent={subHeaderComponentMemo}
+                          persistTableHead
+                          theme="Jobrequest"
+                          customStyles={customStyles}
+                          pagination
+                        />
                       </>
                     );
                   }
@@ -420,25 +766,25 @@ function RenderPage() {
                       textAlign="center"
                       color={"blackAlpha.700"}
                     >
-                      NO SELECTION
+                      Job Orders
                       {/*   <br/>
                       <span style={{fontSize:'13px'}}></span> */}
                     </Text>
                   </Box>
+
+                  <DataTable
+                    columns={defaultcolumns}
+                    data={request}
+                    // paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
+
+                    // subHeaderComponent={subHeaderComponentMemo}
+                    persistTableHead
+                    theme="Jobrequest"
+                    customStyles={customStyles}
+                    pagination
+                  />
                 </>
               )}
-
-              <DataTable
-                columns={columns}
-                data={request.filter((x) => x.FK_userID == userselect)}
-                // paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
-
-                // subHeaderComponent={subHeaderComponentMemo}
-                persistTableHead
-                theme="Jobrequest"
-                customStyles={customStyles}
-                pagination
-              />
             </Box>
           </GridItem>
         </Grid>
