@@ -18,7 +18,7 @@ function Add_Modal(props) {
   return (
     <>
       <Button
-        colorScheme="teal"
+        colorScheme="cyan"
         mb={10}
         size={"sm"}
         fontSize={14}
@@ -30,7 +30,7 @@ function Add_Modal(props) {
         <Text mr={2}> {props.btnTitle} </Text>
         <i className="fas fa-plus-circle"></i>
       </Button>
-      <Modal onClose={onClose} size={"xl"} isOpen={isOpen}>
+      <Modal onClose={onClose} size={props.size} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent userSelect={"none"}>
           <ModalHeader color={"blackAlpha.700"}>{props.title}</ModalHeader>

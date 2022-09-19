@@ -27,7 +27,7 @@ function Edit_Modal(props) {
       >
         <EditIcon />
       </Button>
-      <Modal onClose={onClose} size={"xl"} isOpen={isOpen}>
+      <Modal onClose={onClose} size={props.size} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent userSelect={"none"}>
           <ModalHeader color={"blackAlpha.700"}>{props.title}</ModalHeader>

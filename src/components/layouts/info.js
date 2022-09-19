@@ -66,7 +66,7 @@ export default function Zcmc_info(props) {
           </Text>
         </Stack>
       </Center>
-      <Center bg={"blackAlpha.300"}>
+      <Center bg={"blackAlpha.200"}>
         <Avatar
           size="xl"
           name="Christian Nwamba"

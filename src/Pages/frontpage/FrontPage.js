@@ -1,8 +1,16 @@
-import React, { Component, useState, useEffect, Fragment } from "react";
+import React, {
+  Component,
+  useState,
+  useEffect,
+  Fragment,
+  useDisclosure,
+  Lorem,
+} from "react";
 import * as _ from "@chakra-ui/react";
 import logo from "../../images/zcmc_logo.png";
 import Axios from "axios";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, ListIcon } from "@chakra-ui/icons";
+
 import {
   Alert,
   AlertIcon,
@@ -12,11 +20,21 @@ import {
   GridItem,
   Box,
   Flex,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
   Textarea,
   Heading,
   Checkbox,
   Stack,
   Select,
+  Badge,
   Button,
   Spacer,
   Divider,
@@ -42,8 +60,19 @@ import {
   FormLabel,
   Text,
   FormErrorMessage,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
   FormHelperText,
   Center,
+  UnorderedList,
+  ListItem,
+  Wrap,
+  others,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Edit_Modal from "../../components/layouts/edit_modal";
@@ -61,28 +90,211 @@ const FrontPage = () => {
   const [selectedTOJ, setselectedTOJ] = useState(); ///Selected Type of job, eg. Repaire
   const [selectedDepartment, setselectedDepartment] = useState(); ///Selected Department eg. Civil
   const [selectedSOffer, setselectedSOffer] = useState(); /// Selected offer
-
   const [isShown, setShow] = useState(false); //if checkBox selected || for TextBox view
   const [isEleMech, setEleMech] = useState(); ////
   const [selectedImage, setSelectedImage] = useState(null);
-  const [data, setData] = useState([]);
-  const [checkedBox, setCheckedBox] = React.useState(false); //// CheckBOx
+
+  const [serialNumber, setSerialNumber] = useState("");
+  const [modelNumber, setModelNumber] = useState("");
+  const [data, setData] = useState([]); //datas
+
+  const [checkedBox, setCheckedBox] = useState(false); //// CheckBOx
   const [tableData, setTableData] = useState([]); /// For table,
-  const [addWork, setWork] = useState("");
+  const [selIsSM, setSelIsSM] = useState();
+
+  let [values, setValues] = React.useState("");
+
+  //const { isOpen, onOpen, onClose } = useDisclosure();
+
+  ////OBSERVE
+  const [others, setOthers] = useState(isShown);
 
   // const TypeOfWork = ["New Installation/Fabrication", "Repair/Renovation"];
 
-  const TableComposition = (props) => {};
+  const TableComposition = (props) => {
+    // 1 if dfault
+    //2 if has serial number
+    //3 data is other
+    /////////////////////diferent table components
+    //if other
+    //if data has serial
+    //if data is Def
+    if (props.data.type == 1) {
+      return <IsDefaultTableRow data={props} />;
+    } else if (props.data.type == 3) {
+      return <IsOthersRow data={props} />;
+    } else {
+      return (
+        <Tr>
+          <Td>loko</Td>
+          <Td>loko</Td>
+          <Td>loko</Td>
+        </Tr>
+      );
+    }
+  };
+  const DetailModal = (props) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    return (
+      <>
+        <Button onClick={onOpen}>Details</Button>
 
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>{props.title}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {/* <Lorem count={2} /> */}
+              {props.body}
+            </ModalBody>
+
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={onClose}>
+                Close
+              </Button>
+              {/* <Button variant="ghost">Secondary Action</Button> */}
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </>
+    );
+  };
+  ////TABLE ROW FOR ISOTHERS
+  const IsOthersRow = (props) => {
+    return (
+      <Tr>
+        <Td colSpan={1}>
+          {props.data.data.jobTypeName}
+          <Accordion allowToggle colSpan={3}>
+            <AccordionItem>
+              <h2>
+                <AccordionButton _expanded={{ bg: "teal", color: "white" }}>
+                  <Box flex="1" textAlign="left">
+                    Details
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel>
+                <UnorderedList>
+                  <ListItem
+                    color="gray.500"
+                    fontWeight="semibold"
+                    letterSpacing="wide"
+                    fontSize="xs"
+                    textTransform="uppercase"
+                    ml="2"
+                  >
+                    <Badge borderRadius="full" px="1" colorScheme="teal">
+                      Serial Number
+                    </Badge>
+                    {props.data.data.serialNumber} &bull;{" "}
+                    <Badge borderRadius="full" px="1" colorScheme="teal">
+                      Model Number
+                    </Badge>
+                    {props.data.data.modelNumber}
+                  </ListItem>
+                </UnorderedList>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        </Td>
+        <Td colSpan={2} textAlign={"Center"} noOfLines={1}>
+          {/* <Popover>
+            <PopoverTrigger>
+              <Button>OTHERS</Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverHeader>Details:</PopoverHeader>
+              <PopoverBody bg={"teal.700"} color={"white"} fontSize={"xs"}>
+                {props.data.data.desciption}
+              </PopoverBody>
+            </PopoverContent>
+          </Popover> */}
+          {/* // <DetailModal title={"Details"} body={props.data.data.desciption} /> */}
+        </Td>
+      </Tr>
+    );
+  };
+  const IsDefaultTableRow = (props) => {
+    return (
+      <Tr>
+        <Td>
+          {
+            typeofJob.filter(
+              (e) => e.PK_workTypeID == props.data.data.jobType
+            )[0].label
+          }
+        </Td>
+        <Td>
+          {
+            optionService.filter(
+              (e) => e.PK_servicesID == props.data.data.serviceDepartment
+            )[0].name
+          }
+        </Td>
+        <Td>{props.data.data.serviceTypeName}</Td>
+      </Tr>
+    );
+  };
+  const HasSerMoTableRow = () => {
+    return (
+      <Tr>
+        <Td>
+          Electrical
+          <Accordion allowToggle colSpan={3}>
+            <AccordionItem>
+              <h2>
+                <AccordionButton _expanded={{ bg: "teal", color: "white" }}>
+                  <Box flex="1" textAlign="left">
+                    Details
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel>
+                <UnorderedList>
+                  <ListItem
+                    color="gray.500"
+                    fontWeight="semibold"
+                    letterSpacing="wide"
+                    fontSize="xs"
+                    textTransform="uppercase"
+                    ml="2"
+                  >
+                    aaaaaSerial Number &bull; 213141512
+                  </ListItem>
+                  <ListItem
+                    color="gray.500"
+                    fontWeight="semibold"
+                    letterSpacing="wide"
+                    fontSize="xs"
+                    textTransform="uppercase"
+                    ml="2"
+                  >
+                    Model Number &bull; 2j1660918
+                  </ListItem>
+                </UnorderedList>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        </Td>
+        <Td>"Sample3"</Td>
+        <Td>"Sample3"</Td>
+      </Tr>
+    );
+  };
   const Tablef = (props) => {
     return props.data == "" ? (
       "Choose Type of work"
     ) : (
-      <Tbody>
-        <Tr>
-          <Td>
-            <Box>{props.data.jobType}</Box>
-            {/* <Box>
+      <Tr>
+        <Td>
+          <Box>{props.data.jobType}</Box>
+          {/* <Box>
               <Edit_Modal
                 btnTitle="ADD"
                 title="Add Services  "
@@ -92,45 +304,77 @@ const FrontPage = () => {
                 Details
               </Box>
             </Box> */}
-          </Td>
-          <Td>{props.data.serviceDepartment}</Td>
-          <Td>{props.data.serviceType}</Td>
-          <Td>
-            <Button
-              colorScheme="red"
-              variant="ghost"
-              size={"sm"}
-              onClick={() => {
-                props.deleteHundler(props.data);
-              }}
-            >
-              <DeleteIcon />
-            </Button>
-          </Td>
-        </Tr>
-      </Tbody>
+        </Td>
+        <Td>{props.data.serviceDepartment}</Td>
+        <Td>{props.data.serviceType}</Td>
+        <Td>
+          <Button
+            colorScheme="red"
+            variant="ghost"
+            size={"sm"}
+            onClick={() => {
+              props.deleteHundler(props.data);
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+        </Td>
+      </Tr>
     );
   };
 
+  class OthersModel {
+    constructor(jobType, serialNumber, modelNumber, desciption) {
+      this.type = 3;
+      this.jobType = jobType;
+      this.jobTypeName = typeofJob.filter(
+        (e) => e.PK_workTypeID == jobType
+      )[0].label;
+      this.serialNumber = serialNumber || undefined;
+      this.modelNumber = modelNumber || undefined;
+      this.desciption = desciption;
+    }
+  }
+
   class DefRequestModel {
     constructor(jobType, serviceDepartment, serviceType) {
+      this.type = 1;
       this.jobType = jobType;
       this.serviceDepartment = serviceDepartment;
+      this.serviceTypeName = optionOffer.filter(
+        (e) => e.PK_soID == serviceType
+      )[0].name;
       this.serviceType = serviceType;
     }
   }
 
-  console.log(new DefRequestModel());
+  class hasNumberModel {
+    constructor(
+      jobType,
+      serviceDepartment,
+      serviceType,
+      serialNumber,
+      modelNumber
+    ) {
+      this.type = 2;
+      this.jobType = jobType;
+      this.serviceDepartment = serviceDepartment;
+      this.serviceType = serviceType;
+      this.serialNumber = serialNumber;
+      this.modelNumber = modelNumber;
+    }
+  }
+  //console.log(new DefRequestModel());
   useEffect(() => {
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getservices.php").then(
+    Axios.post("http://localhost/JOBREQUEST/api/request/getservices.php").then(
       (req) => {
         setOptionService(req.data);
+        console.log(req.data);
       }
     );
   }, []);
-
   useEffect(() => {
-    Axios.get("http://localhost/JOBREQUEST/api/admin/servicetype.php").then(
+    Axios.get("http://localhost/JOBREQUEST/api/request/servicetype.php").then(
       (req) => {
         setTypeofJob(req.data);
       }
@@ -140,6 +384,7 @@ const FrontPage = () => {
   const idtoLabel = () => {
     return optionOffer.filter((e) => e.PK_soID == selectedSOffer);
   };
+
   const TuggleButton = () => {
     return (
       <Button
@@ -160,7 +405,7 @@ const FrontPage = () => {
   };
 
   ////CheckBox
-  function CheckBoxHundler() {
+  const CheckBoxHundler = () => {
     return (
       <Checkbox
         isChecked={checkedBox}
@@ -171,56 +416,47 @@ const FrontPage = () => {
         Others
       </Checkbox>
     );
-  }
-
-  const updateTable = () => {
+  };
+  ///////////////////////temppppppppplate!
+  const updateTable = (props) => {
     console.log("toinks", selectedDepartment);
-    if (
-      selectedDepartment === undefined ||
-      selectedDepartment === "" ||
-      selectedTOJ === "" ||
-      selectedTOJ === undefined ||
-      selectedSOffer === "" ||
-      selectedSOffer === undefined
-    ) {
-      //if one the selection is empty
-      console.log("some of the selection is null");
-    } else {
-      setDefRequestData((oldArray) => [
-        ...oldArray,
-        new DefRequestModel(
-          typeofJob.filter((e) => e.PK_workTypeID == selectedTOJ)[0].label,
-          //selectedTOJ,
-          optionService.filter(
-            (e) => e.PK_servicesID == selectedDepartment
-          )[0].name,
-          optionOffer.filter((e) => e.PK_soID == selectedSOffer)[0].name
-        ),
-      ]);
-    }
+    //if one the selection is empty
+    console.log("some of the selection is null");
+
+    setDefRequestData((oldArray) => [
+      ...oldArray,
+      new DefRequestModel(
+        typeofJob.filter((e) => e.PK_workTypeID == selectedTOJ)[0].label,
+        //selectedTOJ,
+        optionService.filter(
+          (e) => e.PK_servicesID == selectedDepartment
+        )[0].name,
+        optionOffer.filter((e) => e.PK_soID == selectedSOffer)[0].name
+      ),
+    ]);
   };
 
   //hundle text area.. OTHERS
-  function TextBox() {
-    let [value, setValue] = React.useState("");
-
+  const TextBox = () => {
     let handleInputChange = (e) => {
       let inputValue = e.target.value;
-      setValue(inputValue);
+      setValues(inputValue);
     };
     return (
       <>
-        {/* <Text mb="8px">Value: {value}</Text> */}
+        <Text mb="8px">Value: {values}</Text>
         <Textarea
-          value={value}
-          onChange={handleInputChange}
-          placeholder="Complaints/Observations/Descriptions: (Kindly specify in details if possible)"
+          value={values}
+          onChange={(e) => {
+            let inputValue = e.target.value;
+            setValues(inputValue);
+          }}
+          placeholder="Here is a sample placeholder"
           size="sm"
-          maxHeight={"200"}
         />
       </>
     );
-  }
+  };
   const SelectedDepartment = () => {
     return optionOffer.length <= 0 ? null : (
       <Select
@@ -274,9 +510,15 @@ const FrontPage = () => {
 
   const FormDetails = (props) => {
     return (
-      <FormControl isDisabled={!isEleMech}>
+      <FormControl isDisabled={isEleMech || checkedBox ? false : true}>
         <FormLabel>{props.name}</FormLabel>
-        <Input placeholder={props.placeholder} />
+        <Input
+          value={props.value}
+          onChange={(e) => {
+            props.theNumber(e.target.value);
+          }}
+          placeholder={props.placeholder}
+        />
       </FormControl>
     );
   };
@@ -286,12 +528,25 @@ const FrontPage = () => {
     setDefRequestData(result);
   };
 
+  const checkIfSelectedisSM = (arg) => {
+    // console.log(
+    //   "LOGGGGG",
+    //   optionService.filter((e) => e.PK_servicesID == arg)[0].name,
+    //   ":  ",
+    //   optionService.filter((e) => e.PK_servicesID == arg)[0].isSM
+    // );
+    setSelIsSM(optionService.filter((e) => e.PK_servicesID == arg)[0].isSM);
+  };
+
   const selectServiceHundlerTB = (arg) => {
     if (arg.length > 0) {
       try {
-        Axios.get("http://localhost/JOBREQUEST/api/admin/getserviceoffer.php", {
-          params: { depid: arg },
-        }).then((req) => {
+        Axios.get(
+          "http://localhost/JOBREQUEST/api/request/getserviceoffer.php",
+          {
+            params: { depid: arg },
+          }
+        ).then((req) => {
           console.log("this data ", req.data);
           setOptionOffer(req.data);
         });
@@ -302,8 +557,40 @@ const FrontPage = () => {
       setOptionOffer([]);
     }
   };
+
+  const fetchService = (arg) => {
+    ////fetch data for filling the column table
+
+    try {
+      Axios.get("http://localhost/JOBREQUEST/api/request/getserviceoffer.php", {
+        params: { depid: arg },
+      }).then((req) => {
+        console.log("this data ", req.data);
+        //setOptionOffer(req.data);
+      });
+    } catch {
+      console.log("somthings happen when selecting the Department");
+    }
+  };
   const ShowAlert = () => {
     return isShown == false ? null : {};
+  };
+
+  const TextBoxHundler = () => {
+    return (
+      <>
+        <Text mb="8px">Value: {values}</Text>
+        <Textarea
+          value={values}
+          onChange={(e) => {
+            let inputValue = e.target.value;
+            setValues(inputValue);
+          }}
+          placeholder="Here is a sample placeholder"
+          size="sm"
+        />
+      </>
+    );
   };
   return (
     <React.Fragment>
@@ -379,9 +666,17 @@ const FrontPage = () => {
                 value={selectedDepartment}
                 onChange={(e) => {
                   selectServiceHundlerTB(e.target.value);
-                  console.log("The selected is ", e.target.value);
+                  //console.log("The selected is ", e.target.value);
                   setselectedDepartment(e.target.value);
-                  setEleMech(e.target.value == 2 || e.target.value == 3);
+                  //setEleMech(e.target.value == 2 || e.target.value == 3);
+                  // setEleMech(()=>{
+                  checkIfSelectedisSM(e.target.value);
+                  // });
+                  setEleMech(
+                    optionService.find((ex) => {
+                      return ex.PK_servicesID == e.target.value;
+                    }).isSM == 1
+                  );
                   setselectedSOffer("");
                   console.log(
                     "On changed Data  ",
@@ -410,21 +705,109 @@ const FrontPage = () => {
           </Flex>
 
           {/* text input */}
-          {checkedBox === false ? null : <TextBox />}
+          {checkedBox === false ? null : (
+            <>
+              <Textarea
+                value={values}
+                onChange={(e) => {
+                  let inputValue = e.target.value;
+                  setValues(inputValue);
+                }}
+                placeholder="Here is a sample placeholder"
+                size="sm"
+              />
+            </>
+          )}
+
           <Divider borderColor={"red"} w="80vh" p={2} />
           <Stack direction={"row"} pt={2}>
-            <FormDetails placeholder={"123456"} name={"Serial No"} />
-            <FormDetails placeholder={"abc123"} name={"Model No"} />
+            <FormControl isDisabled={isEleMech || checkedBox ? false : true}>
+              <FormLabel>Serial number</FormLabel>
+              <Input
+                value={serialNumber}
+                onChange={(e) => {
+                  setSerialNumber(e.target.value);
+                }}
+                placeholder="Model No here"
+              />
+            </FormControl>
+            <FormControl isDisabled={isEleMech || checkedBox ? false : true}>
+              <FormLabel>Model number</FormLabel>
+              <Input
+                value={modelNumber}
+                onChange={(e) => {
+                  setModelNumber(e.target.value);
+                }}
+                placeholder="Model No here"
+              />
+            </FormControl>
           </Stack>
           <Container maxWidth={"container.xxl"}>
             {" "}
-            {selectedDepartment && selectedSOffer && selectedTOJ ? (
+            {(selectedDepartment && selectedSOffer && selectedTOJ) ||
+            checkedBox ? (
               <Button
                 float={"right"}
                 colorScheme="teal"
                 variant="solid"
                 onClick={() => {
-                  updateTable();
+                  ///find out what type of selection does the user selected
+                  if (checkedBox) {
+                    //saving data for details(if any) and description |new instalation ^|  Descriptions  |
+
+                    setData((oldArray) => [
+                      ...oldArray,
+                      new OthersModel(
+                        selectedTOJ,
+                        serialNumber,
+                        modelNumber,
+                        values || ""
+                      ),
+                    ]);
+                    //console.log("DEBUG FOR SAVE: ISOTHERS ", resultTemp);
+                    console.log(
+                      "the datas inside the data variable is : ",
+                      data
+                    );
+                  } else if (selIsSM == 1 && !checkedBox) {
+                    //// If selection should have serial and model   |  sample ^      | sample | sample |
+                    setData((oldArray) => [
+                      ...oldArray,
+                      new hasNumberModel(
+                        selectedTOJ,
+                        selectedDepartment,
+                        selectedSOffer,
+                        serialNumber,
+                        modelNumber
+                      ),
+                    ]);
+                    console.log("DEBUG FOR SAVE: IS NORMAL");
+                    console.log(
+                      "the datas inside the data variable is : ",
+                      data
+                    );
+                    console.log("DEBUG FOR SAVE: HAS NUMBER");
+                  } else if (selIsSM == 0) {
+                    //Default table
+                    setData((oldArray) => [
+                      ...oldArray,
+                      new DefRequestModel(
+                        selectedTOJ,
+                        selectedDepartment,
+                        selectedSOffer
+                      ),
+                    ]);
+                    console.log("DEBUG FOR SAVE: IS NORMAL");
+                    console.log(
+                      "the datas inside the data variable is : ",
+                      data
+                    );
+                  } else {
+                    console.log("duhhhhhhh");
+                  }
+                  ////fill the classmodel based on the type of data and save at the local variable
+                  ///update the table and render it later
+                  //updateTable();
                 }}
               >
                 Add
@@ -436,13 +819,7 @@ const FrontPage = () => {
                 variant="solid"
                 float={"right"}
                 onClick={() => {
-                  updateTable();
-                  console.log(
-                    "Table: ",
-                    selectedTOJ,
-                    selectedDepartment,
-                    selectedSOffer
-                  );
+                  console.log("PLease select");
                 }}
               >
                 Add
@@ -461,8 +838,8 @@ const FrontPage = () => {
           boxShadow="2xl"
           width={"100vh"}
         >
-          <TableContainer width={"100vh"} maxH="40vh" overflowY="auto">
-            <Table size="sm" variant="simple" colorScheme="teal">
+          <TableContainer width={"100vh"} maxH="40vh">
+            <Table size="md" variant="simple" colorScheme="teal">
               <Thead>
                 <Tr>
                   <Th>Job to be done</Th>
@@ -470,12 +847,25 @@ const FrontPage = () => {
                   <Th>Works</Th>
                 </Tr>
               </Thead>
-              {defRequestData.map((e, index) => {
-                //Render Datas to be submit
-                return (
-                  <Tablef data={e} key={index} deleteHundler={deleteHundler} />
-                );
-              })}
+              <Tbody>
+                {/* {defRequestData.map((e, index) => {
+                  //Render Datas to be submit
+                  TableComposition(e);
+                  return (
+                    <TableComposition
+                      data={e}
+                      key={index}
+                      deleteHundler={deleteHundler}
+                    />
+                  );
+                })} */}
+                {data.map((e) => {
+                  return <TableComposition data={e} />;
+                })}
+                {/* <IsOthersRow />
+                <IsDefaultTableRow />
+                <HasSerMoTableRow /> */}
+              </Tbody>
             </Table>
           </TableContainer>
           <Container maxWidth={"container.xxl"}>

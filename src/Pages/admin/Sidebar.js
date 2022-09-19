@@ -20,6 +20,8 @@ import {
 import "../../css/App.css";
 import { Link } from "react-router-dom";
 import Zcmc_info from "../../components/layouts/info";
+import Axios from "axios";
+import React, { useEffect, useState } from "react";
 
 function Sidebar(props) {
   return (
@@ -77,9 +79,11 @@ function Sidebar(props) {
               <Container>
                 <span>
                   <i className="fas fa-users"></i> Accounts{" "}
-                  <Badge ml="1" colorScheme="green">
-                    New
-                  </Badge>{" "}
+                  {props.alerto >= 1 && (
+                    <Badge ml="1" colorScheme="green">
+                      New
+                    </Badge>
+                  )}
                 </span>
               </Container>
             </li>{" "}

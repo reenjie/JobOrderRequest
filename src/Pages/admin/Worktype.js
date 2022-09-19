@@ -6,46 +6,193 @@ import {
   Tr,
   Td,
   Box,
-  Text,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
   Stack,
+  ListItem,
+  UnorderedList,
+  Text,
   Input,
-  FormControl,
-  ModalOverlay,
   Alert,
   AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  CloseButton,
+  FormControl,
+  Spacer,
   InputGroup,
   InputLeftElement,
+  Switch,
+  Tooltip,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
-import { EditIcon, DeleteIcon, AddIcon, SearchIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router-dom";
-import Add_Modal from "../../components/layouts/add_modal";
+import { EditIcon, DeleteIcon, SearchIcon } from "@chakra-ui/icons";
 import Delete_Modal from "../../components/layouts/delete_modal";
+import Table_striped from "../../components/layouts/table_striped";
+import Add_Modal from "../../components/layouts/add_modal";
 import Edit_Modal from "../../components/layouts/edit_modal";
 import DataTable, { createTheme } from "react-data-table-component";
+import moment from "moment";
+import { Link } from "react-router-dom";
+
 function RenderPage() {
-  const [department, setDepartments] = useState([]);
+  const [worktypes, setWorktypes] = useState([]);
   const [alerts, setAlerts] = useState();
-  const [deptval, setDeptval] = useState();
-  const [wsuval, setWsuval] = useState();
-
-  const navigate = useNavigate();
-
   useEffect(() => {
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getdepartment.php").then(
+    Axios.post("http://localhost/JOBREQUEST/api/admin/getWorktype.php").then(
       (req) => {
         if (req.data.length >= 1) {
-          setDepartments(req.data);
+          setWorktypes(req.data);
         } else {
-          setDepartments([]);
+          setWorktypes([]);
         }
       }
     );
   }, []);
+
+  // Add
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    const wt = e.target.wt.value;
+    Axios.post(" http://localhost/JOBREQUEST/api/admin/saveWorktype.php", {
+      wt: wt,
+    }).then((req) => {
+      if (req.data.status == 1) {
+        Axios.post(
+          "http://localhost/JOBREQUEST/api/admin/getWorktype.php"
+        ).then((req) => {
+          if (req.data.length >= 1) {
+            setWorktypes(req.data);
+          } else {
+            setWorktypes([]);
+          }
+        });
+        document.getElementById("modalClose").click();
+        setAlerts("Saved Successfully.");
+        setTimeout(() => {
+          setAlerts("");
+        }, 2000);
+      }
+    });
+  }
+
+  function handleUpdate(e) {
+    e.preventDefault();
+
+    const wt = e.target.worktype.value;
+    const id = e.target.id.value;
+    Axios.post(" http://localhost/JOBREQUEST/api/admin/update_worktype.php", {
+      wt: wt,
+      id: id,
+    }).then((req) => {
+      //setDepartments(req.data);
+      if (req.data.status == 1) {
+        Axios.post(
+          "http://localhost/JOBREQUEST/api/admin/getWorktype.php"
+        ).then((req) => {
+          if (req.data.length >= 1) {
+            setWorktypes(req.data);
+          } else {
+            setWorktypes([]);
+          }
+        });
+        setAlerts("Updated Successfully.");
+
+        setTimeout(() => {
+          setAlerts("");
+        }, 2000);
+      } else if (req.data.status == 2) {
+        setAlerts("No Changes Made.");
+        setTimeout(() => {
+          setAlerts("");
+        }, 2000);
+      }
+      document.getElementById("modalClose").click();
+    });
+  }
+
+  const Add_Modal_Body = () => {
+    return (
+      <>
+        <Container maxW="container.xl">
+          <FormControl>
+            <form method="post" onSubmit={handleSubmit}>
+              <Stack spacing={3}>
+                <Text>WorkType :</Text>
+                <Input
+                  placeholder=""
+                  size="sm"
+                  autoFocus
+                  name="wt"
+                  required
+                  fontSize={14}
+                  borderRadius={4}
+                />
+                <Spacer />
+                <Button
+                  type="submit"
+                  variant="solid"
+                  w={140}
+                  float="right"
+                  colorScheme="teal"
+                >
+                  Add
+                </Button>
+              </Stack>
+            </form>
+          </FormControl>
+        </Container>
+      </>
+    );
+  };
+
+  const Edit_Modal_Body = (props) => {
+    return (
+      <>
+        <Container maxW="container.xl">
+          <FormControl>
+            <form method="post" onSubmit={handleUpdate}>
+              <Stack spacing={3}>
+                <Text>Services :</Text>
+                <Input
+                  placeholder=""
+                  size="sm"
+                  name="worktype"
+                  required
+                  defaultValue={props.worktype}
+                  autoFocus
+                  fontSize={14}
+                  borderRadius={4}
+                />
+                <Spacer />
+                <Input name="id" value={props.id} type="hidden" />
+                <Button
+                  type="submit"
+                  variant="solid"
+                  w={140}
+                  float="right"
+                  colorScheme="teal"
+                >
+                  Update
+                </Button>
+              </Stack>
+            </form>
+          </FormControl>
+        </Container>
+      </>
+    );
+  };
 
   //Delete Functions
   const handleKeyup = (e) => {
@@ -62,12 +209,12 @@ function RenderPage() {
       }).then((req) => {
         if (req.data.status == 1) {
           Axios.post(
-            "http://localhost/JOBREQUEST/api/admin/getdepartment.php"
+            "http://localhost/JOBREQUEST/api/admin/getWorktype.php"
           ).then((req) => {
             if (req.data.length >= 1) {
-              setDepartments(req.data);
+              setWorktypes(req.data);
             } else {
-              setDepartments([]);
+              setWorktypes([]);
             }
             document.getElementById("btnmodalClose").click();
 
@@ -96,142 +243,6 @@ function RenderPage() {
       </>
     );
   }
-
-  // Add
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    const deptname = e.target.department.value;
-    const wsu = e.target.wsu.value;
-    Axios.post(" http://localhost/JOBREQUEST/api/admin/savedepartment.php", {
-      dname: deptname,
-      wsu: wsu,
-    }).then((req) => {
-      //setDepartments(req.data);
-      if (req.data.status == 1) {
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getdepartment.php"
-        ).then((req) => {
-          setDepartments(req.data);
-        });
-
-        document.getElementById("modalClose").click();
-        setAlerts("Saved Successfully.");
-        setTimeout(() => {
-          setAlerts("");
-        }, 2000);
-      }
-    });
-  }
-
-  function handleUpdate(e) {
-    e.preventDefault();
-
-    const deptname = e.target.department.value;
-    const wsu = e.target.wsu.value;
-    const id = e.target.id.value;
-
-    Axios.post(" http://localhost/JOBREQUEST/api/admin/update_department.php", {
-      dname: deptname,
-      wsu: wsu,
-      id: id,
-    }).then((req) => {
-      //setDepartments(req.data);
-      if (req.data.status == 1) {
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getdepartment.php"
-        ).then((req) => {
-          setDepartments(req.data);
-        });
-
-        setAlerts("Updated Successfully.");
-
-        setTimeout(() => {
-          setAlerts("");
-        }, 2000);
-      } else if (req.data.status == 2) {
-        setAlerts("No Changes Made.");
-        setTimeout(() => {
-          setAlerts("");
-        }, 2000);
-      }
-      document.getElementById("modalClose").click();
-    });
-  }
-
-  const Add_Modal_Body = () => {
-    return (
-      <>
-        <Container maxW="container.xl">
-          <FormControl>
-            <form method="post" onSubmit={handleSubmit}>
-              <Stack spacing={3}>
-                <Text>Department :</Text>
-                <Input
-                  placeholder=""
-                  size="sm"
-                  autoFocus
-                  name="department"
-                  required
-                  fontSize={14}
-                  borderRadius={4}
-                />
-                <Text>Ward / Section / Unit :</Text>
-                <Input
-                  placeholder=""
-                  size="sm"
-                  name="wsu"
-                  required
-                  fontSize={14}
-                  borderRadius={4}
-                />
-                <Button type="submit" variant="solid" colorScheme="teal">
-                  Add
-                </Button>
-              </Stack>
-            </form>
-          </FormControl>
-        </Container>
-      </>
-    );
-  };
-
-  const Edit_Modal_Body = (props) => {
-    return (
-      <>
-        <Container maxW="container.xl">
-          <FormControl>
-            <form method="post" onSubmit={handleUpdate}>
-              <Stack spacing={3}>
-                <Text>Department :</Text>
-                <Input
-                  placeholder=""
-                  size="sm"
-                  name="department"
-                  defaultValue={props.department}
-                  required
-                />
-                <Text>Ward / Section / Unit :</Text>
-                <Input
-                  placeholder=""
-                  size="sm"
-                  name="wsu"
-                  required
-                  defaultValue={props.wsu}
-                  fontSize={14}
-                  borderRadius={4}
-                />
-                <Input name="id" value={props.dp_id} type="hidden" />
-                <Button type="submit" variant="solid" colorScheme="blue">
-                  Update
-                </Button>
-              </Stack>
-            </form>
-          </FormControl>
-        </Container>
-      </>
-    );
-  };
 
   createTheme(
     "Jobrequest",
@@ -277,7 +288,6 @@ function RenderPage() {
       style: {
         paddingLeft: "8px", // override the cell padding for data cells
         paddingRight: "8px",
-        height: "50px",
       },
     },
     pagination: {
@@ -306,46 +316,48 @@ function RenderPage() {
       },
     },
   };
+
   const columns = [
     {
-      name: "Department",
+      name: "Name",
       selector: (row) => (
         <>
           <Text fontWeight={"bold"} fontSize="14">
-            {row.dept_name}
+            {row.label}
           </Text>
         </>
       ),
     },
     {
-      name: "Ward/Section/Unit",
-      selector: (row) => row.ward_sec_unit,
+      name: "Created",
+      selector: (row) => (
+        <>{moment(row.created_at).format("@hh:mm a MMMM DD,YYYY")}</>
+      ),
     },
+    {
+      name: "Modified",
+      selector: (row) => (
+        <>{moment(row.updated_at).format("@hh:mm a MMMM DD,YYYY")}</>
+      ),
+    },
+
     {
       name: "Action",
       selector: (row) => (
         <>
           <Edit_Modal
             btnTitle="UPDATE"
-            title="Edit Department "
-            size="sm"
+            title="Edit WorkTypes "
             mbody={
-              <Edit_Modal_Body
-                department={row.dept_name}
-                wsu={row.ward_sec_unit}
-                dp_id={row.PK_departmentID}
-              />
+              <Edit_Modal_Body worktype={row.label} id={row.PK_workTypeID} />
             }
           />
           <Delete_Modal
+            note="All Services Offer will be Deleted. Do you still wish to proceed?"
             confirm={
-              <Confirm_Delete
-                item_id={row.PK_departmentID}
-                table="department"
-              />
+              <Confirm_Delete item_id={row.PK_workTypeID} table="worktype" />
             }
-            size="sm"
-            note="All data connected to it will be deleted as well."
+            modalid={row.PK_workTypeID}
           />
         </>
       ),
@@ -355,8 +367,9 @@ function RenderPage() {
   //Filtering
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-  const filteredItems = department.filter((item) =>
-    item.dept_name.toLowerCase().includes(filterText.toLowerCase())
+
+  const filteredItems = worktypes.filter((item) =>
+    item.label.toLowerCase().includes(filterText.toLowerCase())
   );
 
   const subHeaderComponentMemo = React.useMemo(() => {
@@ -376,7 +389,7 @@ function RenderPage() {
               children={<SearchIcon color="gray.500" />}
             />
             <Input
-              placeholder="Filter By Department"
+              placeholder="Filter By Worktypes"
               onChange={(e) => {
                 setFilterText(e.target.value);
               }}
@@ -395,18 +408,28 @@ function RenderPage() {
     <>
       {" "}
       <Container mt={10} maxW="container.xxl">
-        <Box p="10" bg={"cyan.50"} borderRadius="6" transition={"all ease 2s"}>
+        <Box p="10" bg={"cyan.50"} borderRadius="6">
           {alerts && (
             <Alert status="success" id="" variant="left-accent">
               <AlertIcon />
               <Text color={"blackAlpha.600"}>{alerts}</Text>
             </Alert>
           )}
+
           <Add_Modal
             btnTitle="ADD"
-            title="Add Department  "
+            title="Add WorkTypes  "
             mbody={<Add_Modal_Body />}
           />
+
+          <Link to="/Admin/Services">
+            {" "}
+            <Button variant={"ghost"} size="sm" colorScheme={"cyan"}>
+              Services
+              <i style={{ marginLeft: "5px" }} className="fas fa-cogs"></i>
+            </Button>
+          </Link>
+
           <DataTable
             columns={columns}
             data={filteredItems}
@@ -419,21 +442,22 @@ function RenderPage() {
             pagination
           />
         </Box>
+        {/*  */}
       </Container>
     </>
   );
 }
 
-function Department() {
+function Worktype() {
   return (
     <>
       <AdminLayout
         Sidebar_elements={<Sidebar />}
         Page_Contents={<RenderPage />}
-        Page_title="DEPARTMENT"
+        Page_title="WORKTYPE"
       />
     </>
   );
 }
 
-export default Department;
+export default Worktype;
