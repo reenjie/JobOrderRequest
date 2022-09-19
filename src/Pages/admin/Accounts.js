@@ -34,6 +34,7 @@ import PopoverComponent from "../../components/layouts/Popover";
 import { Link, useNavigate } from "react-router-dom";
 import { useDisclosure } from "@chakra-ui/react";
 import DataTable, { createTheme } from "react-data-table-component";
+import url from "../../config";
 function RenderPage() {
   const [users, setUsers] = useState([]);
   const [department, setDepartments] = useState([]);
@@ -42,27 +43,21 @@ function RenderPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getUsers.php").then(
-      (req) => {
-        if (req.data.length >= 1) {
-          setUsers(req.data);
-        } else {
-          setUsers([]);
-        }
+    Axios.post(url + "/api/admin/getUsers.php").then((req) => {
+      if (req.data.length >= 1) {
+        setUsers(req.data);
+      } else {
+        setUsers([]);
       }
-    );
+    });
 
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getdepartment.php").then(
-      (req) => {
-        setDepartments(req.data);
-      }
-    );
+    Axios.post(url + "/api/admin/getdepartment.php").then((req) => {
+      setDepartments(req.data);
+    });
 
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getservices.php").then(
-      (req) => {
-        setServices(req.data);
-      }
-    );
+    Axios.post(url + "/api/admin/getservices.php").then((req) => {
+      setServices(req.data);
+    });
   }, []);
 
   //Delete Functions
@@ -73,21 +68,19 @@ function RenderPage() {
 
     if (value == "delete" || value == "DELETE") {
       document.getElementById("btnmodalClose").click();
-      Axios.post("http://localhost/JOBREQUEST/api/admin/delete_data.php", {
+      Axios.post(url + "/api/admin/delete_data.php", {
         delete: 1,
         id: id,
         table: table,
       }).then((req) => {
         if (req.data.status == 1) {
-          Axios.post("http://localhost/JOBREQUEST/api/admin/getUsers.php").then(
-            (req) => {
-              if (req.data.length >= 1) {
-                setUsers(req.data);
-              } else {
-                setUsers([]);
-              }
+          Axios.post(url + "/api/admin/getUsers.php").then((req) => {
+            if (req.data.length >= 1) {
+              setUsers(req.data);
+            } else {
+              setUsers([]);
             }
-          );
+          });
 
           document.getElementById("btnmodalClose").click();
 
@@ -118,19 +111,17 @@ function RenderPage() {
 
   function HandleConfirm(e) {
     const id = e.target.dataset.id;
-    Axios.post("http://localhost/JOBREQUEST/api/admin/verifyUser.php", {
+    Axios.post(url + "/api/admin/verifyUser.php", {
       id: id,
     }).then((req) => {
       if (req.data.status == 1) {
-        Axios.post("http://localhost/JOBREQUEST/api/admin/getUsers.php").then(
-          (req) => {
-            if (req.data.length >= 1) {
-              setUsers(req.data);
-            } else {
-              setUsers([]);
-            }
+        Axios.post(url + "/api/admin/getUsers.php").then((req) => {
+          if (req.data.length >= 1) {
+            setUsers(req.data);
+          } else {
+            setUsers([]);
           }
-        );
+        });
 
         document.getElementById("closePopover").click();
 

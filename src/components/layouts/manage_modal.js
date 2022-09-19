@@ -16,6 +16,10 @@ import React from "react";
 function ManageModal(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const closemodal = () => {
+    onClose();
+    props.closing();
+  };
   return (
     <>
       <Button
@@ -35,7 +39,7 @@ function ManageModal(props) {
       <Modal size={"full"} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg={"gray.100"}>
-          <ModalCloseButton />
+          <ModalCloseButton onClick={props.closing} />
           <ModalBody>
             <Container maxW={"container.lg"}>{props.info}</Container>
             <Button
@@ -43,7 +47,7 @@ function ManageModal(props) {
               display={"none"}
               colorScheme="blue"
               mr={3}
-              onClick={onClose}
+              onClick={closemodal}
             >
               Close
             </Button>

@@ -44,25 +44,22 @@ import Edit_Modal from "../../components/layouts/edit_modal";
 import DataTable, { createTheme } from "react-data-table-component";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import url from "../../config";
 
 function RenderPage() {
   const [services, setServices] = useState([]);
   const [servicesoffer, setServicesoffer] = useState([]);
   const [alerts, setAlerts] = useState();
   useEffect(() => {
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getservices.php").then(
-      (req) => {
-        if (req.data.length >= 1) {
-          setServices(req.data);
-        } else {
-          setServices([]);
-        }
+    Axios.post(url + "/api/admin/getservices.php").then((req) => {
+      if (req.data.length >= 1) {
+        setServices(req.data);
+      } else {
+        setServices([]);
       }
-    );
+    });
 
-    Axios.post(
-      "http://localhost/JOBREQUEST/api/admin/getservicesoffer.php"
-    ).then((req) => {
+    Axios.post(url + "/api/admin/getservicesoffer.php").then((req) => {
       setServicesoffer(req.data);
     });
   }, []);
@@ -72,13 +69,11 @@ function RenderPage() {
     e.preventDefault();
 
     const service = e.target.services.value;
-    Axios.post(" http://localhost/JOBREQUEST/api/admin/saveservices.php", {
+    Axios.post(url + "/api/admin/saveservices.php", {
       services: service,
     }).then((req) => {
       if (req.data.status == 1) {
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getservices.php"
-        ).then((req) => {
+        Axios.post(url + "/api/admin/getservices.php").then((req) => {
           if (req.data.length >= 1) {
             setServices(req.data);
           } else {
@@ -99,15 +94,13 @@ function RenderPage() {
 
     const service = e.target.services.value;
     const id = e.target.id.value;
-    Axios.post(" http://localhost/JOBREQUEST/api/admin/update_services.php", {
+    Axios.post(url + " /api/admin/update_services.php", {
       service: service,
       id: id,
     }).then((req) => {
       //setDepartments(req.data);
       if (req.data.status == 1) {
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getservices.php"
-        ).then((req) => {
+        Axios.post(url + "/api/admin/getservices.php").then((req) => {
           if (req.data.length >= 1) {
             setServices(req.data);
           } else {
@@ -210,15 +203,13 @@ function RenderPage() {
 
     if (value == "delete" || value == "DELETE") {
       // document.getElementById("btnmodalClose").click();
-      Axios.post("http://localhost/JOBREQUEST/api/admin/delete_data.php", {
+      Axios.post(url + "/api/admin/delete_data.php", {
         delete: 1,
         id: id,
         table: table,
       }).then((req) => {
         if (req.data.status == 1) {
-          Axios.post(
-            "http://localhost/JOBREQUEST/api/admin/getservices.php"
-          ).then((req) => {
+          Axios.post(url + "/api/admin/getservices.php").then((req) => {
             setServices(req.data);
             document.getElementById("btnmodalClose").click();
 
@@ -253,14 +244,12 @@ function RenderPage() {
     const s_status = e.target.checked == false ? 0 : 1;
     const id = e.target.value;
 
-    Axios.post("http://localhost/JOBREQUEST/api/admin/changeStatus.php", {
+    Axios.post(url + "/api/admin/changeStatus.php", {
       id: id,
       s_status: s_status,
     }).then((req) => {
       if (req.data.status == 1) {
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getservices.php"
-        ).then((req) => {
+        Axios.post(url + "/api/admin/getservices.php").then((req) => {
           setServices(req.data);
         });
       }

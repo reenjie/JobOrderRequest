@@ -36,6 +36,7 @@ import Add_Modal from "../../components/layouts/add_modal";
 import Edit_Modal from "../../components/layouts/edit_modal";
 import DataTable, { createTheme } from "react-data-table-component";
 import moment from "moment";
+import url from "../../config";
 
 function RenderPage() {
   const [servicesoffer, setServicesoffer] = useState([]);
@@ -44,7 +45,7 @@ function RenderPage() {
 
   useEffect(() => {
     Axios.post(
-      "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
+      url + "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
       {
         serviceid: serviceid,
       }
@@ -70,17 +71,14 @@ function RenderPage() {
     e.preventDefault();
 
     const service = e.target.services.value;
-    Axios.post(" http://localhost/JOBREQUEST/api/admin/saveservicesoffer.php", {
+    Axios.post(url + " /api/admin/saveservicesoffer.php", {
       services: service,
       serviceid: serviceid,
     }).then((req) => {
       if (req.data.status == 1) {
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
-          {
-            serviceid: serviceid,
-          }
-        ).then((req) => {
+        Axios.post(url + "/api/admin/getServicesoffer_sorted.php", {
+          serviceid: serviceid,
+        }).then((req) => {
           if (req.data.length >= 1) {
             setServicesoffer(req.data);
           } else {
@@ -100,21 +98,15 @@ function RenderPage() {
 
     const service = e.target.services.value;
     const id = e.target.id.value;
-    Axios.post(
-      " http://localhost/JOBREQUEST/api/admin/update_servicesOffer.php",
-      {
-        service: service,
-        id: id,
-      }
-    ).then((req) => {
+    Axios.post(url + "/api/admin/update_servicesOffer.php", {
+      service: service,
+      id: id,
+    }).then((req) => {
       //setDepartments(req.data);
       if (req.data.status == 1) {
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
-          {
-            serviceid: serviceid,
-          }
-        ).then((req) => {
+        Axios.post(url + "/api/admin/getServicesoffer_sorted.php", {
+          serviceid: serviceid,
+        }).then((req) => {
           if (req.data.length >= 1) {
             setServicesoffer(req.data);
           } else {
@@ -216,18 +208,15 @@ function RenderPage() {
 
     if (value == "delete" || value == "DELETE") {
       // document.getElementById("btnmodalClose").click();
-      Axios.post("http://localhost/JOBREQUEST/api/admin/delete_data.php", {
+      Axios.post(url + "/api/admin/delete_data.php", {
         delete: 1,
         id: id,
         table: table,
       }).then((req) => {
         if (req.data.status == 1) {
-          Axios.post(
-            "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
-            {
-              serviceid: serviceid,
-            }
-          ).then((req) => {
+          Axios.post(url + "/api/admin/getServicesoffer_sorted.php", {
+            serviceid: serviceid,
+          }).then((req) => {
             if (req.data.length >= 1) {
               setServicesoffer(req.data);
             } else {

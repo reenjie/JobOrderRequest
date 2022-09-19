@@ -28,6 +28,7 @@ import DataTable, { createTheme } from "react-data-table-component";
 import moment from "moment";
 import Axios from "axios";
 import ViewRequestmodal from "../../components/layouts/ViewRequestmodal";
+import url from "../../config";
 function RenderPage() {
   const [matches, setMatches] = useState(
     window.matchMedia("(min-width: 768px)").matches
@@ -46,17 +47,15 @@ function RenderPage() {
       .matchMedia("(min-width: 768px)")
       .addEventListener("change", (e) => setMatches(e.matches));
 
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getdepartment.php").then(
-      (req) => {
-        if (req.data.length >= 1) {
-          setDepartments(req.data);
-        } else {
-          setDepartments([]);
-        }
+    Axios.post(url + "/api/admin/getdepartment.php").then((req) => {
+      if (req.data.length >= 1) {
+        setDepartments(req.data);
+      } else {
+        setDepartments([]);
       }
-    );
+    });
 
-    Axios.post("http://localhost/JOBREQUEST/api/assessor/getrequests.php", {
+    Axios.post(url + "/api/assessor/getrequests.php", {
       serviceID: "3",
     }).then((req) => {
       if (req.data.length >= 1) {
@@ -66,29 +65,23 @@ function RenderPage() {
       }
     });
 
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getWorktype.php").then(
-      (req) => {
-        if (req.data.length >= 1) {
-          setWorktypes(req.data);
-        } else {
-          setWorktypes([]);
-        }
+    Axios.post(url + "/api/admin/getWorktype.php").then((req) => {
+      if (req.data.length >= 1) {
+        setWorktypes(req.data);
+      } else {
+        setWorktypes([]);
       }
-    );
+    });
 
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getUsers.php").then(
-      (req) => {
-        if (req.data.length >= 1) {
-          setUsers(req.data);
-        } else {
-          setUsers([]);
-        }
+    Axios.post(url + "/api/admin/getUsers.php").then((req) => {
+      if (req.data.length >= 1) {
+        setUsers(req.data);
+      } else {
+        setUsers([]);
       }
-    );
+    });
 
-    Axios.post(
-      "http://localhost/JOBREQUEST/api/admin/getservicesoffer.php"
-    ).then((req) => {
+    Axios.post(url + "/api/admin/getservicesoffer.php").then((req) => {
       setServicesoffer(req.data);
     });
   }, []);
@@ -106,20 +99,17 @@ function RenderPage() {
     if (years == "" && months == "" && weeks == "" && days == "") {
       setValidate("Please set Time Frame");
     } else if (years != "" || months != "" || weeks != "" || days != "") {
-      Axios.post(
-        "http://localhost/JOBREQUEST/api/assessor/ApprovedRequest.php",
-        {
-          id: id,
-          prioritization: prioritization,
-          typeofrepair: typeofrepair,
-          recommendation: recommendation,
-          years: years,
-          months: months,
-          weeks: weeks,
-          days: days,
-        }
-      ).then((req) => {
-        Axios.post("http://localhost/JOBREQUEST/api/assessor/getrequests.php", {
+      Axios.post(url + "/api/assessor/ApprovedRequest.php", {
+        id: id,
+        prioritization: prioritization,
+        typeofrepair: typeofrepair,
+        recommendation: recommendation,
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days,
+      }).then((req) => {
+        Axios.post(url + "/api/assessor/getrequests.php", {
           serviceID: "3",
         }).then((req) => {
           if (req.data.length >= 1) {

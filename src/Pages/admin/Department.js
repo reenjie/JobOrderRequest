@@ -27,6 +27,7 @@ import Add_Modal from "../../components/layouts/add_modal";
 import Delete_Modal from "../../components/layouts/delete_modal";
 import Edit_Modal from "../../components/layouts/edit_modal";
 import DataTable, { createTheme } from "react-data-table-component";
+import url from "../../config";
 function RenderPage() {
   const [department, setDepartments] = useState([]);
   const [alerts, setAlerts] = useState();
@@ -36,15 +37,13 @@ function RenderPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    Axios.post("http://localhost/JOBREQUEST/api/admin/getdepartment.php").then(
-      (req) => {
-        if (req.data.length >= 1) {
-          setDepartments(req.data);
-        } else {
-          setDepartments([]);
-        }
+    Axios.post(url + "/api/admin/getdepartment.php").then((req) => {
+      if (req.data.length >= 1) {
+        setDepartments(req.data);
+      } else {
+        setDepartments([]);
       }
-    );
+    });
   }, []);
 
   //Delete Functions
@@ -55,15 +54,13 @@ function RenderPage() {
 
     if (value == "delete" || value == "DELETE") {
       // document.getElementById("btnmodalClose").click();
-      Axios.post("http://localhost/JOBREQUEST/api/admin/delete_data.php", {
+      Axios.post(url + "/api/admin/delete_data.php", {
         delete: 1,
         id: id,
         table: table,
       }).then((req) => {
         if (req.data.status == 1) {
-          Axios.post(
-            "http://localhost/JOBREQUEST/api/admin/getdepartment.php"
-          ).then((req) => {
+          Axios.post(url + "/api/admin/getdepartment.php").then((req) => {
             if (req.data.length >= 1) {
               setDepartments(req.data);
             } else {
@@ -103,15 +100,13 @@ function RenderPage() {
 
     const deptname = e.target.department.value;
     const wsu = e.target.wsu.value;
-    Axios.post(" http://localhost/JOBREQUEST/api/admin/savedepartment.php", {
+    Axios.post(url + " /api/admin/savedepartment.php", {
       dname: deptname,
       wsu: wsu,
     }).then((req) => {
       //setDepartments(req.data);
       if (req.data.status == 1) {
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getdepartment.php"
-        ).then((req) => {
+        Axios.post(url + "/api/admin/getdepartment.php").then((req) => {
           setDepartments(req.data);
         });
 
@@ -131,16 +126,14 @@ function RenderPage() {
     const wsu = e.target.wsu.value;
     const id = e.target.id.value;
 
-    Axios.post(" http://localhost/JOBREQUEST/api/admin/update_department.php", {
+    Axios.post(url + " /api/admin/update_department.php", {
       dname: deptname,
       wsu: wsu,
       id: id,
     }).then((req) => {
       //setDepartments(req.data);
       if (req.data.status == 1) {
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getdepartment.php"
-        ).then((req) => {
+        Axios.post(url + "/api/admin/getdepartment.php").then((req) => {
           setDepartments(req.data);
         });
 
