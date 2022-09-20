@@ -8,8 +8,7 @@ import Services from "../../Pages/admin/Services";
 import Accounts from "../../Pages/admin/Accounts";
 import A_Dashboard from "../../Pages/assessor/Dashboard";
 import A_Request from "../../Pages/assessor/Request";
-import A_Requesters from "../../Pages/assessor/Requesters";
-import A_Accounts from "../../Pages/assessor/Accounts";
+import A_Services from "../../Pages/assessor/Services";
 import A_Status from "../../Pages/assessor/Status";
 import R_Dashboard from "../../Pages/requestor/Dashboard";
 import R_Request from "../../Pages/requestor/Request";
@@ -19,10 +18,12 @@ import Servicesoffer from "../../Pages/admin/Servicesoffer";
 import Add_User from "../../Pages/admin/Add_User";
 import Update_User from "../../Pages/admin/Update_User";
 import Worktype from "../../Pages/admin/Worktype";
+import NotFound from "../../Pages/NotFound";
 export default function Routing() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="*" element={<NotFound />} />
         <Route path="/" element={<App />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
@@ -47,8 +48,7 @@ export default function Routing() {
         <Route path="Assessor/Dashboard" element={<A_Dashboard />} />
         <Route path="Assessor/Request" element={<A_Request />} />
         <Route path="Assessor/Status" element={<A_Status />} />
-        <Route path="Assessor/Requesters" element={<A_Requesters />} />
-        <Route path="Assessor/Accounts" element={<A_Accounts />} />
+        <Route path="Assessor/Services" element={<A_Services />} />
 
         {/*  REQUESTOR  */}
 

@@ -89,23 +89,12 @@ function Sidebar() {
             </li>{" "}
           </Link>
 
-          <Link to="../Assessor/Requesters">
+          <Link to="../Assessor/Services">
             {" "}
             <li>
               <Container>
                 <span>
-                  <i className="fas fa-list"></i> Requesters{" "}
-                </span>
-              </Container>
-            </li>{" "}
-          </Link>
-
-          <Link to="../Assessor/Accounts">
-            {" "}
-            <li>
-              <Container>
-                <span>
-                  <i className="fas fa-users"></i> Accounts{" "}
+                  <i className="fas fa-gears"></i> Services{" "}
                 </span>
               </Container>
             </li>{" "}

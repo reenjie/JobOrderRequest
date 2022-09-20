@@ -367,6 +367,16 @@ function RenderPage() {
         setRequest([]);
       }
     });
+
+    Axios.post(url + "/api/assessor/getAccomplishedrequests.php", {
+      serviceID: "3",
+    }).then((req) => {
+      if (req.data.length >= 1) {
+        setAccomplishRequest(req.data);
+      } else {
+        setAccomplishRequest([]);
+      }
+    });
   };
 
   const Manage = (props) => {
@@ -457,40 +467,57 @@ function RenderPage() {
                 }
               })}
 
+              <Grid
+                templateColumns={[
+                  "repeat(1, 1fr)",
+                  "repeat(1, 1fr)",
+                  "repeat(2, 1fr)",
+                ]}
+                gap={1}
+              >
+                <GridItem w="100%">
+                  <Box>
+                    <Text color={"blackAlpha.700"} fontSize={15}>
+                      Current Status:
+                    </Text>
+                    <Select
+                      bg={"green.50"}
+                      borderColor={"green.200"}
+                      placeholder="Change Status"
+                      size={"sm"}
+                      color={"green.600"}
+                      autoFocus
+                      defaultValue={row.request_status}
+                      data-requestid={row.PK_requestID}
+                      data-name={"request_status"}
+                      onChange={handlechange}
+                      id="request_status"
+                    >
+                      <option value="WORK ON GOING">Work On Going</option>
+                      <option value="ON QUEUE">On Queue</option>
+                      <option value="ACCOMPLISHED">Accomplished</option>
+                    </Select>
+                  </Box>
+                </GridItem>
+                <GridItem w="100%">
+                  <Box ml={4}>
+                    <Text color={"blackAlpha.700"} fontSize={15}>
+                      Status Message:
+                    </Text>
+                    <Textarea
+                      borderColor={"green.200"}
+                      defaultValue={row.status_message}
+                      color={"teal.500"}
+                      fontSize={14}
+                      data-requestid={row.PK_requestID}
+                      data-name={"status_message"}
+                      onChange={handlechange}
+                    />
+                  </Box>
+                </GridItem>
+              </Grid>
+
               <Stack>
-                <Box>
-                  <Text color={"blackAlpha.700"} fontSize={15}>
-                    Current Status:
-                  </Text>
-                  <Select
-                    placeholder="Change Status"
-                    size={"sm"}
-                    color="blackAlpha.700"
-                    autoFocus
-                    defaultValue={row.request_status}
-                    data-requestid={row.PK_requestID}
-                    data-name={"request_status"}
-                    onChange={handlechange}
-                    id="request_status"
-                  >
-                    <option value="WORK ON GOING">Work On Going</option>
-                    <option value="ON QUEUE">On Queue</option>
-                    <option value="ACCOMPLISHED">Accomplished</option>
-                  </Select>
-                </Box>
-                <Box ml={4}>
-                  <Text color={"blackAlpha.700"} fontSize={15}>
-                    Status Message:
-                  </Text>
-                  <Textarea
-                    defaultValue={row.status_message}
-                    color={"teal.500"}
-                    fontSize={14}
-                    data-requestid={row.PK_requestID}
-                    data-name={"status_message"}
-                    onChange={handlechange}
-                  />
-                </Box>
                 <Box>
                   <Text color={"blackAlpha.700"} fontSize={15}>
                     Findings:
@@ -570,20 +597,14 @@ function RenderPage() {
       name: "Type of Work",
       selector: (row) => (
         <>
-          {worktypes.map((wt) => {
-            if (wt.PK_workTypeID == row.FK_workID) {
-              return (
-                <Text
-                  color={"teal.600"}
-                  fontSize={14}
-                  textTransform="uppercase"
-                  userSelect={"text"}
-                >
-                  {wt.label}
-                </Text>
-              );
-            }
-          })}
+          <Text
+            color={"teal.600"}
+            fontSize={14}
+            textTransform="uppercase"
+            userSelect={"text"}
+          >
+            {row.label}
+          </Text>
         </>
       ),
     },
@@ -672,26 +693,18 @@ function RenderPage() {
       name: "Request",
       selector: (row) => (
         <>
-          {users.map((user) => {
-            if (user.PK_userID == row.FK_userID) {
-              return (
-                <Text
-                  color={"teal.600"}
-                  fontSize={14}
-                  textTransform="uppercase"
-                  userSelect={"text"}
-                >
-                  {user.firstname} {user.lastname}
-                  <br />
-                  <span
-                    style={{ fontSize: "12px", textTransform: "lowercase" }}
-                  >
-                    {user.email} #{user.contact_no}
-                  </span>
-                </Text>
-              );
-            }
-          })}
+          <Text
+            color={"teal.600"}
+            fontSize={14}
+            textTransform="uppercase"
+            userSelect={"text"}
+          >
+            {row.firstname} {row.lastname}
+            <br />
+            <span style={{ fontSize: "12px", textTransform: "lowercase" }}>
+              {row.email} #{row.contact_no}
+            </span>
+          </Text>
         </>
       ),
     },
@@ -699,20 +712,14 @@ function RenderPage() {
       name: "Type of Work",
       selector: (row) => (
         <>
-          {worktypes.map((wt) => {
-            if (wt.PK_workTypeID == row.FK_workID) {
-              return (
-                <Text
-                  color={"teal.600"}
-                  fontSize={14}
-                  textTransform="uppercase"
-                  userSelect={"text"}
-                >
-                  {wt.label}
-                </Text>
-              );
-            }
-          })}
+          <Text
+            color={"teal.600"}
+            fontSize={14}
+            textTransform="uppercase"
+            userSelect={"text"}
+          >
+            {row.label}
+          </Text>
         </>
       ),
     },
@@ -795,13 +802,26 @@ function RenderPage() {
       ),
     },
   ];
-
+  /*  Filtering requesters*/
   const [filterText, setFilterText] = useState("");
   const filteredItems = requesters.filter(
     (item) =>
       item.lastname.toLowerCase().includes(filterText.toLowerCase()) ||
       item.firstname.toLowerCase().includes(filterText.toLowerCase()) ||
       item.email.toLowerCase().includes(filterText.toLowerCase())
+  );
+
+  /* Filtering Requests */
+  const [filterRequest, setFilterRequest] = useState("");
+  const filteredRequest = request.filter(
+    (filtered) =>
+      filtered.lastname.toLowerCase().includes(filterRequest.toLowerCase()) ||
+      filtered.firstname.toLowerCase().includes(filterRequest.toLowerCase()) ||
+      filtered.email.toLowerCase().includes(filterRequest.toLowerCase()) ||
+      filtered.label.toLowerCase().includes(filterRequest.toLowerCase()) ||
+      filtered.request_status
+        .toLowerCase()
+        .includes(filterRequest.toLowerCase())
   );
 
   const closealert = () => {
@@ -906,7 +926,11 @@ function RenderPage() {
               </UnorderedList>
             </Box>
           </GridItem>
-          <GridItem colSpan={[12, 12, 12, 8]} w="100%">
+          <GridItem
+            colSpan={[12, 12, 12, 8]}
+            w="100%"
+            transition={"all ease 0.3s"}
+          >
             <Box bg={"gray.100"} p={5}>
               {alerts && (
                 <Alert
@@ -1074,9 +1098,52 @@ function RenderPage() {
                       work={worktypes}
                     />
                   </Box>
+
+                  <Stack
+                    direction={["column", "row"]}
+                    mt={[10, 10, 0]}
+                    p={[0, 0, 10]}
+                  >
+                    <Box>
+                      <InputGroup>
+                        <InputLeftElement
+                          pointerEvents="none"
+                          children={<SearchIcon color="gray.500" />}
+                        />
+
+                        <Input
+                          placeholder="Filter By Name , Email or Type of Work"
+                          //    defaultValue={filterRequest}
+                          fontSize={14}
+                          width={350}
+                          variant="filled"
+                          autoFocus
+                          onChange={(e) => {
+                            setFilterRequest(e.target.value);
+                          }}
+                        />
+                      </InputGroup>
+                    </Box>
+                    <Box>
+                      <Select
+                        bg={"cyan.50"}
+                        borderColor={"cyan.200"}
+                        placeholder="Sort By Status"
+                        fontSize={14}
+                        color={"blackAlpha.600"}
+                        onChange={(e) => {
+                          setFilterRequest(e.target.value);
+                        }}
+                      >
+                        <option value="WORK ON GOING">WORK ON GOING</option>
+                        <option value="ON QUEUE">ON QUEUE</option>
+                      </Select>
+                    </Box>
+                  </Stack>
+
                   <DataTable
                     columns={defaultcolumns}
-                    data={request}
+                    data={filteredRequest}
                     // paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
 
                     // subHeaderComponent={subHeaderComponentMemo}

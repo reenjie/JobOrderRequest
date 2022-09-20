@@ -125,6 +125,12 @@
     
   }
 
+  #fourofour {
+    color: rgb(163,159,231);
+   color: linear-gradient(90deg, rgba(163,159,231,1) 1%, rgba(172,112,233,1) 20%, rgba(181,68,127,1) 71%, rgba(212,164,189,1) 85%, rgba(81,202,227,1) 100%);
+   text-shadow: 2px 2px 8px #FF0000;
+  }
+
   .ul {
     list-style: none;
   }

@@ -1,12 +1,8 @@
 import AdminLayout from "../../components/layouts/admin_layout";
 import Sidebar from "./Sidebar";
-import Headings from "../../components/layouts/heading";
+
 function RenderPage() {
-  return (
-    <>
-      <Headings title="DASHBOARD" />
-    </>
-  );
+  return <></>;
 }
 
 function R_Dashboard() {
@@ -15,6 +11,7 @@ function R_Dashboard() {
       <AdminLayout
         Sidebar_elements={<Sidebar />}
         Page_Contents={<RenderPage />}
+        Page_title="DASHBOARD"
       />
     </>
   );

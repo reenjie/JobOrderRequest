@@ -669,8 +669,13 @@ function RenderPage() {
 
   return (
     <>
-      <Box p={5}>
-        <Box p="5" bg={"gray.50"} borderRadius="6" transition={"all ease 2s"}>
+      <Box p={[2, 5, 10]}>
+        <Box
+          p={[0, 5, 8]}
+          bg={"gray.50"}
+          borderRadius="6"
+          transition={"all ease 2s"}
+        >
           {alerts && (
             <Alert status="success" id="" variant="left-accent">
               <AlertIcon />

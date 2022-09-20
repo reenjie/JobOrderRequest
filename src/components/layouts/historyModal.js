@@ -15,6 +15,9 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Flex,
+  Avatar,
+  Box,
 } from "@chakra-ui/react";
 
 import { EditIcon, DeleteIcon, AddIcon, SearchIcon } from "@chakra-ui/icons";
@@ -103,8 +106,6 @@ function HistoryModal(props) {
     },
   };
 
-  console.log(props);
-
   const defaultcolumns = props.usertype
     ? [
         {
@@ -142,6 +143,13 @@ function HistoryModal(props) {
               })}
               {row.others}
             </>
+          ),
+        },
+
+        {
+          name: "Date Accomplished",
+          selector: (row) => (
+            <>{moment(row.dt_accomplished).format("@hh:mm a MMMM DD,YYYY")}</>
           ),
         },
 
@@ -213,6 +221,13 @@ function HistoryModal(props) {
         },
 
         {
+          name: "Date Accomplished",
+          selector: (row) => (
+            <>{moment(row.dt_accomplished).format("@hh:mm a MMMM DD,YYYY")}</>
+          ),
+        },
+
+        {
           name: "Status",
           selector: (row) => (
             <>
@@ -221,6 +236,7 @@ function HistoryModal(props) {
           ),
         },
       ];
+
   const [filterText, setFilterText] = useState("");
   const filteredItems = props.requestsaccomplished.filter(
     (item) =>
@@ -252,8 +268,81 @@ function HistoryModal(props) {
               <Heading mb={2} fontSize={25}>
                 Accomplished Job Orders
               </Heading>
+
               {props.usertype ? (
-                ""
+                props.users.map((row) => {
+                  if (row.PK_userID == props.usertype) {
+                    return (
+                      <>
+                        <Flex p={10}>
+                          <Avatar
+                            size="xl"
+                            name={row.firstname + " " + row.lastname}
+                            src={""}
+                            mb={2}
+                          />
+
+                          <Box ml="10" userSelect={"text"}>
+                            <Text
+                              fontWeight="bold"
+                              textTransform={"uppercase"}
+                              color={"blackAlpha.700"}
+                            >
+                              {row.firstname + " " + row.lastname}
+                              <br />
+                              <span
+                                style={{
+                                  fontSize: "13px",
+                                  fontWeight: "normal",
+                                  textTransform: "lowercase",
+                                }}
+                              >
+                                {row.email}
+                              </span>
+                              <br />
+                              <span
+                                style={{
+                                  fontSize: "13px",
+                                  fontWeight: "normal",
+                                  userSelect: "",
+                                }}
+                              >
+                                #{row.contact_no}
+                              </span>
+                              <br />
+                              <span
+                                style={{
+                                  fontSize: "13px",
+                                  fontWeight: "normal",
+                                  userSelect: "",
+                                }}
+                              >
+                                {row.specialty}
+                                <br />
+                                {row.position}
+                              </span>
+                              <Text
+                                style={{
+                                  fontSize: "15px",
+                                  fontWeight: "bold",
+                                }}
+                                color={"teal.500"}
+                              >
+                                {/*     {department.map((dep) => {
+                                    if (
+                                      dep.PK_departmentID == row.FK_departmentID
+                                    ) {
+                                      return <>{dep.dept_name}</>;
+                                    }
+                                  })} */}
+                              </Text>
+                            </Text>
+                          </Box>
+                        </Flex>
+                      </>
+                    );
+                  }
+                })
               ) : (
                 <InputGroup>
                   <InputLeftElement
@@ -274,7 +363,6 @@ function HistoryModal(props) {
                   />
                 </InputGroup>
               )}
-
               <DataTable
                 columns={defaultcolumns}
                 data={filteredItems}
