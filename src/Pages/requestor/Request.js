@@ -46,6 +46,7 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import Axios from "axios";
@@ -53,6 +54,8 @@ import moment from "moment";
 import React, { useState, useEffect } from "react";
 import url from "../../config";
 import swal from "sweetalert";
+import ViewInfo from "../../components/layouts/viewInfo";
+import Info from "./info";
 function RenderPage() {
   const [open, setOpen] = useState();
   const [services, setServices] = useState([]);
@@ -179,9 +182,11 @@ function RenderPage() {
               setMyPendingrequest([]);
             }
           });
-          //setOpen("");
+          setUncheckall("uncheck");
           swal("Saved!", "Selection Saved Successfully!", "success").then(
-            (value) => {}
+            (value) => {
+              setUncheckall("");
+            }
           );
         } else if (req.data.status == 2) {
           swal(
@@ -226,7 +231,86 @@ function RenderPage() {
   };
 
   const handleSubmitRequest = (e) => {
-    console.log("ee");
+    swal({
+      title: "Are you sure?",
+      text: "if request is submitted.it cannot be modified.",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    }).then((Save) => {
+      if (Save) {
+        Axios.post(url + "/api/requestor/submitRequest.php", {
+          userID: 30,
+        }).then((req) => {
+          setMyPendingrequest([]);
+          toast({
+            title: `Request Submitted Successfully!`,
+            status: "success",
+            position: "top-right",
+            variant: "left-accent",
+            isClosable: true,
+          });
+          Axios.post(url + "/api/requestor/getMyrequest.php", {
+            userID: 30,
+          }).then((req) => {
+            if (req.data.length >= 1) {
+              setMyrequest(req.data);
+            } else {
+              setMyrequest([]);
+            }
+          });
+          //
+        });
+      }
+    });
+  };
+
+  const handleDeleteList = (e) => {
+    const id = e.currentTarget.dataset.id;
+
+    swal({
+      title: "Are you sure?",
+      text: "you wont be able to revert this",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((Delete) => {
+      if (Delete) {
+        Axios.post(url + "/api/requestor/deleteRequest.php", {
+          id: id,
+        }).then((req) => {
+          if (req.data.status == 1) {
+            toast({
+              title: `Request Deleted Successfully!`,
+              status: "success",
+              position: "top-right",
+              variant: "left-accent",
+              isClosable: true,
+            });
+            Axios.post(url + "/api/requestor/getMyrequest.php", {
+              userID: 30,
+            }).then((req) => {
+              if (req.data.length >= 1) {
+                setMyrequest(req.data);
+              } else {
+                setMyrequest([]);
+              }
+            });
+          }
+        });
+      }
+    });
+  };
+
+  const handleAddinfo = (e) => {
+    const id = e.currentTarget.dataset.id;
+    const type = e.currentTarget.dataset.type;
+    const value = e.target.value;
+    Axios.post(url + "/api/requestor/updateRequestInfo.php", {
+      id: id,
+      type: type,
+      value: value,
+    });
   };
   return (
     <>
@@ -366,6 +450,8 @@ function RenderPage() {
                                                   colorScheme="cyan"
                                                   value={s.PK_soID}
                                                   onChange={handleSelected}
+                                                  name="servicesoffer"
+                                                  id={s.PK_soID}
                                                 >
                                                   {s.name}
                                                 </Checkbox>
@@ -407,7 +493,7 @@ function RenderPage() {
               </Box>
               {/* end Request */}
             </Box>
-            <Box bg={"gray.100"} p="10" mt={2}>
+            <Box bg={"teal.50"} p="10" mt={2} borderLeft={"4px solid #2596be"}>
               <Text color={"blackAlpha.600"}>Types of Services</Text>
 
               <Grid
@@ -450,16 +536,21 @@ function RenderPage() {
           </GridItem>
           <GridItem w="100%" colSpan={[12, 12, 6]}>
             {myPendingrequest.length >= 1 ? (
-              <Box bg={"gray.100"} p={10} display={"block"}>
+              <Box
+                bg={"gray.100"}
+                p={10}
+                display={"block"}
+                borderRight="4px solid #bc7d52"
+              >
                 {/* finalize request */}
                 <Box>
                   <Alert
                     status="error"
-                    borderLeft={"4px solid #d88686"}
-                    bg={"red.100"}
+                    borderLeft={"4px solid #d7883b"}
+                    bg={"#f5daa5"}
                   >
-                    <AlertIcon color={"red.400"} />
-                    <Text color={"red.300"} fontSize={14}>
+                    <AlertIcon color={"#d7883b"} />
+                    <Text color={"orange.500"} fontSize={14}>
                       FINALIZE REQUEST
                     </Text>
                   </Alert>
@@ -485,16 +576,15 @@ function RenderPage() {
                               <Tr>
                                 <Td>
                                   <Stack>
-                                    <Badge mb={2} colorScheme={"blue"}>
+                                    <Text mb={2} color={"blue.400"}>
                                       {" "}
                                       <i className="fas fa-cogs"></i>
                                       {worktype.map((w) => {
-                                        console.log(row.FK_workID);
                                         if (w.PK_workTypeID == row.FK_workID) {
                                           return w.label;
                                         }
                                       })}
-                                    </Badge>
+                                    </Text>
                                     <Box>
                                       {services.map((s) => {
                                         if (
@@ -537,6 +627,9 @@ function RenderPage() {
                                                   backgroundColor={
                                                     "whiteAlpha.600"
                                                   }
+                                                  onChange={handleAddinfo}
+                                                  data-type="serialno"
+                                                  data-id={row.PK_requestID}
                                                 />
                                               </Box>
                                               <Box>
@@ -547,6 +640,9 @@ function RenderPage() {
                                                   backgroundColor={
                                                     "whiteAlpha.600"
                                                   }
+                                                  onChange={handleAddinfo}
+                                                  data-type="modelno"
+                                                  data-id={row.PK_requestID}
                                                 />
                                               </Box>
                                             </Stack>
@@ -564,7 +660,7 @@ function RenderPage() {
                                     onClick={handleRemove}
                                     data-requestid={row.PK_requestID}
                                   >
-                                    <i className="fas fa-times"></i>
+                                    <i className="fas fa-times-circle"></i>
                                   </Button>
                                 </Td>
                               </Tr>
@@ -579,10 +675,14 @@ function RenderPage() {
                     mt={3}
                     size={"sm"}
                     variant={"outline"}
-                    colorScheme="green"
+                    colorScheme="facebook"
                     onClick={handleSubmitRequest}
                   >
-                    Submit Request
+                    Submit Request{" "}
+                    <i
+                      className="fas fa-paper-plane"
+                      style={{ marginLeft: "4px" }}
+                    ></i>
                   </Button>
                 </Box>
                 {/* End finalize Request */}
@@ -634,18 +734,38 @@ function RenderPage() {
 
                           <Tbody>
                             {myrequest.map((row) => {
-                              if (row.status == 2) {
+                              if (
+                                row.status == 0 ||
+                                row.status == 1 ||
+                                row.status == 2
+                              ) {
                                 return (
                                   <>
                                     <Tr color={"blackAlpha.700"}>
                                       <Td>
-                                        {services.map((s) => {
-                                          if (
-                                            s.PK_servicesID == row.FK_serviceID
-                                          ) {
-                                            return s.name;
-                                          }
-                                        })}
+                                        <Stack>
+                                          <Text mb={2} color={"blue.400"}>
+                                            {" "}
+                                            <i className="fas fa-cogs"></i>
+                                            {worktype.map((w) => {
+                                              if (
+                                                w.PK_workTypeID == row.FK_workID
+                                              ) {
+                                                return w.label;
+                                              }
+                                            })}
+                                          </Text>
+                                          <Box>
+                                            {services.map((s) => {
+                                              if (
+                                                s.PK_servicesID ==
+                                                row.FK_serviceID
+                                              ) {
+                                                return s.name;
+                                              }
+                                            })}
+                                          </Box>
+                                        </Stack>
                                       </Td>
                                       <Td>
                                         {servicesOffer.map((so) => {
@@ -677,30 +797,90 @@ function RenderPage() {
                                               100%
                                             </Text>
                                           </Flex>
-                                        ) : (
+                                        ) : row.totaldays ? (
                                           progress(
                                             row.dt_assessed,
                                             row.totaldays
                                           )
+                                        ) : (
+                                          <Flex>
+                                            <Progress
+                                              backgroundColor={"green.100"}
+                                              value={0}
+                                              hasStripe
+                                              colorScheme={"teal"}
+                                              style={{
+                                                width: "100px",
+                                                height: "15px",
+                                              }}
+                                            ></Progress>
+                                            <Text
+                                              ml={2}
+                                              color={"blackAlpha.600"}
+                                            >
+                                              0%
+                                            </Text>
+                                          </Flex>
                                         )}
                                       </Td>
                                       <Td>
-                                        <Badge
-                                          variant="subtle"
-                                          colorScheme="green"
-                                        >
-                                          {row.request_status}
-                                        </Badge>
+                                        {row.request_status ? (
+                                          <Badge
+                                            variant="subtle"
+                                            colorScheme="green"
+                                          >
+                                            {row.request_status}
+                                          </Badge>
+                                        ) : row.status == 0 ? (
+                                          <Badge
+                                            variant="subtle"
+                                            colorScheme="orange"
+                                          >
+                                            For Approval
+                                          </Badge>
+                                        ) : (
+                                          <Badge
+                                            variant="subtle"
+                                            colorScheme="red"
+                                          >
+                                            PENDING
+                                          </Badge>
+                                        )}
                                       </Td>
                                       <Td>
-                                        <Button
-                                          size={"sm"}
-                                          colorScheme={"cyan"}
-                                          variant={"ghost"}
-                                          fontWeight="normal"
-                                        >
-                                          View{" "}
-                                        </Button>
+                                        <Stack direction={"row"}>
+                                          <ButtonGroup
+                                            size="sm"
+                                            isAttached
+                                            variant="outline"
+                                          >
+                                            {/*  */}
+                                            <ViewInfo
+                                              info={
+                                                <Info
+                                                  myrequest={myrequest}
+                                                  myID={row.PK_requestID}
+                                                  services={services}
+                                                  servicesOffer={servicesOffer}
+                                                />
+                                              }
+                                            />
+                                            {row.status == 0 ? (
+                                              <Button
+                                                size={"sm"}
+                                                colorScheme={"red"}
+                                                variant={"ghost"}
+                                                fontWeight="normal"
+                                                onClick={handleDeleteList}
+                                                data-id={row.PK_requestID}
+                                              >
+                                                <i className="fas fa-trash-can"></i>
+                                              </Button>
+                                            ) : (
+                                              ""
+                                            )}
+                                          </ButtonGroup>
+                                        </Stack>
                                       </Td>
                                     </Tr>
                                   </>
@@ -783,14 +963,16 @@ function RenderPage() {
                                         </Badge>
                                       </Td>
                                       <Td>
-                                        <Button
-                                          size={"sm"}
-                                          colorScheme={"cyan"}
-                                          variant={"ghost"}
-                                          fontWeight="normal"
-                                        >
-                                          View{" "}
-                                        </Button>
+                                        <ViewInfo
+                                          info={
+                                            <Info
+                                              myrequest={myrequest}
+                                              myID={row.PK_requestID}
+                                              services={services}
+                                              servicesOffer={servicesOffer}
+                                            />
+                                          }
+                                        />
                                       </Td>
                                     </Tr>
                                   </>
