@@ -34,12 +34,13 @@ function ViewInfo(props) {
         <i className="fa fa-circle-info"></i>
       </Button>
 
-      <Modal size={"lg"} isOpen={isOpen} onClose={onClose}>
+      <Modal size={"full"} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg={"gray.100"}>
           <ModalCloseButton onClick={props.closing} />
           <ModalBody>
-            {props.info}
+            <Container maxW={"container.xl"}>{props.info}</Container>
+
             <Button
               id="btnManageModalClose"
               display={"none"}

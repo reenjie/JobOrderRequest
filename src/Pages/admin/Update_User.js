@@ -44,7 +44,9 @@ function RenderPage() {
   const [services, setServices] = useState([]);
   const [department, setDepartments] = useState([]);
   const [userinfo, setUserinfo] = useState([]);
+  const [sec, setSec] = useState();
   const { userid } = useParams();
+
   useEffect(() => {
     Axios.post("http://localhost/JOBREQUEST/api/admin/getservices.php").then(
       (req) => {
@@ -69,7 +71,9 @@ function RenderPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const usertype = e.target.usertype.value;
+    console.log(sec);
+
+    /*  const usertype = e.target.usertype.value;
     const firstname = e.target.firstname.value;
     const lastname = e.target.lastname.value;
     const email = e.target.email.value;
@@ -101,7 +105,15 @@ function RenderPage() {
           setAlerts("");
         }, 2000);
       }
-    });
+    }); */
+  };
+
+  const handleCheck = (e) => {
+    if (e.target.checked == true) {
+      setSec(1);
+    } else {
+      setSec(0);
+    }
   };
   return (
     <>
@@ -165,6 +177,53 @@ function RenderPage() {
                             <option value="requestor">Requestor</option>
                           </Select>
                         </FormControl>
+
+                        {row.user_type == "requestor" ? (
+                          <>
+                            {row.secretary == 1 ? (
+                              <>
+                                {" "}
+                                <Checkbox
+                                  size="sm"
+                                  color={"blackAlpha.700"}
+                                  colorScheme="blue"
+                                  fontSize={13}
+                                  borderWidth={2}
+                                  padding={3}
+                                  border={"1px solid #a8b2a8"}
+                                  borderRadius={5}
+                                  mb={2}
+                                  name="deptsec"
+                                  defaultChecked
+                                  onChange={handleCheck}
+                                >
+                                  Department Secretary
+                                </Checkbox>
+                              </>
+                            ) : (
+                              <>
+                                {" "}
+                                <Checkbox
+                                  size="sm"
+                                  color={"blackAlpha.700"}
+                                  colorScheme="blue"
+                                  fontSize={13}
+                                  borderWidth={2}
+                                  padding={3}
+                                  border={"1px solid #a8b2a8"}
+                                  borderRadius={5}
+                                  mb={2}
+                                  name="deptsec"
+                                  onChange={handleCheck}
+                                >
+                                  Department Secretary
+                                </Checkbox>
+                              </>
+                            )}
+                          </>
+                        ) : (
+                          ""
+                        )}
 
                         <FormControl isRequired mb={2} color="blackAlpha.700">
                           <FormLabel fontSize={14}>First name</FormLabel>

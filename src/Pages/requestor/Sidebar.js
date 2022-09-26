@@ -56,15 +56,15 @@ function Sidebar() {
                 <span>
                   {" "}
                   <i className="fas fa-share"></i> Request
-                  <Badge ml="1" colorScheme="green">
+                  {/*  <Badge ml="1" colorScheme="green">
                     Alert
-                  </Badge>
+                  </Badge> */}
                 </span>
               </Container>
             </li>{" "}
           </Link>
 
-          <Link to="../Accomplished">
+          {/*   <Link to="../Accomplished">
             {" "}
             <li>
               <Container>
@@ -76,7 +76,7 @@ function Sidebar() {
                 </span>
               </Container>
             </li>{" "}
-          </Link>
+          </Link> */}
 
           <Link to="../History">
             {" "}

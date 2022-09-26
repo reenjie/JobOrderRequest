@@ -38,6 +38,13 @@ import {
   PopoverCloseButton,
   PopoverAnchor,
   CloseButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { EditIcon, DeleteIcon, AddIcon, SearchIcon } from "@chakra-ui/icons";
@@ -47,6 +54,7 @@ import ManageModal from "../../components/layouts/manage_modal";
 import HistoryModal from "../../components/layouts/historyModal";
 import url from "../../config";
 import swal from "sweetalert";
+import { useDisclosure } from "@chakra-ui/react";
 
 import {
   Progress,
@@ -72,6 +80,8 @@ function RenderPage() {
   const [servicesoffer, setServicesoffer] = useState([]);
   const [alerts, setAlerts] = useState();
   const [AccomplishRequest, setAccomplishRequest] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [requestid, setRequestid] = useState();
 
   useEffect(() => {
     window
@@ -249,6 +259,7 @@ function RenderPage() {
     const findings = document.getElementById("findings").value;
     const materialsneeded = document.getElementById("materialsneeded").value;
     const estimatedcost = document.getElementById("estimatedcost").value;
+
     const totalestimatedcost =
       document.getElementById("totalestimatedcost").value;
     document.getElementById("findings").setAttribute("style", "");
@@ -322,7 +333,9 @@ function RenderPage() {
             .getElementById("totalestimatedcost")
             .setAttribute("style", "border:1px solid #9a4d54");
         } else {
-          swal({
+          onOpen();
+          setRequestid(request_id);
+          /*   swal({
             title: "Are you sure?",
             text: "Please make sure that the job is fully accomplished.",
             icon: "warning",
@@ -330,16 +343,17 @@ function RenderPage() {
             dangerMode: false,
           }).then((JobisDone) => {
             if (JobisDone) {
-              Axios.post(url + "/api/assessor/accomplishedRequest.php", {
+
+             Axios.post(url + "/api/assessor/accomplishedRequest.php", {
                 id: request_id,
               }).then((req) => {
                 setAlerts("Marked Accomplished Successfully");
                 document.getElementById("btnManageModalClose").click();
-              });
+              }); 
             } else {
               document.getElementById("request_status").value = "ON QUEUE";
             }
-          });
+          }); */
         }
       } else {
         Axios.post(url + "/api/assessor/changeRequestStatus.php", {
@@ -355,6 +369,26 @@ function RenderPage() {
         value: value,
       }).then((req) => {});
     }
+  };
+
+  const handleAccomplished = (e) => {
+    e.preventDefault();
+    const repairedby = e.target.repairedby.value;
+    const remarks = e.target.a_remarks.value;
+    const dtstart = e.target.dtstart.value;
+    const dtend = e.target.dtend.value;
+
+    Axios.post(url + "/api/assessor/accomplishedRequest.php", {
+      id: requestid,
+      repairedby: repairedby,
+      remarks: remarks,
+      dtstart: dtstart,
+      dtend: dtend,
+    }).then((req) => {
+      setAlerts("Marked Accomplished Successfully");
+      document.getElementById("btnManageModalClose").click();
+      onClose();
+    });
   };
 
   const Fetch = () => {
@@ -386,6 +420,92 @@ function RenderPage() {
       if (row.PK_requestID == id) {
         return (
           <>
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader fontSize={15}>Mark Accomplished</ModalHeader>
+                <ModalCloseButton />
+                <form method="post" onSubmit={handleAccomplished}>
+                  <ModalBody>
+                    <Box>
+                      <Stack>
+                        <Box>
+                          <Text fontSize={14} color="blackAlpha.700" mb={2}>
+                            Repaired By:
+                          </Text>
+                          <Input
+                            size={"md"}
+                            fontSize={14}
+                            placeholder="ex. Jhon Doe"
+                            autoFocus
+                            required
+                            name="repairedby"
+                          />
+                        </Box>
+
+                        <Box>
+                          <Text fontSize={14} color="blackAlpha.700" mb={2}>
+                            Date Time Started:
+                          </Text>
+                          <Input
+                            placeholder="Select Date and Time"
+                            size="md"
+                            type="datetime-local"
+                            fontSize={14}
+                            required
+                            name="dtstart"
+                          />
+                        </Box>
+
+                        <Box>
+                          <Text fontSize={14} color="blackAlpha.700" mb={2}>
+                            Date Time Finished:
+                          </Text>
+                          <Input
+                            placeholder="Select Date and Time"
+                            size="md"
+                            type="datetime-local"
+                            fontSize={14}
+                            required
+                            name="dtend"
+                          />
+                        </Box>
+
+                        <Box>
+                          <Text fontSize={14} color="blackAlpha.700" mb={2}>
+                            Remarks :
+                          </Text>
+                          <Textarea
+                            fontSize={14}
+                            placeholder="..."
+                            name="a_remarks"
+                          />
+                        </Box>
+                      </Stack>
+                    </Box>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button
+                      colorScheme="gray"
+                      size={"sm"}
+                      mr={3}
+                      onClick={onClose}
+                      type="button"
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      colorScheme={"green"}
+                      type="submit"
+                      size={"sm"}
+                      variant="solid"
+                    >
+                      DONE
+                    </Button>
+                  </ModalFooter>
+                </form>
+              </ModalContent>
+            </Modal>
             <Box p={4}>
               <Text fontWeight={"bold"} color={"blackAlpha.600"}>
                 Job Description

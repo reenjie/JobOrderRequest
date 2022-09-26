@@ -21,6 +21,7 @@ import {
   AlertIcon,
   InputGroup,
   InputLeftElement,
+  Switch,
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -210,7 +211,13 @@ function RenderPage() {
   const columns = [
     {
       name: "Email",
-      selector: (row) => <>{row.email}</>,
+      selector: (row) => (
+        <>
+          <Stack>
+            <Box>{row.email}</Box>
+          </Stack>
+        </>
+      ),
     },
     {
       name: "Firstname",
@@ -233,7 +240,27 @@ function RenderPage() {
     },
     {
       name: "Usertype",
-      selector: (row) => <>{row.user_type}</>,
+      selector: (row) => (
+        <>
+          {row.user_type}
+
+          <Box>
+            {row.user_type == "requestor" ? (
+              <>
+                {row.secretary == 1 ? (
+                  <Badge variant="subtle" colorScheme="green">
+                    Secretary
+                  </Badge>
+                ) : (
+                  ""
+                )}
+              </>
+            ) : (
+              ""
+            )}
+          </Box>
+        </>
+      ),
     },
     {
       name: "Department|Services",

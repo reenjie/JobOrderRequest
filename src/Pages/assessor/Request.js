@@ -96,6 +96,8 @@ function RenderPage() {
     const weeks = e.target.dataset.weeks;
     const days = e.target.dataset.days;
 
+    const assessedby = 31; // SESSION_ID Assessors- Account
+
     if (years == "" && months == "" && weeks == "" && days == "") {
       setValidate("Please set Time Frame");
     } else if (years != "" || months != "" || weeks != "" || days != "") {
@@ -108,6 +110,7 @@ function RenderPage() {
         months: months,
         weeks: weeks,
         days: days,
+        assessedby: assessedby,
       }).then((req) => {
         Axios.post(url + "/api/assessor/getrequests.php", {
           serviceID: "3",

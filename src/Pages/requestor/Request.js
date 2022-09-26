@@ -47,15 +47,20 @@ import {
   Tab,
   TabPanel,
   ButtonGroup,
+  Image,
+  Center,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import Axios from "axios";
 import moment from "moment";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import url from "../../config";
 import swal from "sweetalert";
 import ViewInfo from "../../components/layouts/viewInfo";
 import Info from "./info";
+import svg from "../../images/serv.svg";
+import Approval from "./Approval";
+
 function RenderPage() {
   const [open, setOpen] = useState();
   const [services, setServices] = useState([]);
@@ -65,8 +70,11 @@ function RenderPage() {
   const [myPendingrequest, setMyPendingrequest] = useState([]);
   const [selected, setSelected] = useState([]);
   const [selectedservices, setSelectectServices] = useState([]);
+  const [users, setUsers] = useState([]);
   const [uncheckall, setUncheckall] = useState();
   const toast = useToast();
+  const ref = useRef();
+
   useEffect(() => {
     Axios.post(url + "/api/requestor/getservices.php").then((req) => {
       if (req.data.length >= 1) {
@@ -109,6 +117,14 @@ function RenderPage() {
         setMyPendingrequest(req.data);
       } else {
         setMyPendingrequest([]);
+      }
+    });
+
+    Axios.post(url + "/api/admin/getUsers.php").then((req) => {
+      if (req.data.length >= 1) {
+        setUsers(req.data);
+      } else {
+        setUsers([]);
       }
     });
   }, []);
@@ -164,6 +180,8 @@ function RenderPage() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    ref.current.checked = "false";
+
     const typeofwork = e.target.typeofwork.value;
 
     if (selected.length >= 1) {
@@ -185,7 +203,7 @@ function RenderPage() {
           setUncheckall("uncheck");
           swal("Saved!", "Selection Saved Successfully!", "success").then(
             (value) => {
-              setUncheckall("");
+              setOpen("");
             }
           );
         } else if (req.data.status == 2) {
@@ -331,11 +349,9 @@ function RenderPage() {
               {/* request */}
               <Box display={"block"}>
                 <Text fontWeight={"bold"} fontSize={16} color={"blue.500"}>
-                  Job Request{" "}
-                  <i
-                    className="fas fa-digging"
-                    style={{ fontSize: "17px", marginLeft: "5px" }}
-                  ></i>
+                  <Badge variant="outline" colorScheme="green">
+                    Warehouse
+                  </Badge>
                   <Button
                     float={"right"}
                     onClick={() => {
@@ -452,6 +468,7 @@ function RenderPage() {
                                                   onChange={handleSelected}
                                                   name="servicesoffer"
                                                   id={s.PK_soID}
+                                                  ref={ref}
                                                 >
                                                   {s.name}
                                                 </Checkbox>
@@ -494,7 +511,24 @@ function RenderPage() {
               {/* end Request */}
             </Box>
             <Box bg={"teal.50"} p="10" mt={2} borderLeft={"4px solid #2596be"}>
-              <Text color={"blackAlpha.600"}>Types of Services</Text>
+              <Text
+                fontWeight={"bold"}
+                fontSize={16}
+                color={"blackAlpha.700"}
+                textAlign="center"
+              >
+                JOB ORDER REQUEST
+              </Text>{" "}
+              <Center mt={10}>
+                <Image
+                  //   borderRadius="full"
+                  userSelect={"none"}
+                  width={"70%"}
+                  src={svg}
+                  alt="Dan Abramov"
+                />
+              </Center>
+              {/*     <Text color={"blackAlpha.600"}>Types of Services</Text>
 
               <Grid
                 templateColumns={[
@@ -531,7 +565,7 @@ function RenderPage() {
                     </>
                   );
                 })}
-              </Grid>
+              </Grid> */}
             </Box>
           </GridItem>
           <GridItem w="100%" colSpan={[12, 12, 6]}>
@@ -696,31 +730,32 @@ function RenderPage() {
                 <Text color={"blackAlpha.600"} fontWeight="bold">
                   MY REQUEST
                 </Text>
-                <TableContainer mt={4}>
-                  <Badge mb={2} colorScheme={"linkedin"}>
-                    {" "}
-                    <i className="fas fa-list"></i> My Job Orders
-                  </Badge>
 
-                  <Tabs>
-                    <TabList>
-                      <Tab fontSize={14} color="blackAlpha.600">
-                        On Going{" "}
-                        <i
-                          className="fas fa-sync"
-                          style={{ marginLeft: "5px" }}
-                        ></i>
-                      </Tab>
-                      <Tab fontSize={14} color="blackAlpha.600">
-                        Accomplished{" "}
-                        <i
-                          className="fas fa-check-circle"
-                          style={{ marginLeft: "5px" }}
-                        ></i>
-                      </Tab>
-                    </TabList>
-                    <TabPanels>
-                      <TabPanel>
+                <Badge mb={2} colorScheme={"linkedin"}>
+                  {" "}
+                  <i className="fas fa-list"></i> My Job Orders
+                </Badge>
+
+                <Tabs>
+                  <TabList>
+                    <Tab fontSize={14} color="blackAlpha.600">
+                      On Going{" "}
+                      <i
+                        className="fas fa-sync"
+                        style={{ marginLeft: "5px" }}
+                      ></i>
+                    </Tab>
+                    <Tab fontSize={14} color="blackAlpha.600">
+                      Accomplished{" "}
+                      <i
+                        className="fas fa-check-circle"
+                        style={{ marginLeft: "5px" }}
+                      ></i>
+                    </Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <TableContainer mt={4}>
                         <Table size="sm" variant="striped" colorScheme="gray">
                           <Thead>
                             <Tr>
@@ -862,6 +897,8 @@ function RenderPage() {
                                                   myID={row.PK_requestID}
                                                   services={services}
                                                   servicesOffer={servicesOffer}
+                                                  users={users}
+                                                  load="ongoing"
                                                 />
                                               }
                                             />
@@ -889,8 +926,10 @@ function RenderPage() {
                             })}
                           </Tbody>
                         </Table>
-                      </TabPanel>
-                      <TabPanel>
+                      </TableContainer>
+                    </TabPanel>
+                    <TabPanel>
+                      <TableContainer mt={4}>
                         <Table size="sm" variant="striped" colorScheme="gray">
                           <Thead>
                             <Tr>
@@ -970,6 +1009,7 @@ function RenderPage() {
                                               myID={row.PK_requestID}
                                               services={services}
                                               servicesOffer={servicesOffer}
+                                              users={users}
                                             />
                                           }
                                         />
@@ -981,10 +1021,10 @@ function RenderPage() {
                             })}
                           </Tbody>
                         </Table>
-                      </TabPanel>
-                    </TabPanels>
-                  </Tabs>
-                </TableContainer>
+                      </TableContainer>
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
               </Box>
             </Box>
           </GridItem>
@@ -995,11 +1035,12 @@ function RenderPage() {
 }
 
 function R_Request() {
+  const isSecretary = 1;
   return (
     <>
       <AdminLayout
         Sidebar_elements={<Sidebar />}
-        Page_Contents={<RenderPage />}
+        Page_Contents={isSecretary == 1 ? <Approval /> : <RenderPage />}
         Page_title="REQUEST"
       />
     </>

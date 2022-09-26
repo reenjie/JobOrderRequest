@@ -46,6 +46,7 @@ import {
   Tab,
   TabPanel,
   ButtonGroup,
+  Avatar,
 } from "@chakra-ui/react";
 import moment from "moment";
 function Info(props) {
@@ -99,10 +100,10 @@ function Info(props) {
                       </Thead>
                       <Tbody>
                         <Tr color={"teal.700"}>
-                          <Td>{row.noteby ? row.noteby : "N/A"}</Td>
+                          <Td>{row.notedby ? row.notedby : "N/A"}</Td>
                           <Td>
                             {row.dtapproved
-                              ? moment(row.dtapproved).format("MMMM DD,YYYY")
+                              ? moment(row.dtapproved).format("MMM DD,YYYY")
                               : "N/A"}
                           </Td>
                           <Td>
@@ -141,60 +142,158 @@ function Info(props) {
                     >
                       Assesstment
                     </Text>
-                    <Stack>
-                      <Text color="blackAlpha.700" fontSize={15}>
-                        Prioritization :{" "}
-                        <span style={{ color: "#4dadd3" }}>
-                          {row.prioritization}
-                        </span>
-                      </Text>
-                      <Text color="blackAlpha.700" fontSize={15}>
-                        Type of Repair :{" "}
-                        <span style={{ color: "#4dadd3" }}>
-                          {row.typeofrepair}
-                        </span>
-                      </Text>
-                      <Text color="blackAlpha.700" fontSize={15}>
-                        Recommendation :{" "}
-                        <span style={{ color: "#4dadd3" }}>
-                          {row.recommendation}
-                        </span>
-                      </Text>
-                      <Text color="blackAlpha.700" fontSize={15}>
-                        Materials Needed :{" "}
-                        <span style={{ color: "#4dadd3" }}>
-                          {row.materials_needed}
-                        </span>
-                      </Text>
-                      <Text color="blackAlpha.700" fontSize={15}>
-                        Estimated Unit Cost :{" "}
-                        <span style={{ color: "#4dadd3" }}>
-                          {row.estimated_unitcost}
-                        </span>
-                      </Text>
-                      <Text color="blackAlpha.700" fontSize={15}>
-                        Total Estimated Unit Cost :{" "}
-                        <span style={{ color: "#4dadd3" }}>
-                          {row.total_estimated_cost}
-                        </span>
-                      </Text>
-                      <Text color="blackAlpha.700" fontSize={15}>
-                        Assessed By :{" "}
-                        <span style={{ color: "#4dadd3" }}>
-                          {row.assessedby}
-                        </span>
-                      </Text>
-                      <Text color="blackAlpha.700" fontSize={15}>
-                        Verified By:{" "}
-                        <span style={{ color: "#4dadd3" }}>
-                          {row.verifiedby}
-                        </span>
-                      </Text>
 
-                      <Text color="blackAlpha.700" fontSize={15}>
-                        Remarks :{" "}
-                        <span style={{ color: "#4dadd3" }}>{row.remarks}</span>
-                      </Text>
+                    <Text
+                      color={"blackAlpha.700"}
+                      fontSize={13}
+                      float={["", "", "", "right"]}
+                    >
+                      Date-Assessed:{" "}
+                      {moment(row.dt_assessed).format("@hh:mm a MMM DD,YYYY")}
+                    </Text>
+                    <Text color="blackAlpha.700" fontSize={15}>
+                      Assessed By :{" "}
+                      <span style={{ color: "#4dadd3" }}>
+                        {props.users.map((e) => {
+                          if (e.PK_userID == row.assessedby) {
+                            return (
+                              <>
+                                <Box p={4}>
+                                  <Flex>
+                                    <Avatar
+                                      name="Dan Abrahmov"
+                                      src="https://bit.ly/dan-abramov"
+                                      size={"md"}
+                                    />
+                                    <Box ml={5}>
+                                      {e.firstname + " " + e.lastname}
+                                      <br />
+                                      <span
+                                        style={{
+                                          fontSize: "12px",
+                                        }}
+                                      >
+                                        {" "}
+                                        {e.email}
+                                        <br />
+                                        {e.contact_no}
+                                      </span>
+                                    </Box>
+                                  </Flex>
+                                </Box>
+                              </>
+                            );
+                          }
+                        })}
+                      </span>
+                    </Text>
+                    <Text color="blackAlpha.700" ml={5} fontSize={15} mb={2}>
+                      TIME FRAME: <br />
+                      <span style={{ color: "#4dadd3" }}>
+                        {row.tf_years == 0 ? (
+                          ""
+                        ) : (
+                          <>
+                            {row.tf_years} Year/s
+                            <br />
+                          </>
+                        )}
+                        {row.tf_months == 0 ? (
+                          ""
+                        ) : (
+                          <>
+                            {row.tf_months} Month/s <br />
+                          </>
+                        )}
+                        {row.tf_weeks == 0 ? (
+                          ""
+                        ) : (
+                          <>
+                            {row.tf_weeks} Week/s <br />
+                          </>
+                        )}
+                        {row.tf_days == 0 ? (
+                          ""
+                        ) : (
+                          <>
+                            {row.tf_days} Day/s <br />
+                          </>
+                        )}
+                      </span>
+                    </Text>
+
+                    <TableContainer>
+                      <Table size="sm">
+                        <Thead>
+                          <Tr>
+                            <Th>Prioritization</Th>
+                            <Th>Type of Repair</Th>
+                            <Th>Recommendation</Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          <Tr color={"teal.700"}>
+                            <Td color="#4dadd3"> {row.prioritization}</Td>
+                            <Td color="#4dadd3">{row.typeofrepair}</Td>
+                            <Td color="#4dadd3">{row.recommendation}</Td>
+                          </Tr>
+                        </Tbody>
+                        <Thead>
+                          <br />
+                        </Thead>
+                        {
+                          (row.materials_needed,
+                          row.estimated_unitcost,
+                          row.total_estimated_cost ? (
+                            <>
+                              <Thead>
+                                <Tr>
+                                  <Th>Materials Needed</Th>
+                                  <Th>Estimated Unit Cost</Th>
+                                  <Th>Total Estimated Unit Cost</Th>
+                                </Tr>
+                              </Thead>
+                              <Tbody>
+                                <Tr color={"teal.700"}>
+                                  <Td color="#4dadd3">
+                                    {" "}
+                                    {row.materials_needed}
+                                  </Td>
+                                  <Td color="#4dadd3">
+                                    {" "}
+                                    {row.estimated_unitcost}
+                                  </Td>
+                                  <Td color="#4dadd3">
+                                    {" "}
+                                    {row.total_estimated_cost}
+                                  </Td>
+                                </Tr>
+                              </Tbody>
+                            </>
+                          ) : (
+                            ""
+                          ))
+                        }
+                      </Table>
+                    </TableContainer>
+                    <Stack>
+                      {row.verifiedby && (
+                        <Text color="blackAlpha.700" fontSize={15}>
+                          Verified By:{" "}
+                          <span style={{ color: "#4dadd3" }}>
+                            {row.verifiedby}
+                          </span>
+                        </Text>
+                      )}
+
+                      {row.remarks && (
+                        <Text color="blackAlpha.700" mt={4} fontSize={15}>
+                          Remarks :{" "}
+                          <span style={{ color: "#4dadd3" }}>
+                            {row.remarks}
+                          </span>
+                        </Text>
+                      )}
                     </Stack>
                   </Box>
                 ) : (
@@ -216,36 +315,60 @@ function Info(props) {
                       <Table size="sm">
                         <Thead>
                           <Tr>
-                            <Th>Date and Time Started</Th>
+                            <Th> Date and Time Started</Th>
                             <Th>Date and Time Finished</Th>
-                            <Th>Repaired By</Th>
-                            <Th>Remarks</Th>
                           </Tr>
                         </Thead>
                         <Tbody>
                           <Tr color={"teal.700"}>
-                            <Td>Dennis Falcasantos</Td>
-                            <Td>sept 23 2022</Td>
-                            <Td>1:27 pm</Td>
-                            <Td>Dennis Falcasantos</Td>
+                            <Td>
+                              {" "}
+                              {moment(row.dtstart).format(
+                                "@hh:mm a MMM DD,YYYY"
+                              )}
+                            </Td>
+                            <Td>
+                              {moment(row.dtend).format("@hh:mm a MMM DD,YYYY")}
+                            </Td>
                           </Tr>
                         </Tbody>
                       </Table>
                     </TableContainer>
+
+                    <Text color="blackAlpha.700" fontSize={15}>
+                      Repaired By:
+                      <span style={{ color: "#4dadd3", marginLeft: "5px" }}>
+                        {row.repairedby}
+                      </span>
+                    </Text>
+                    <Text color="blackAlpha.700" fontSize={15}>
+                      Remarks:
+                      <span style={{ color: "#4dadd3", marginLeft: "5px" }}>
+                        {row.accomplishment_remarks}
+                      </span>
+                    </Text>
                   </Box>
                 ) : (
                   ""
                 )}
 
-                <Box p={5} mt={10}>
-                  <Button variant={"outline"} colorScheme="facebook" size="sm">
-                    Print
-                    <i
-                      className="fas fa-file-pdf"
-                      style={{ marginLeft: "5px" }}
-                    ></i>
-                  </Button>
-                </Box>
+                {props.load ? (
+                  ""
+                ) : (
+                  <Box p={5} mt={10}>
+                    <Button
+                      variant={"outline"}
+                      colorScheme="facebook"
+                      size="sm"
+                    >
+                      Print
+                      <i
+                        className="fas fa-file-pdf"
+                        style={{ marginLeft: "5px" }}
+                      ></i>
+                    </Button>
+                  </Box>
+                )}
               </Stack>
             </Container>
           </Box>
