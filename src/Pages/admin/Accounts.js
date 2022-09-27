@@ -428,6 +428,12 @@ function RenderPage() {
           borderRadius="6"
           boxShadow="md"
         >
+          <Box>
+            <Badge colorScheme={"linkedin"} mb={2}>
+              {" "}
+              <i className="fas fa-list"></i> JO Accounts
+            </Badge>
+          </Box>
           {alerts && (
             <Alert mt={3} mb={3} status="success" id="" variant="left-accent">
               <AlertIcon />

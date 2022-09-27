@@ -58,6 +58,7 @@ function RenderPage() {
       userid: userid,
     }).then((req) => {
       setUserinfo(req.data);
+      setSec(req.data[0].secretary);
     });
 
     Axios.post("http://localhost/JOBREQUEST/api/admin/getdepartment.php").then(
@@ -71,9 +72,7 @@ function RenderPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(sec);
-
-    /*  const usertype = e.target.usertype.value;
+    const usertype = e.target.usertype.value;
     const firstname = e.target.firstname.value;
     const lastname = e.target.lastname.value;
     const email = e.target.email.value;
@@ -97,6 +96,7 @@ function RenderPage() {
       position: position,
       services: services,
       id: id,
+      secretary: sec,
     }).then((req) => {
       console.log(req.data.status);
       if (req.data.status == 1) {
@@ -105,7 +105,7 @@ function RenderPage() {
           setAlerts("");
         }, 2000);
       }
-    }); */
+    });
   };
 
   const handleCheck = (e) => {
@@ -182,7 +182,6 @@ function RenderPage() {
                           <>
                             {row.secretary == 1 ? (
                               <>
-                                {" "}
                                 <Checkbox
                                   size="sm"
                                   color={"blackAlpha.700"}

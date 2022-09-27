@@ -772,7 +772,8 @@ function RenderPage() {
                               if (
                                 row.status == 0 ||
                                 row.status == 1 ||
-                                row.status == 2
+                                row.status == 2 ||
+                                row.status == 4
                               ) {
                                 return (
                                   <>
@@ -1035,7 +1036,7 @@ function RenderPage() {
 }
 
 function R_Request() {
-  const isSecretary = 1;
+  const isSecretary = 0;
   return (
     <>
       <AdminLayout

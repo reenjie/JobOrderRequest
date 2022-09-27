@@ -29,6 +29,7 @@ import moment from "moment";
 import Axios from "axios";
 import ViewRequestmodal from "../../components/layouts/ViewRequestmodal";
 import url from "../../config";
+
 function RenderPage() {
   const [matches, setMatches] = useState(
     window.matchMedia("(min-width: 768px)").matches
@@ -98,9 +99,7 @@ function RenderPage() {
 
     const assessedby = 31; // SESSION_ID Assessors- Account
 
-    if (years == "" && months == "" && weeks == "" && days == "") {
-      setValidate("Please set Time Frame");
-    } else if (years != "" || months != "" || weeks != "" || days != "") {
+    if (recommendation == "Outsource") {
       Axios.post(url + "/api/assessor/ApprovedRequest.php", {
         id: id,
         prioritization: prioritization,
@@ -111,6 +110,7 @@ function RenderPage() {
         weeks: weeks,
         days: days,
         assessedby: assessedby,
+        status: 4,
       }).then((req) => {
         Axios.post(url + "/api/assessor/getrequests.php", {
           serviceID: "3",
@@ -130,6 +130,41 @@ function RenderPage() {
 
         document.getElementById("btnmodalCloseview").click();
       });
+    } else {
+      if (years == "" && months == "" && weeks == "" && days == "") {
+        setValidate("Please set Time Frame");
+      } else if (years != "" || months != "" || weeks != "" || days != "") {
+        Axios.post(url + "/api/assessor/ApprovedRequest.php", {
+          id: id,
+          prioritization: prioritization,
+          typeofrepair: typeofrepair,
+          recommendation: recommendation,
+          years: years,
+          months: months,
+          weeks: weeks,
+          days: days,
+          assessedby: assessedby,
+          status: 2,
+        }).then((req) => {
+          Axios.post(url + "/api/assessor/getrequests.php", {
+            serviceID: "3",
+          }).then((req) => {
+            if (req.data.length >= 1) {
+              setRequest(req.data);
+            } else {
+              setRequest([]);
+            }
+          });
+
+          setAlerts("Approved Successfully.");
+          setTimeout(() => {
+            setAlerts("");
+            window.location.reload();
+          }, 2000);
+
+          document.getElementById("btnmodalCloseview").click();
+        });
+      }
     }
   };
 
@@ -686,6 +721,10 @@ function RenderPage() {
             </Alert>
           )}
 
+          <Badge colorScheme={"linkedin"}>
+            {" "}
+            <i className="fas fa-list"></i> Job Orders
+          </Badge>
           <DataTable
             columns={columns}
             data={request}

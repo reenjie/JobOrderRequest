@@ -27,6 +27,7 @@ import {
   BreadcrumbSeparator,
   InputGroup,
   InputLeftElement,
+  Badge,
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -439,6 +440,13 @@ function RenderPage() {
               <Text color={"blackAlpha.600"}>{alerts}</Text>
             </Alert>
           )}
+
+          <Box>
+            <Badge colorScheme={"linkedin"} mb={2}>
+              {" "}
+              <i className="fas fa-list"></i> JO ServicesOffers
+            </Badge>
+          </Box>
 
           <Add_Modal
             btnTitle="ADD"

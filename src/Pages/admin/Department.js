@@ -18,6 +18,7 @@ import {
   CloseButton,
   InputGroup,
   InputLeftElement,
+  Badge,
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -389,6 +390,12 @@ function RenderPage() {
       {" "}
       <Container mt={10} maxW="container.xxl">
         <Box p="10" bg={"cyan.50"} borderRadius="6" transition={"all ease 2s"}>
+          <Box>
+            <Badge colorScheme={"linkedin"}>
+              {" "}
+              <i className="fas fa-list"></i> JO Departments
+            </Badge>
+          </Box>
           {alerts && (
             <Alert status="success" id="" variant="left-accent">
               <AlertIcon />

@@ -27,6 +27,7 @@ import {
   BreadcrumbSeparator,
   InputGroup,
   InputLeftElement,
+  Badge,
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -374,6 +375,12 @@ function RenderPage() {
       {" "}
       <Container mt={5} p={[0, 5, 10]} maxW="container.xxl">
         <Box p="7" bg={"cyan.50"} borderRadius="6">
+          <Box>
+            <Badge colorScheme={"linkedin"} mb={2}>
+              {" "}
+              <i className="fas fa-list"></i> JO Services
+            </Badge>
+          </Box>
           {alerts && (
             <Alert status="success" id="" variant="left-accent">
               <AlertIcon />

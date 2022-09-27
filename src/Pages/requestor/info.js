@@ -47,8 +47,10 @@ import {
   TabPanel,
   ButtonGroup,
   Avatar,
+  Image,
 } from "@chakra-ui/react";
 import moment from "moment";
+import logo from "../../images/zcmc_logo.png";
 function Info(props) {
   return props.myrequest.map((row) => (
     <>
@@ -56,6 +58,73 @@ function Info(props) {
         <div>
           <Box p={3}>
             <Container maxW={"container.xl"}>
+              <Stack direction={"row"}>
+                <Text color="blackAlpha.700" fontSize={15}>
+                  <span style={{ color: "#4dadd3" }}>
+                    <Box p={4}>
+                      <Flex>
+                        <Image
+                          boxSize="60px"
+                          h={"auto"}
+                          src={logo}
+                          alt="zcmc_logo"
+                        />
+                        <Box
+                          ml={2}
+                          color={"blackAlpha.600"}
+                          fontSize={17}
+                          fontWeight="bold"
+                          mt={5}
+                        >
+                          JOB ORDER REQUEST
+                        </Box>
+                      </Flex>
+                    </Box>
+                  </span>
+                </Text>
+                <Spacer />
+                {props.unset && (
+                  <Box>
+                    <Text color="blackAlpha.700" float={"right"} fontSize={15}>
+                      Requested By :{" "}
+                      <span style={{ color: "#4dadd3" }}>
+                        {props.users.map((e) => {
+                          if (e.PK_userID == row.FK_userID) {
+                            return (
+                              <>
+                                <Box p={4}>
+                                  <Flex>
+                                    <Avatar
+                                      name="Dan Abrahmov"
+                                      src="https://bit.ly/dan-abramov"
+                                      size={"md"}
+                                    />
+                                    <Box ml={5}>
+                                      {e.firstname + " " + e.lastname}
+                                      <br />
+                                      <span
+                                        style={{
+                                          fontSize: "12px",
+                                        }}
+                                      >
+                                        {" "}
+                                        {e.email}
+                                        <br />
+                                        {e.contact_no}
+                                      </span>
+                                    </Box>
+                                  </Flex>
+                                </Box>
+                              </>
+                            );
+                          }
+                        })}
+                      </span>
+                    </Text>
+                  </Box>
+                )}
+              </Stack>
+
               <Stack>
                 <Text color={"blue.600"} fontSize={15}>
                   <i className="fas fa-cogs"></i> {row.label}
@@ -124,10 +193,24 @@ function Info(props) {
                     </>
                   ) : (
                     <>
-                      <Text color={"blue.400"}>Status :</Text>
-                      <Badge variant="outline" colorScheme="green">
-                        APPROVED
-                      </Badge>
+                      {row.status == 5 ? (
+                        <>
+                          {" "}
+                          <Text color={"blue.400"}>Remarks :</Text>
+                          {row.disapproved_remarks}
+                          <Text color={"blue.400"}>Status :</Text>
+                          <Badge variant="outline" colorScheme="red">
+                            DISAPPROVED
+                          </Badge>
+                        </>
+                      ) : (
+                        <>
+                          <Text color={"blue.400"}>Status :</Text>
+                          <Badge variant="outline" colorScheme="green">
+                            APPROVED
+                          </Badge>
+                        </>
+                      )}
                     </>
                   )}
                 </Box>
@@ -353,6 +436,8 @@ function Info(props) {
                 )}
 
                 {props.load ? (
+                  ""
+                ) : props.unset ? (
                   ""
                 ) : (
                   <Box p={5} mt={10}>

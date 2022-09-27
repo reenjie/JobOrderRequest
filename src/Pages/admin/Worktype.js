@@ -33,6 +33,7 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   PopoverAnchor,
+  Badge,
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -409,6 +410,12 @@ function RenderPage() {
       {" "}
       <Container mt={10} maxW="container.xxl">
         <Box p="10" bg={"cyan.50"} borderRadius="6">
+          <Box>
+            <Badge colorScheme={"linkedin"} mb={2}>
+              {" "}
+              <i className="fas fa-list"></i> JO Worktypes
+            </Badge>
+          </Box>
           {alerts && (
             <Alert status="success" id="" variant="left-accent">
               <AlertIcon />

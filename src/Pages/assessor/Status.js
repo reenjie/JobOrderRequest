@@ -46,7 +46,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { EditIcon, DeleteIcon, AddIcon, SearchIcon } from "@chakra-ui/icons";
 import DataTable, { createTheme } from "react-data-table-component";
 import moment from "moment";
@@ -54,6 +54,8 @@ import ManageModal from "../../components/layouts/manage_modal";
 import HistoryModal from "../../components/layouts/historyModal";
 import url from "../../config";
 import swal from "sweetalert";
+import { useToast } from "@chakra-ui/react";
+
 import { useDisclosure } from "@chakra-ui/react";
 
 import {
@@ -80,9 +82,11 @@ function RenderPage() {
   const [servicesoffer, setServicesoffer] = useState([]);
   const [alerts, setAlerts] = useState();
   const [AccomplishRequest, setAccomplishRequest] = useState([]);
+  const [messages, setMessages] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [requestid, setRequestid] = useState();
-
+  const tarea = useRef();
+  const toast = useToast();
   useEffect(() => {
     window
       .matchMedia("(min-width: 768px)")
@@ -145,6 +149,14 @@ function RenderPage() {
       }
 
       //console.log(req.data);
+    });
+
+    Axios.post(url + "/api/assessor/getstatusMessages.php").then((req) => {
+      if (req.data.length >= 1) {
+        setMessages(req.data);
+      } else {
+        setMessages([]);
+      }
     });
   }, []);
   createTheme(
@@ -413,6 +425,78 @@ function RenderPage() {
     });
   };
 
+  const handleSendStatus = (e) => {
+    const status_message = tarea.current.value;
+    const id = e.currentTarget.dataset.requestid;
+    if (status_message == "") {
+      console.log("please provide message");
+      toast({
+        title: `Please provide remarks or message before adding!`,
+        status: "error",
+        position: "top-center",
+        variant: "left-accent",
+        isClosable: true,
+      });
+    } else {
+      Axios.post(url + "/api/assessor/AddStatus_message.php", {
+        status_message: status_message,
+        id: id,
+      }).then((req) => {
+        if (req.data.status == 1) {
+          Axios.post(url + "/api/assessor/getstatusMessages.php").then(
+            (req) => {
+              if (req.data.length >= 1) {
+                setMessages(req.data);
+              } else {
+                setMessages([]);
+              }
+            }
+          );
+
+          toast({
+            title: `Remarks Added!`,
+            status: "success",
+            position: "top-right",
+            variant: "left-accent",
+            isClosable: true,
+          });
+          tarea.current.value = "";
+        }
+      });
+
+      /*
+       */
+    }
+
+    //
+  };
+
+  const handleDeleteMessage = (e) => {
+    const id = e.currentTarget.dataset.id;
+
+    Axios.post(url + "/api/assessor/DeleteStatus_message.php", {
+      id: id,
+    }).then((req) => {
+      if (req.data.status == 1) {
+        Axios.post(url + "/api/assessor/getstatusMessages.php").then((req) => {
+          if (req.data.length >= 1) {
+            setMessages(req.data);
+          } else {
+            setMessages([]);
+          }
+        });
+
+        toast({
+          title: `Message Deleted!`,
+          status: "success",
+          position: "top-right",
+          variant: "left-accent",
+          isClosable: true,
+        });
+      }
+    });
+  };
+
   const Manage = (props) => {
     const id = props.requestID;
 
@@ -520,11 +604,12 @@ function RenderPage() {
                         textTransform="uppercase"
                         userSelect={"text"}
                       >
-                        {wt.label}
+                        <i className="fas fa-cogs"></i> {wt.label}
                       </Text>
                     );
                   }
                 })}
+
                 <br />
                 {servicesoffer.map((so) => {
                   if (so.PK_soID == row.FK_serviceOfferID) {
@@ -587,58 +672,120 @@ function RenderPage() {
                 }
               })}
 
-              <Grid
-                templateColumns={[
-                  "repeat(1, 1fr)",
-                  "repeat(1, 1fr)",
-                  "repeat(2, 1fr)",
-                ]}
-                gap={1}
-              >
-                <GridItem w="100%">
-                  <Box>
-                    <Text color={"blackAlpha.700"} fontSize={15}>
-                      Current Status:
-                    </Text>
-                    <Select
-                      bg={"green.50"}
-                      borderColor={"green.200"}
-                      placeholder="Change Status"
-                      size={"sm"}
-                      color={"green.600"}
-                      autoFocus
-                      defaultValue={row.request_status}
-                      data-requestid={row.PK_requestID}
-                      data-name={"request_status"}
-                      onChange={handlechange}
-                      id="request_status"
-                    >
-                      <option value="WORK ON GOING">Work On Going</option>
-                      <option value="ON QUEUE">On Queue</option>
-                      <option value="ACCOMPLISHED">Accomplished</option>
-                    </Select>
-                  </Box>
-                </GridItem>
-                <GridItem w="100%">
-                  <Box ml={4}>
-                    <Text color={"blackAlpha.700"} fontSize={15}>
-                      Status Message:
-                    </Text>
-                    <Textarea
-                      borderColor={"green.200"}
-                      defaultValue={row.status_message}
-                      color={"teal.500"}
-                      fontSize={14}
-                      data-requestid={row.PK_requestID}
-                      data-name={"status_message"}
-                      onChange={handlechange}
-                    />
-                  </Box>
-                </GridItem>
-              </Grid>
-
               <Stack>
+                <Box mt={5} mb={4} bg={"blackAlpha.100"} p={5} borderRadius={5}>
+                  <Text fontWeight={"bold"} color={"blackAlpha.600"}>
+                    Manage Status
+                  </Text>
+                  <Container maxW={"container.lg"}>
+                    <Box mb={3}>
+                      <Text color={"blackAlpha.700"} fontSize={15}>
+                        Current :
+                      </Text>
+                      <Select
+                        bg={"green.50"}
+                        borderColor={"green.200"}
+                        placeholder="Change Status"
+                        size={"sm"}
+                        color={"green.600"}
+                        defaultValue={row.request_status}
+                        data-requestid={row.PK_requestID}
+                        data-name={"request_status"}
+                        onChange={handlechange}
+                        id="request_status"
+                      >
+                        <option value="WORK ON GOING">Work On Going</option>
+                        <option value="ON QUEUE">On Queue</option>
+                        <option value="ACCOMPLISHED">Accomplished</option>
+                      </Select>
+                    </Box>
+                    <Badge colorScheme="facebook">Remarks</Badge>
+                    <UnorderedList listStyleType={"none"} fontSize={14} mb={2}>
+                      {messages.map((sms) => {
+                        if (sms.FK_requestID == row.PK_requestID) {
+                          return (
+                            <>
+                              <ListItem p={1}>
+                                <Button
+                                  color={"red.300"}
+                                  fontWeight="normal"
+                                  size={"sm"}
+                                  variant={"outline"}
+                                  marginRight="5px"
+                                  data-id={sms.PK_statusID}
+                                  onClick={handleDeleteMessage}
+                                >
+                                  <i
+                                    className="fas fa-trash-can"
+                                    style={{ marginRight: "5px" }}
+                                  ></i>{" "}
+                                </Button>
+                                <i
+                                  className="fas fa-message"
+                                  style={{
+                                    color: "#8aab85",
+                                    marginRight: "5px",
+                                  }}
+                                ></i>{" "}
+                                {sms.message}
+                                <span
+                                  style={{
+                                    float: "right",
+                                    fontSize: "12px",
+
+                                    color: "#ab5338",
+                                  }}
+                                >
+                                  {moment(sms.created_at).format(
+                                    "hh:mma | MMM DD,YYYY"
+                                  )}
+                                </span>
+                              </ListItem>
+                            </>
+                          );
+                        }
+                      })}
+                    </UnorderedList>
+
+                    <Box mt={10}>
+                      <Text color={"blackAlpha.700"} fontSize={15}>
+                        Remarks | Message:
+                      </Text>
+                      <Textarea
+                        color={"blackAlpha.800"}
+                        fontSize={14}
+                        bg={"whiteAlpha.700"}
+                        data-requestid={row.PK_requestID}
+                        data-name={"status_message"}
+                        placeholder="type your message here .."
+                        borderColor={"gray.300"}
+                        ref={tarea}
+                        autoFocus
+                      />
+                      <Button
+                        variant={"outline"}
+                        colorScheme="whiteAlpha"
+                        color="green.500"
+                        size={"sm"}
+                        mt={4}
+                        float="right"
+                        data-requestid={row.PK_requestID}
+                        onClick={handleSendStatus}
+                      >
+                        Add Remarks{" "}
+                        <i
+                          className="fas fa-paper-plane"
+                          style={{ marginLeft: "5px" }}
+                        ></i>
+                      </Button>
+                    </Box>
+                  </Container>
+                </Box>
+
                 <Box>
+                  <Text fontWeight={"bold"} mb={2} color={"blackAlpha.600"}>
+                    Assesstment
+                  </Text>
                   <Text color={"blackAlpha.700"} fontSize={15}>
                     Findings:
                   </Text>
@@ -784,12 +931,27 @@ function RenderPage() {
       selector: (row) => (
         <>
           <Box>
-            {differrence(
-              row.dt_assessed,
-              row.tf_years,
-              row.tf_months,
-              row.tf_weeks,
-              row.tf_days
+            {row.status == 4 ? (
+              <Flex>
+                <Progress
+                  backgroundColor={"green.100"}
+                  value={0}
+                  hasStripe
+                  colorScheme={"teal"}
+                  style={{ width: "100px", height: "15px" }}
+                ></Progress>
+                <Text ml={2} color={"blackAlpha.600"}>
+                  0%
+                </Text>
+              </Flex>
+            ) : (
+              differrence(
+                row.dt_assessed,
+                row.tf_years,
+                row.tf_months,
+                row.tf_weeks,
+                row.tf_days
+              )
             )}
           </Box>
         </>
@@ -899,12 +1061,27 @@ function RenderPage() {
       selector: (row) => (
         <>
           <Box>
-            {differrence(
-              row.dt_assessed,
-              row.tf_years,
-              row.tf_months,
-              row.tf_weeks,
-              row.tf_days
+            {row.status == 4 ? (
+              <Flex>
+                <Progress
+                  backgroundColor={"green.100"}
+                  value={0}
+                  hasStripe
+                  colorScheme={"teal"}
+                  style={{ width: "100px", height: "15px" }}
+                ></Progress>
+                <Text ml={2} color={"blackAlpha.600"}>
+                  0%
+                </Text>
+              </Flex>
+            ) : (
+              differrence(
+                row.dt_assessed,
+                row.tf_years,
+                row.tf_months,
+                row.tf_weeks,
+                row.tf_days
+              )
             )}
           </Box>
         </>

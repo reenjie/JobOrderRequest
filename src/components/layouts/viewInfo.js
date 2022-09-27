@@ -10,6 +10,7 @@ import {
   Text,
   Center,
   Container,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import React from "react";
@@ -22,17 +23,24 @@ function ViewInfo(props) {
   };
   return (
     <>
-      <Button
-        onClick={() => {
-          onOpen();
-        }}
-        size={"sm"}
-        colorScheme={"cyan"}
-        variant={"ghost"}
-        fontWeight="normal"
+      <Tooltip
+        label="View Info"
+        aria-label="A tooltip"
+        bg={"gray.100"}
+        placement="top-end"
       >
-        <i className="fa fa-circle-info"></i>
-      </Button>
+        <Button
+          onClick={() => {
+            onOpen();
+          }}
+          size={"sm"}
+          colorScheme={"cyan"}
+          variant={"ghost"}
+          fontWeight="normal"
+        >
+          <i className="fa fa-circle-info"></i>
+        </Button>
+      </Tooltip>
 
       <Modal size={"full"} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
