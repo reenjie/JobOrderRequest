@@ -7,9 +7,14 @@ import {
   useDisclosure,
   Button,
   Box,
+  Center,
+  Stack,
+  Image,
+  Heading,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-
+import { useState, useEffect } from "react";
+import Loading from "../loading";
 function handleClick() {
   const sb = document.getElementById("sideBar");
   const sblink = document.getElementById("sblink");
@@ -30,27 +35,42 @@ function handleClick() {
   }
 }
 function AdminLayout(props) {
+  const [isLoading, setLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  });
   return (
     <>
-      <div id="sideBar">{props.Sidebar_elements}</div>
-      <div className="topbar">
-        <button
-          id="btnopen_close"
-          colorScheme="teal"
-          variant="outline"
-          value="changeicon"
-          zIndex="100"
-          onClick={handleClick}
-        >
-          <HamburgerIcon id="humicon" />
-        </button>
-        <span className="title" style={{ fontWeight: "bold", color: "gray" }}>
-          {props.Page_title}
-        </span>
-      </div>
-      <div className="Wrap" id="wrap">
-        <div id="mainPage">{props.Page_Contents}</div>
-      </div>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <div id="sideBar">{props.Sidebar_elements}</div>
+          <div className="topbar">
+            <button
+              id="btnopen_close"
+              colorScheme="teal"
+              variant="outline"
+              value="changeicon"
+              zIndex="100"
+              onClick={handleClick}
+            >
+              <HamburgerIcon id="humicon" />
+            </button>
+            <span
+              className="title"
+              style={{ fontWeight: "bold", color: "gray" }}
+            >
+              {props.Page_title}
+            </span>
+          </div>
+          <div className="Wrap" id="wrap">
+            <div id="mainPage">{props.Page_Contents}</div>
+          </div>
+        </>
+      )}
     </>
   );
 }

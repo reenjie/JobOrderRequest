@@ -1,15 +1,8 @@
-import React, {
-  Component,
-  useState,
-  useEffect,
-  Fragment,
-  useDisclosure,
-  Lorem,
-} from "react";
+import React, { Component, useState, useEffect, Fragment, Lorem } from "react";
 import * as _ from "@chakra-ui/react";
 import logo from "../../images/zcmc_logo.png";
 import Axios from "axios";
-import { DeleteIcon, ListIcon } from "@chakra-ui/icons";
+import { DeleteIcon, ListIcon, AttachmentIcon } from "@chakra-ui/icons";
 
 import {
   Alert,
@@ -60,6 +53,7 @@ import {
   FormLabel,
   Text,
   FormErrorMessage,
+  useDisclosure,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -93,6 +87,7 @@ const FrontPage = () => {
   const [isShown, setShow] = useState(false); //if checkBox selected || for TextBox view
   const [isEleMech, setEleMech] = useState(); ////
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState();
 
   const [serialNumber, setSerialNumber] = useState("");
   const [modelNumber, setModelNumber] = useState("");
@@ -112,6 +107,7 @@ const FrontPage = () => {
   // const TypeOfWork = ["New Installation/Fabrication", "Repair/Renovation"];
 
   const TableComposition = (props) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
     // 1 if dfault
     //2 if has serial number
     //3 data is other
@@ -123,21 +119,17 @@ const FrontPage = () => {
       return <IsDefaultTableRow data={props} />;
     } else if (props.data.type == 3) {
       return <IsOthersRow data={props} />;
-    } else {
-      return (
-        <Tr>
-          <Td>loko</Td>
-          <Td>loko</Td>
-          <Td>loko</Td>
-        </Tr>
-      );
+    } else if (props.data.type == 2) {
+      return <HasSerMoTableRow data={props} />;
+      //console.log("the datas are: ", props.data);
     }
   };
+
   const DetailModal = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     return (
       <>
-        <Button onClick={onOpen}>Details</Button>
+        <Button onClick={onOpen}>Description</Button>
 
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -146,7 +138,10 @@ const FrontPage = () => {
             <ModalCloseButton />
             <ModalBody>
               {/* <Lorem count={2} /> */}
-              {props.body}
+              {/* {props.body} */}
+              <Box padding={"10"}>
+                <Text>{props.desciption}</Text>
+              </Box>
             </ModalBody>
 
             <ModalFooter>
@@ -164,8 +159,16 @@ const FrontPage = () => {
   const IsOthersRow = (props) => {
     return (
       <Tr>
-        <Td colSpan={1}>
-          {props.data.data.jobTypeName}
+        <Td>
+          <Heading as={"sm"} size="sm">
+            {props.data.data.jobTypeName}
+            {props.data.data.File.length <= 0 ? null : (
+              <Badge bg="teal.100" ml="2" color={"blackAlpha"} p={1}>
+                <Icon as={AttachmentIcon} mr="1" />
+                {props.data.data.File.length}
+              </Badge>
+            )}
+          </Heading>
           <Accordion allowToggle colSpan={3}>
             <AccordionItem>
               <h2>
@@ -200,7 +203,11 @@ const FrontPage = () => {
             </AccordionItem>
           </Accordion>
         </Td>
-        <Td colSpan={2} textAlign={"Center"} noOfLines={1}>
+        <Td textAlign={"Center"} noOfLines={1} colSpan={"2"}>
+          <DetailModal
+            title={"Description"}
+            desciption={props.data.data.desciption}
+          />
           {/* <Popover>
             <PopoverTrigger>
               <Button>OTHERS</Button>
@@ -216,6 +223,19 @@ const FrontPage = () => {
           </Popover> */}
           {/* // <DetailModal title={"Details"} body={props.data.data.desciption} /> */}
         </Td>
+        <Td></Td>
+        <Td>
+          <Button
+            colorScheme="red"
+            variant="ghost"
+            size={"sm"}
+            onClick={() => {
+              deleteHundler(props.data);
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+        </Td>
       </Tr>
     );
   };
@@ -224,9 +244,19 @@ const FrontPage = () => {
       <Tr>
         <Td>
           {
-            typeofJob.filter(
-              (e) => e.PK_workTypeID == props.data.data.jobType
-            )[0].label
+            <Heading as={"sm"} size="sm">
+              {
+                typeofJob.filter(
+                  (e) => e.PK_workTypeID == props.data.data.jobType
+                )[0].label
+              }
+              {props.data.data.File.length <= 0 ? null : (
+                <Badge bg="teal.100" ml="2" color={"blackAlpha"} p={1}>
+                  <Icon as={AttachmentIcon} mr="1" />
+                  {props.data.data.File.length}
+                </Badge>
+              )}
+            </Heading>
           }
         </Td>
         <Td>
@@ -237,14 +267,39 @@ const FrontPage = () => {
           }
         </Td>
         <Td>{props.data.data.serviceTypeName}</Td>
+        <Td>
+          <Button
+            colorScheme="red"
+            variant="ghost"
+            size={"sm"}
+            onClick={() => {
+              deleteHundler(props.data);
+              console.log("to delete :", data);
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+        </Td>
       </Tr>
     );
   };
-  const HasSerMoTableRow = () => {
+  const HasSerMoTableRow = (props) => {
     return (
       <Tr>
         <Td>
-          Electrical
+          <Heading as={"sm"} size="sm">
+            {
+              typeofJob.filter(
+                (e) => e.PK_workTypeID == props.data.data.jobType
+              )[0].label
+            }
+            {props.data.data.File.length <= 0 ? null : (
+              <Badge bg="teal.100" ml="2" color={"blackAlpha"} p={1}>
+                <Icon as={AttachmentIcon} mr="1" />
+                {props.data.data.File.length}
+              </Badge>
+            )}
+          </Heading>
           <Accordion allowToggle colSpan={3}>
             <AccordionItem>
               <h2>
@@ -265,7 +320,7 @@ const FrontPage = () => {
                     textTransform="uppercase"
                     ml="2"
                   >
-                    aaaaaSerial Number &bull; 213141512
+                    {props.data.data.serialNumber}
                   </ListItem>
                   <ListItem
                     color="gray.500"
@@ -275,15 +330,27 @@ const FrontPage = () => {
                     textTransform="uppercase"
                     ml="2"
                   >
-                    Model Number &bull; 2j1660918
+                    {props.data.data.modelNumber}
                   </ListItem>
                 </UnorderedList>
               </AccordionPanel>
             </AccordionItem>
           </Accordion>
         </Td>
-        <Td>"Sample3"</Td>
-        <Td>"Sample3"</Td>
+        <Td>{props.data.data.serviceDepartmentName}</Td>
+        <Td>{props.data.data.serviceTypeName}</Td>
+        <Td>
+          <Button
+            colorScheme="red"
+            variant="ghost"
+            size={"sm"}
+            onClick={() => {
+              deleteHundler(props.data);
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+        </Td>
       </Tr>
     );
   };
@@ -324,7 +391,7 @@ const FrontPage = () => {
   };
 
   class OthersModel {
-    constructor(jobType, serialNumber, modelNumber, desciption) {
+    constructor(jobType, serialNumber, modelNumber, desciption, File) {
       this.type = 3;
       this.jobType = jobType;
       this.jobTypeName = typeofJob.filter(
@@ -333,11 +400,12 @@ const FrontPage = () => {
       this.serialNumber = serialNumber || undefined;
       this.modelNumber = modelNumber || undefined;
       this.desciption = desciption;
+      this.File = File || "";
     }
   }
 
   class DefRequestModel {
-    constructor(jobType, serviceDepartment, serviceType) {
+    constructor(jobType, serviceDepartment, serviceType, File) {
       this.type = 1;
       this.jobType = jobType;
       this.serviceDepartment = serviceDepartment;
@@ -345,6 +413,7 @@ const FrontPage = () => {
         (e) => e.PK_soID == serviceType
       )[0].name;
       this.serviceType = serviceType;
+      this.File = File || "";
     }
   }
 
@@ -354,16 +423,27 @@ const FrontPage = () => {
       serviceDepartment,
       serviceType,
       serialNumber,
-      modelNumber
+      modelNumber,
+      File
     ) {
       this.type = 2;
       this.jobType = jobType;
       this.serviceDepartment = serviceDepartment;
       this.serviceType = serviceType;
+
+      this.serviceDepartmentName = optionService.filter(
+        (e) => e.PK_servicesID == serviceDepartment
+      )[0].name;
+
       this.serialNumber = serialNumber;
       this.modelNumber = modelNumber;
+      this.serviceTypeName = optionOffer.filter(
+        (e) => e.PK_soID == this.serviceType
+      )[0].name;
+      this.File = File || "";
     }
   }
+
   //console.log(new DefRequestModel());
   useEffect(() => {
     Axios.post("http://localhost/JOBREQUEST/api/request/getservices.php").then(
@@ -395,7 +475,6 @@ const FrontPage = () => {
           console.log(
             selectedDepartment === undefined || selectedDepartment === ""
           );
-
           console.log(selectedDepartment);
         }}
       >
@@ -498,11 +577,16 @@ const FrontPage = () => {
         <br />
         <input
           type="file"
-          name="myImage"
-          onChange={(event) => {
-            console.log(event.target.files[0]);
-            setSelectedImage(event.target.files[0]);
-          }}
+          className="form-control"
+          multiple
+          name="file"
+          onChange={
+            (event) => {
+              console.log(event.target.files);
+              setSelectedFile(event.target.files);
+            }
+            // this.handleInputChange
+          }
         />
       </Flex>
     );
@@ -523,9 +607,10 @@ const FrontPage = () => {
     );
   };
 
-  const deleteHundler = (requestModel) => {
-    const result = defRequestData.filter((e) => requestModel != e);
-    setDefRequestData(result);
+  const deleteHundler = (toDelete) => {
+    console.log("deleted :", toDelete.data);
+    const result = data.filter((e) => toDelete.data != e);
+    setData(result);
   };
 
   const checkIfSelectedisSM = (arg) => {
@@ -597,8 +682,6 @@ const FrontPage = () => {
       <Stack
         justifyContent="center"
         alignItems="center"
-        width="100wh"
-        height="100vh"
         backgroundColor={"rgb(221, 222, 223)"}
         flexDirection={"column"}
         gap="5"
@@ -613,13 +696,14 @@ const FrontPage = () => {
           bg="white"
           borderRadius="10"
           boxShadow="2xl"
-          width={"100vh"}
+          width="95vw"
+          maxW={"900"}
         >
           <Heading as="h1" size="sm">
             Select Type of Work{" "}
           </Heading>
           <ShowAlert />
-          <Flex direction={"row"} gap={6}>
+          <Flex direction={["column", "row"]} gap={6}>
             <Box w="100%">
               {/* <Select
                 variant="filled"
@@ -719,8 +803,8 @@ const FrontPage = () => {
             </>
           )}
 
-          <Divider borderColor={"red"} w="80vh" p={2} />
-          <Stack direction={"row"} pt={2}>
+          <Divider borderColor={"red"} w="60vw" p={2} maxW={"700"} />
+          <Stack direction={["column", "row"]} pt={2}>
             <FormControl isDisabled={isEleMech || checkedBox ? false : true}>
               <FormLabel>Serial number</FormLabel>
               <Input
@@ -761,7 +845,8 @@ const FrontPage = () => {
                         selectedTOJ,
                         serialNumber,
                         modelNumber,
-                        values || ""
+                        values || "",
+                        selectedFile
                       ),
                     ]);
                     //console.log("DEBUG FOR SAVE: ISOTHERS ", resultTemp);
@@ -778,7 +863,8 @@ const FrontPage = () => {
                         selectedDepartment,
                         selectedSOffer,
                         serialNumber,
-                        modelNumber
+                        modelNumber,
+                        selectedFile
                       ),
                     ]);
                     console.log("DEBUG FOR SAVE: IS NORMAL");
@@ -794,7 +880,8 @@ const FrontPage = () => {
                       new DefRequestModel(
                         selectedTOJ,
                         selectedDepartment,
-                        selectedSOffer
+                        selectedSOffer,
+                        selectedFile
                       ),
                     ]);
                     console.log("DEBUG FOR SAVE: IS NORMAL");
@@ -805,6 +892,7 @@ const FrontPage = () => {
                   } else {
                     console.log("duhhhhhhh");
                   }
+                  setSelectedFile("");
                   ////fill the classmodel based on the type of data and save at the local variable
                   ///update the table and render it later
                   //updateTable();
@@ -836,15 +924,26 @@ const FrontPage = () => {
           bg="white"
           borderRadius="10"
           boxShadow="2xl"
-          width={"100vh"}
+          width={"95vw"}
+          maxW={"900"}
         >
-          <TableContainer width={"100vh"} maxH="40vh">
+          <TableContainer width={"100vh"} maxH="40vh" overflowY={"scroll"}>
             <Table size="md" variant="simple" colorScheme="teal">
+              <TableCaption>Request Table</TableCaption>
               <Thead>
                 <Tr>
-                  <Th>Job to be done</Th>
-                  <Th>Type of service</Th>
-                  <Th>Works</Th>
+                  <Th>
+                    <Heading fontSize={"14"}>Type of Work</Heading>
+                  </Th>
+                  <Th>
+                    <Heading fontSize={"14"}>Department</Heading>
+                  </Th>
+                  <Th>
+                    <Heading fontSize={"14"}>Type of Work</Heading>
+                  </Th>
+                  <Th>
+                    <Heading fontSize={"14"}>Action</Heading>
+                  </Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -862,6 +961,7 @@ const FrontPage = () => {
                 {data.map((e) => {
                   return <TableComposition data={e} />;
                 })}
+                {/* //<TableComposition title="sample2" desciption={"aaaaaaaasample"} /> */}
                 {/* <IsOthersRow />
                 <IsDefaultTableRow />
                 <HasSerMoTableRow /> */}
