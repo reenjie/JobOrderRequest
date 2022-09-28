@@ -21,7 +21,7 @@ import {
   Select,
   Input,
 } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../../css/App.css";
 import PopoverComponent from "../../components/layouts/Popover";
 import DataTable, { createTheme } from "react-data-table-component";
@@ -42,6 +42,7 @@ function RenderPage() {
   const [department, setDepartments] = useState([]);
   const [viewStatus, setViewStatus] = useState([]);
   const [validate, setValidate] = useState();
+  const hook = useRef();
 
   useEffect(() => {
     window
@@ -434,64 +435,68 @@ function RenderPage() {
                   ""
                 )}
 
-                <Box>
-                  <Text>Time Frame</Text>
-                  <Grid
-                    templateColumns={[
-                      "repeat(1, 1fr)",
-                      "repeat(2, 1fr)",
-                      "repeat(6, 1fr)",
-                    ]}
-                    gap={1}
-                  >
-                    <GridItem w="100%" h="10">
-                      <Text fontSize={14}>Year</Text>
-                      <Input
-                        size="sm"
-                        type={"number"}
-                        placeholder=""
-                        autoFocus={validate && "true"}
-                        onChange={(e) => {
-                          SetYears(e.target.value);
-                        }}
-                      />
-                    </GridItem>
-                    <GridItem w="100%" h="10">
-                      <Text fontSize={14}>Months</Text>
-                      <Input
-                        size="sm"
-                        type={"number"}
-                        placeholder=""
-                        onChange={(e) => {
-                          SetMonths(e.target.value);
-                        }}
-                      />
-                    </GridItem>
-                    <GridItem w="100%" h="10">
-                      <Text fontSize={14}>Weeks</Text>
-                      <Input
-                        size="sm"
-                        type={"number"}
-                        placeholder=""
-                        onChange={(e) => {
-                          SetWeeks(e.target.value);
-                        }}
-                      />
-                    </GridItem>
-                    <GridItem w="100%" h="10">
-                      <Text fontSize={14}>Days</Text>
-                      <Input
-                        size="sm"
-                        type={"number"}
-                        placeholder=""
-                        onChange={(e) => {
-                          SetDays(e.target.value);
-                        }}
-                      />
-                    </GridItem>
-                  </Grid>
-                  <Stack spacing={5} direction="row"></Stack>
-                </Box>
+                {recommendation == "Outsource" ? (
+                  ""
+                ) : (
+                  <Box ref={hook}>
+                    <Text>Time Frame</Text>
+                    <Grid
+                      templateColumns={[
+                        "repeat(1, 1fr)",
+                        "repeat(2, 1fr)",
+                        "repeat(6, 1fr)",
+                      ]}
+                      gap={1}
+                    >
+                      <GridItem w="100%" h="10">
+                        <Text fontSize={14}>Year</Text>
+                        <Input
+                          size="sm"
+                          type={"number"}
+                          placeholder=""
+                          autoFocus={validate && "true"}
+                          onChange={(e) => {
+                            SetYears(e.target.value);
+                          }}
+                        />
+                      </GridItem>
+                      <GridItem w="100%" h="10">
+                        <Text fontSize={14}>Months</Text>
+                        <Input
+                          size="sm"
+                          type={"number"}
+                          placeholder=""
+                          onChange={(e) => {
+                            SetMonths(e.target.value);
+                          }}
+                        />
+                      </GridItem>
+                      <GridItem w="100%" h="10">
+                        <Text fontSize={14}>Weeks</Text>
+                        <Input
+                          size="sm"
+                          type={"number"}
+                          placeholder=""
+                          onChange={(e) => {
+                            SetWeeks(e.target.value);
+                          }}
+                        />
+                      </GridItem>
+                      <GridItem w="100%" h="10">
+                        <Text fontSize={14}>Days</Text>
+                        <Input
+                          size="sm"
+                          type={"number"}
+                          placeholder=""
+                          onChange={(e) => {
+                            SetDays(e.target.value);
+                          }}
+                        />
+                      </GridItem>
+                    </Grid>
+                    <Stack spacing={5} direction="row"></Stack>
+                  </Box>
+                )}
               </Stack>
 
               <Container mt={4} textAlign={"right"} maxW={"container.xxl"}>

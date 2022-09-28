@@ -59,6 +59,7 @@ import swal from "sweetalert";
 import ViewInfo from "../../components/layouts/viewInfo";
 import Info from "./info";
 import svg from "../../images/serv.svg";
+import empty from "../../images/empty.svg";
 import Approval from "./Approval";
 
 function RenderPage() {
@@ -71,6 +72,7 @@ function RenderPage() {
   const [selected, setSelected] = useState([]);
   const [selectedservices, setSelectectServices] = useState([]);
   const [users, setUsers] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [uncheckall, setUncheckall] = useState();
   const toast = useToast();
   const ref = useRef();
@@ -125,6 +127,13 @@ function RenderPage() {
         setUsers(req.data);
       } else {
         setUsers([]);
+      }
+    });
+    Axios.post(url + "/api/assessor/getstatusMessages.php").then((req) => {
+      if (req.data.length >= 1) {
+        setMessages(req.data);
+      } else {
+        setMessages([]);
       }
     });
   }, []);
@@ -344,7 +353,7 @@ function RenderPage() {
           ]}
           gap={2}
         >
-          <GridItem w="100%" colSpan={[12, 12, 6]}>
+          <GridItem w="100%" colSpan={[12, 12, 7]}>
             <Box bg={"gray.100"} p={10} color={"blackAlpha.600"}>
               {/* request */}
               <Box display={"block"}>
@@ -510,221 +519,6 @@ function RenderPage() {
               </Box>
               {/* end Request */}
             </Box>
-            <Box bg={"teal.50"} p="10" mt={2} borderLeft={"4px solid #2596be"}>
-              <Text
-                fontWeight={"bold"}
-                fontSize={16}
-                color={"blackAlpha.700"}
-                textAlign="center"
-              >
-                JOB ORDER REQUEST
-              </Text>{" "}
-              <Center mt={10}>
-                <Image
-                  //   borderRadius="full"
-                  userSelect={"none"}
-                  width={"70%"}
-                  src={svg}
-                  alt="Dan Abramov"
-                />
-              </Center>
-              {/*     <Text color={"blackAlpha.600"}>Types of Services</Text>
-
-              <Grid
-                templateColumns={[
-                  "repeat(3, 1fr)",
-                  "repeat(1, 1fr)",
-                  "repeat(2, 1fr)",
-                  "repeat(3, 1fr)",
-                ]}
-                gap={1}
-              >
-                {services.map((row) => {
-                  return (
-                    <>
-                      <GridItem w="100%">
-                        <Text color="teal.700" fontSize={14} mt={2}>
-                          {row.name}
-                        </Text>
-                        <UnorderedList
-                          mt={2}
-                          color="blackAlpha.600"
-                          fontSize={14}
-                        >
-                          {servicesOffer.map((s) => {
-                            if (s.FK_serviceID == row.PK_servicesID) {
-                              return (
-                                <>
-                                  <ListItem>{s.name}</ListItem>
-                                </>
-                              );
-                            }
-                          })}
-                        </UnorderedList>
-                      </GridItem>
-                    </>
-                  );
-                })}
-              </Grid> */}
-            </Box>
-          </GridItem>
-          <GridItem w="100%" colSpan={[12, 12, 6]}>
-            {myPendingrequest.length >= 1 ? (
-              <Box
-                bg={"gray.100"}
-                p={10}
-                display={"block"}
-                borderRight="4px solid #bc7d52"
-              >
-                {/* finalize request */}
-                <Box>
-                  <Alert
-                    status="error"
-                    borderLeft={"4px solid #d7883b"}
-                    bg={"#f5daa5"}
-                  >
-                    <AlertIcon color={"#d7883b"} />
-                    <Text color={"orange.500"} fontSize={14}>
-                      FINALIZE REQUEST
-                    </Text>
-                  </Alert>
-                  <TableContainer mt={4}>
-                    <Table
-                      size="sm"
-                      variant="striped"
-                      bg={"blackAlpha.100"}
-                      color={"blackAlpha.600"}
-                    >
-                      <Thead>
-                        <Tr>
-                          <Th>Type of Work</Th>
-                          <Th>Work</Th>
-                          <Th>Additional Info</Th>
-                          <Th>Action</Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {myPendingrequest.map((row) => {
-                          return (
-                            <>
-                              <Tr>
-                                <Td>
-                                  <Stack>
-                                    <Text mb={2} color={"blue.400"}>
-                                      {" "}
-                                      <i className="fas fa-cogs"></i>
-                                      {worktype.map((w) => {
-                                        if (w.PK_workTypeID == row.FK_workID) {
-                                          return w.label;
-                                        }
-                                      })}
-                                    </Text>
-                                    <Box>
-                                      {services.map((s) => {
-                                        if (
-                                          s.PK_servicesID == row.FK_serviceID
-                                        ) {
-                                          return s.name;
-                                        }
-                                      })}
-                                    </Box>
-                                  </Stack>
-                                </Td>
-                                <Td>
-                                  {servicesOffer.map((so) => {
-                                    if (so.PK_soID == row.FK_serviceOfferID) {
-                                      return so.name;
-                                    }
-                                  })}
-                                </Td>
-                                <Td>
-                                  {services.map((s) => {
-                                    if (s.PK_servicesID == row.FK_serviceID) {
-                                      if (s.isSM == 1) {
-                                        return (
-                                          <>
-                                            <Stack
-                                              bg={"gray.200"}
-                                              padding={5}
-                                              borderColor={"blackAlpha.200"}
-                                              borderWidth={1}
-                                              borderRadius={4}
-                                            >
-                                              <Box>
-                                                <Text fontSize={12}>
-                                                  If applicable:
-                                                </Text>
-                                                <Text>Serial No:</Text>
-                                                <Input
-                                                  placeholder=""
-                                                  size="sm"
-                                                  backgroundColor={
-                                                    "whiteAlpha.600"
-                                                  }
-                                                  onChange={handleAddinfo}
-                                                  data-type="serialno"
-                                                  data-id={row.PK_requestID}
-                                                />
-                                              </Box>
-                                              <Box>
-                                                <Text>Model No:</Text>
-                                                <Input
-                                                  placeholder=""
-                                                  size="sm"
-                                                  backgroundColor={
-                                                    "whiteAlpha.600"
-                                                  }
-                                                  onChange={handleAddinfo}
-                                                  data-type="modelno"
-                                                  data-id={row.PK_requestID}
-                                                />
-                                              </Box>
-                                            </Stack>
-                                          </>
-                                        );
-                                      }
-                                    }
-                                  })}
-                                </Td>
-                                <Td>
-                                  <Button
-                                    variant="ghost"
-                                    color={"red.400"}
-                                    size="md"
-                                    onClick={handleRemove}
-                                    data-requestid={row.PK_requestID}
-                                  >
-                                    <i className="fas fa-times-circle"></i>
-                                  </Button>
-                                </Td>
-                              </Tr>
-                            </>
-                          );
-                        })}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-
-                  <Button
-                    mt={3}
-                    size={"sm"}
-                    variant={"outline"}
-                    colorScheme="facebook"
-                    onClick={handleSubmitRequest}
-                  >
-                    Submit Request{" "}
-                    <i
-                      className="fas fa-paper-plane"
-                      style={{ marginLeft: "4px" }}
-                    ></i>
-                  </Button>
-                </Box>
-                {/* End finalize Request */}
-              </Box>
-            ) : (
-              ""
-            )}
-
             <Box bg={"gray.100"} p={10} mt={2}>
               <Box>
                 <Text color={"blackAlpha.600"} fontWeight="bold">
@@ -900,6 +694,7 @@ function RenderPage() {
                                                   servicesOffer={servicesOffer}
                                                   users={users}
                                                   load="ongoing"
+                                                  messages={messages}
                                                 />
                                               }
                                             />
@@ -1011,6 +806,7 @@ function RenderPage() {
                                               services={services}
                                               servicesOffer={servicesOffer}
                                               users={users}
+                                              messages={messages}
                                             />
                                           }
                                         />
@@ -1027,6 +823,202 @@ function RenderPage() {
                   </TabPanels>
                 </Tabs>
               </Box>
+            </Box>
+            {/*     <Box bg={"teal.50"} p="10" mt={2} borderLeft={"4px solid #2596be"}>
+              <Text
+                fontWeight={"bold"}
+                fontSize={16}
+                color={"blackAlpha.700"}
+                textAlign="center"
+              >
+                JOB ORDER REQUEST
+              </Text>{" "}
+              <Center mt={10}>
+                <Image
+                  //   borderRadius="full"
+                  userSelect={"none"}
+                  width={"70%"}
+                  src={svg}
+                  alt="Dan Abramov"
+                />
+              </Center>
+            
+            </Box> */}
+          </GridItem>
+          <GridItem w="100%" colSpan={[12, 12, 5]}>
+            <Box
+              bg={"gray.100"}
+              p={10}
+              display={"block"}
+              borderRight="4px solid #bc7d52"
+            >
+              {/* finalize request */}
+              <Box>
+                {myPendingrequest.length >= 1 ? (
+                  <>
+                    <Alert
+                      status="error"
+                      borderLeft={"4px solid #d7883b"}
+                      bg={"#f5daa5"}
+                    >
+                      <AlertIcon color={"#d7883b"} />
+                      <Text color={"orange.500"} fontSize={14}>
+                        FINALIZE REQUEST
+                      </Text>
+                    </Alert>
+
+                    <Stack>
+                      {myPendingrequest.map((row) => {
+                        return (
+                          <>
+                            <Box bg={"gray.100"} p={5} shadow="md">
+                              <Badge
+                                variant="outline"
+                                mb={2}
+                                colorScheme="green"
+                              >
+                                saved
+                              </Badge>
+                              <Stack direction={"row"}>
+                                <Text fontSize={12} mb={2} color={"blue.400"}>
+                                  {" "}
+                                  <i className="fas fa-cogs"></i>
+                                  {worktype.map((w) => {
+                                    if (w.PK_workTypeID == row.FK_workID) {
+                                      return w.label;
+                                    }
+                                  })}
+                                </Text>
+                                <Box>|</Box>
+                                <Box fontSize={12} color={"blue.700"}>
+                                  {services.map((s) => {
+                                    if (s.PK_servicesID == row.FK_serviceID) {
+                                      return s.name;
+                                    }
+                                  })}
+                                </Box>
+                              </Stack>
+                              <Stack>
+                                <Box>
+                                  <Text
+                                    fontSize={14}
+                                    fontWeight="bold"
+                                    color={"gray.500"}
+                                  >
+                                    {servicesOffer.map((so) => {
+                                      if (so.PK_soID == row.FK_serviceOfferID) {
+                                        return so.name;
+                                      }
+                                    })}
+                                  </Text>
+                                </Box>
+                                <Box fontSize={14}>
+                                  {services.map((s) => {
+                                    if (s.PK_servicesID == row.FK_serviceID) {
+                                      if (s.isSM == 1) {
+                                        return (
+                                          <>
+                                            <Stack
+                                              bg={"gray.200"}
+                                              padding={5}
+                                              borderColor={"blackAlpha.200"}
+                                              borderWidth={1}
+                                              borderRadius={4}
+                                            >
+                                              <Box>
+                                                <Text fontSize={12}>
+                                                  If applicable:
+                                                </Text>
+                                                <Text>Serial No:</Text>
+                                                <Input
+                                                  placeholder=""
+                                                  size="sm"
+                                                  backgroundColor={
+                                                    "whiteAlpha.600"
+                                                  }
+                                                  onChange={handleAddinfo}
+                                                  data-type="serialno"
+                                                  data-id={row.PK_requestID}
+                                                />
+                                              </Box>
+                                              <Box>
+                                                <Text>Model No:</Text>
+                                                <Input
+                                                  placeholder=""
+                                                  size="sm"
+                                                  backgroundColor={
+                                                    "whiteAlpha.600"
+                                                  }
+                                                  onChange={handleAddinfo}
+                                                  data-type="modelno"
+                                                  data-id={row.PK_requestID}
+                                                />
+                                              </Box>
+                                            </Stack>
+                                          </>
+                                        );
+                                      }
+                                    }
+                                  })}
+                                </Box>
+                              </Stack>
+                              <Button
+                                variant="ghost"
+                                color={"red.400"}
+                                size="md"
+                                onClick={handleRemove}
+                                data-requestid={row.PK_requestID}
+                                fontSize={12}
+                              >
+                                Remove{" "}
+                                <i
+                                  style={{ marginLeft: "5px" }}
+                                  className="fas fa-times-circle"
+                                ></i>
+                              </Button>
+                            </Box>
+                          </>
+                        );
+                      })}
+                    </Stack>
+                    <Button
+                      mt={3}
+                      size={"sm"}
+                      variant={"outline"}
+                      colorScheme="facebook"
+                      onClick={handleSubmitRequest}
+                    >
+                      Submit Request{" "}
+                      <i
+                        className="fas fa-paper-plane"
+                        style={{ marginLeft: "4px" }}
+                      ></i>
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Stack bg={"gray.200"} p={5}>
+                      <Box>
+                        <Center>
+                          <Image src={empty} width={"40%"} />
+                        </Center>
+                      </Box>
+                      <Box>
+                        <Text
+                          textAlign={"center"}
+                          color={"blackAlpha.700"}
+                          mt={4}
+                          fontWeight="bold"
+                        >
+                          No Saved Request Found
+                        </Text>
+                      </Box>
+                    </Stack>
+                  </>
+                )}
+              </Box>
+
+              {/* End finalize Request */}
             </Box>
           </GridItem>
         </Grid>

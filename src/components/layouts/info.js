@@ -68,13 +68,13 @@ export default function Zcmc_info(props) {
       </Center>
       <Center bg={"blackAlpha.200"}>
         <Avatar
-          size="xl"
+          size="lg"
           name="Christian Nwamba"
           src="https://bit.ly/code-beast"
           mt={2}
           mb={2}
         />
-        <Flex mb={5} mt={2}>
+        <Flex mb={5} mt={2} p={1}>
           <Box ml="3">
             <Text fontWeight="bold" color={"blackAlpha.700"}>
               Caimor Reenjay
@@ -84,7 +84,7 @@ export default function Zcmc_info(props) {
         </Flex>
       </Center>
 
-      <Menu>
+      {/*    <Menu>
         <MenuButton
           textAlign={"right"}
           fontSize={13}
@@ -120,7 +120,7 @@ export default function Zcmc_info(props) {
             </Text>
           </MenuItem>
         </MenuList>
-      </Menu>
+      </Menu> */}
     </Stack>
   );
 }

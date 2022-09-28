@@ -43,12 +43,13 @@ function ViewInfo(props) {
       </Tooltip>
 
       <Modal size={"full"} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent bg={"gray.100"}>
+        <ModalOverlay bg={"gray.100"} />
+        <ModalContent bg={"gray.100"} shadow="none">
           <ModalCloseButton onClick={props.closing} />
           <ModalBody>
-            <Container maxW={"container.xl"}>{props.info}</Container>
-
+            <Container maxW={["container.xl", "container.xxl", "container.xl"]}>
+              {props.info}
+            </Container>
             <Button
               id="btnManageModalClose"
               display={"none"}

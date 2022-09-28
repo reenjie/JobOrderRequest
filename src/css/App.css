@@ -10,6 +10,37 @@
    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 3px 20px 0 rgba(0, 0, 0, 0.19);
   }
 
+  #btnProfilesettings {
+   color: #FF0000;
+  }
+  /* width */
+#remarks::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+#remarks::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+#remarks::-webkit-scrollbar-thumb {
+  background: rgb(204, 209, 219);
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+#remarks::-webkit-scrollbar-thumb:hover {
+  background: rgb(184, 191, 206);
+}
+
+/* @media screen and (max-width:768px) {
+    #remarks {
+      position: absolute;
+    }
+} */
+  
+
   #sideBar{
      width: 240px;
      height: 100vh;
@@ -52,13 +83,13 @@
   }
   #btnopen_close:active #humicon{
    
-    animation: App-logo-spin 0.5s;
+    animation: myanimation  1s;
   }
 
 
   .sidebar-links ul {
   
-    margin-top: 20px;
+    margin-top: 10px;
     list-style: none;
     width: 100%;
    
@@ -144,6 +175,42 @@
   .li:hover{
     background-color: rgba(143, 162, 167, 0.185);
     
+  }
+
+  #bars {
+   cursor: pointer;
+   transition: all ease 1s; 
+   animation: myanimation .9s infinite;
+   color: red;
+  }
+ 
+
+  @keyframes myanimation {
+    0%{
+      transform: scale(0.5
+      );
+    }
+
+    20%{
+      transform: scale(1);
+    }
+
+    40%{
+      transform: scale(0.8);
+    }
+
+    60%{
+      transform: scale(1.2);
+    }
+
+    80% {
+      transform: scale(1);
+      
+    }
+
+    100% {
+      transform: scale(0.5);
+    }
   }
 @media screen and (max-width:768px) {
   #login {

@@ -487,7 +487,7 @@ function RenderPage() {
         });
 
         toast({
-          title: `Message Deleted!`,
+          title: `Remarks Deleted!`,
           status: "success",
           position: "top-right",
           variant: "left-accent",
@@ -674,9 +674,28 @@ function RenderPage() {
 
               <Stack>
                 <Box mt={5} mb={4} bg={"blackAlpha.100"} p={5} borderRadius={5}>
+                  {row.recommendation == "Outsource" ? (
+                    <Badge
+                      variant="outline"
+                      float={"right"}
+                      colorScheme="orange"
+                    >
+                      {row.recommendation}
+                    </Badge>
+                  ) : (
+                    <Badge
+                      variant="outline"
+                      float={"right"}
+                      colorScheme="messenger"
+                    >
+                      {row.recommendation}
+                    </Badge>
+                  )}
+
                   <Text fontWeight={"bold"} color={"blackAlpha.600"}>
                     Manage Status
                   </Text>
+
                   <Container maxW={"container.lg"}>
                     <Box mb={3}>
                       <Text color={"blackAlpha.700"} fontSize={15}>

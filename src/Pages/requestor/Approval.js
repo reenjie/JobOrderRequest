@@ -71,6 +71,7 @@ function Approval(props) {
   const [selected, setSelected] = useState([]);
   const [selectedservices, setSelectectServices] = useState([]);
   const [users, setUsers] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [uncheckall, setUncheckall] = useState();
   const toast = useToast();
   const ref = useRef();
@@ -125,6 +126,14 @@ function Approval(props) {
         setUsers(req.data);
       } else {
         setUsers([]);
+      }
+    });
+
+    Axios.post(url + "/api/assessor/getstatusMessages.php").then((req) => {
+      if (req.data.length >= 1) {
+        setMessages(req.data);
+      } else {
+        setMessages([]);
       }
     });
   }, []);
@@ -567,10 +576,10 @@ function Approval(props) {
                                                   users={users}
                                                   load="ongoing"
                                                   unset={"unset"}
+                                                  messages={messages}
                                                 />
                                               }
                                             />
-
                                             {row.status == 0 ? (
                                               <>
                                                 <Gmodal
@@ -791,6 +800,7 @@ function Approval(props) {
                                               servicesOffer={servicesOffer}
                                               users={users}
                                               unset={"unset"}
+                                              messages={messages}
                                             />
                                           }
                                         />
@@ -891,6 +901,7 @@ function Approval(props) {
                                               servicesOffer={servicesOffer}
                                               users={users}
                                               unset={"unset"}
+                                              messages={messages}
                                             />
                                           }
                                         />
