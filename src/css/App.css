@@ -86,6 +86,9 @@
     animation: myanimation  1s;
   }
 
+  #btndropdown:active {
+    animation: myanimation  1s;
+  }
 
   .sidebar-links ul {
   
