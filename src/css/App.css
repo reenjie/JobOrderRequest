@@ -1,5 +1,6 @@
 
- @import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz@8..144&display=swap');
+
+
  #login{
     background-color: ghostwhite;
     width: 100%;
@@ -8,6 +9,37 @@
     color: gray;
    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 3px 20px 0 rgba(0, 0, 0, 0.19);
   }
+
+  #btnProfilesettings {
+   color: #FF0000;
+  }
+  /* width */
+#remarks::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+#remarks::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+#remarks::-webkit-scrollbar-thumb {
+  background: rgb(204, 209, 219);
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+#remarks::-webkit-scrollbar-thumb:hover {
+  background: rgb(184, 191, 206);
+}
+
+/* @media screen and (max-width:768px) {
+    #remarks {
+      position: absolute;
+    }
+} */
+  
 
   #sideBar{
      width: 240px;
@@ -51,13 +83,16 @@
   }
   #btnopen_close:active #humicon{
    
-    animation: App-logo-spin 0.5s;
+    animation: myanimation  1s;
   }
 
+  #btndropdown:active {
+    animation: myanimation  1s;
+  }
 
   .sidebar-links ul {
   
-    margin-top: 20px;
+    margin-top: 10px;
     list-style: none;
     width: 100%;
    
@@ -124,6 +159,65 @@
   .box {
     
   }
+<<<<<<< HEAD
+=======
+
+  #fourofour {
+    color: rgb(163,159,231);
+   color: linear-gradient(90deg, rgba(163,159,231,1) 1%, rgba(172,112,233,1) 20%, rgba(181,68,127,1) 71%, rgba(212,164,189,1) 85%, rgba(81,202,227,1) 100%);
+   text-shadow: 2px 2px 8px #FF0000;
+  }
+
+  .ul {
+    list-style: none;
+  }
+  .li{
+    padding: 10px;
+    font-size: 15px;
+   
+
+  }
+  .li:hover{
+    background-color: rgba(143, 162, 167, 0.185);
+    
+  }
+
+  #bars {
+   cursor: pointer;
+   transition: all ease 1s; 
+   animation: myanimation .9s infinite;
+   color: red;
+  }
+ 
+
+  @keyframes myanimation {
+    0%{
+      transform: scale(0.5
+      );
+    }
+
+    20%{
+      transform: scale(1);
+    }
+
+    40%{
+      transform: scale(0.8);
+    }
+
+    60%{
+      transform: scale(1.2);
+    }
+
+    80% {
+      transform: scale(1);
+      
+    }
+
+    100% {
+      transform: scale(0.5);
+    }
+  }
+>>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 @media screen and (max-width:768px) {
   #login {
       width: 100%;

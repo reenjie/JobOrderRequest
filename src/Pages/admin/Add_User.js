@@ -28,7 +28,10 @@ import {
   Alert,
   AlertIcon,
 } from "@chakra-ui/react";
+<<<<<<< HEAD
 
+=======
+>>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -74,6 +77,10 @@ function RenderPage() {
     const position = e.target.position.value;
     const services = e.target.services.value;
     const option = e.target.option.checked;
+<<<<<<< HEAD
+=======
+    const deptsec = e.target.deptsec.checked;
+>>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 
     Axios.post("http://localhost/JOBREQUEST/api/admin/saveUser.php", {
       usertype: usertype,
@@ -86,6 +93,10 @@ function RenderPage() {
       specialty: specialty,
       position: position,
       services: services,
+<<<<<<< HEAD
+=======
+      sec: deptsec,
+>>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
     }).then((req) => {
       if (req.data.status == 1) {
         setAlerts("User Added Successfully.");
@@ -162,6 +173,31 @@ function RenderPage() {
                       </Select>
                     </FormControl>
 
+<<<<<<< HEAD
+=======
+                    {usertype == "requestor" ? (
+                      <>
+                        <Checkbox
+                          size="sm"
+                          color={"blackAlpha.700"}
+                          colorScheme="blue"
+                          fontSize={13}
+                          borderWidth={2}
+                          padding={3}
+                          border={"1px solid #a8b2a8"}
+                          borderRadius={5}
+                          mb={2}
+                          value={"1"}
+                          name="deptsec"
+                        >
+                          Department Secretary
+                        </Checkbox>
+                      </>
+                    ) : (
+                      ""
+                    )}
+
+>>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
                     <FormControl isRequired mb={2} color="blackAlpha.700">
                       <FormLabel fontSize={14}>First name</FormLabel>
                       <Input

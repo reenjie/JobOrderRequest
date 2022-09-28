@@ -2,11 +2,7 @@ import AdminLayout from "../../components/layouts/admin_layout";
 import Sidebar from "./Sidebar";
 import Headings from "../../components/layouts/heading";
 function RenderPage() {
-  return (
-    <>
-      <Headings title="HISTORY" />
-    </>
-  );
+  return <></>;
 }
 
 function R_History() {
@@ -15,6 +11,7 @@ function R_History() {
       <AdminLayout
         Sidebar_elements={<Sidebar />}
         Page_Contents={<RenderPage />}
+        Page_title="HISTORY"
       />
     </>
   );

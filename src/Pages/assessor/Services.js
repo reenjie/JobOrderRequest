@@ -27,10 +27,7 @@ import {
   BreadcrumbSeparator,
   InputGroup,
   InputLeftElement,
-<<<<<<< HEAD
-=======
   Badge,
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -40,32 +37,20 @@ import Add_Modal from "../../components/layouts/add_modal";
 import Edit_Modal from "../../components/layouts/edit_modal";
 import DataTable, { createTheme } from "react-data-table-component";
 import moment from "moment";
-<<<<<<< HEAD
-=======
 import url from "../../config";
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
-
 function RenderPage() {
   const [servicesoffer, setServicesoffer] = useState([]);
   const [alerts, setAlerts] = useState();
   const { serviceid, servicename } = useParams();
 
   useEffect(() => {
-<<<<<<< HEAD
-    Axios.post(
-      "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
-      {
-        serviceid: serviceid,
-      }
-    ).then((req) => {
-=======
     Axios.post(url + "/api/admin/getServicesoffer_sorted.php", {
-      serviceid: serviceid,
+      serviceid: 3,
     }).then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
       if (req.data.length >= 1) {
         setServicesoffer(req.data);
       } else {
+        setServicesoffer([]);
       }
     });
   }, []);
@@ -84,27 +69,14 @@ function RenderPage() {
     e.preventDefault();
 
     const service = e.target.services.value;
-<<<<<<< HEAD
-    Axios.post(" http://localhost/JOBREQUEST/api/admin/saveservicesoffer.php", {
-=======
     Axios.post(url + " /api/admin/saveservicesoffer.php", {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
       services: service,
-      serviceid: serviceid,
+      serviceid: 3,
     }).then((req) => {
       if (req.data.status == 1) {
-<<<<<<< HEAD
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
-          {
-            serviceid: serviceid,
-          }
-        ).then((req) => {
-=======
         Axios.post(url + "/api/admin/getServicesoffer_sorted.php", {
-          serviceid: serviceid,
+          serviceid: 3,
         }).then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           if (req.data.length >= 1) {
             setServicesoffer(req.data);
           } else {
@@ -124,23 +96,6 @@ function RenderPage() {
 
     const service = e.target.services.value;
     const id = e.target.id.value;
-<<<<<<< HEAD
-    Axios.post(
-      " http://localhost/JOBREQUEST/api/admin/update_servicesOffer.php",
-      {
-        service: service,
-        id: id,
-      }
-    ).then((req) => {
-      //setDepartments(req.data);
-      if (req.data.status == 1) {
-        Axios.post(
-          "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
-          {
-            serviceid: serviceid,
-          }
-        ).then((req) => {
-=======
     Axios.post(url + "/api/admin/update_servicesOffer.php", {
       service: service,
       id: id,
@@ -148,9 +103,8 @@ function RenderPage() {
       //setDepartments(req.data);
       if (req.data.status == 1) {
         Axios.post(url + "/api/admin/getServicesoffer_sorted.php", {
-          serviceid: serviceid,
+          serviceid: 3,
         }).then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           if (req.data.length >= 1) {
             setServicesoffer(req.data);
           } else {
@@ -252,28 +206,15 @@ function RenderPage() {
 
     if (value == "delete" || value == "DELETE") {
       // document.getElementById("btnmodalClose").click();
-<<<<<<< HEAD
-      Axios.post("http://localhost/JOBREQUEST/api/admin/delete_data.php", {
-=======
       Axios.post(url + "/api/admin/delete_data.php", {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
         delete: 1,
         id: id,
         table: table,
       }).then((req) => {
         if (req.data.status == 1) {
-<<<<<<< HEAD
-          Axios.post(
-            "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
-            {
-              serviceid: serviceid,
-            }
-          ).then((req) => {
-=======
           Axios.post(url + "/api/admin/getServicesoffer_sorted.php", {
-            serviceid: serviceid,
+            serviceid: 3,
           }).then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
             if (req.data.length >= 1) {
               setServicesoffer(req.data);
             } else {
@@ -348,8 +289,9 @@ function RenderPage() {
     },
     cells: {
       style: {
-        paddingLeft: "8px", // override the cell padding for data cells
-        paddingRight: "8px",
+        paddingLeft: "4px", // override the cell padding for data cells
+        paddingRight: "5px",
+        height: "50px",
       },
     },
     pagination: {
@@ -428,100 +370,52 @@ function RenderPage() {
     item.name.toLowerCase().includes(filterText.toLowerCase())
   );
 
-  const subHeaderComponentMemo = React.useMemo(() => {
-    const handleClear = () => {
-      if (filterText) {
-        setResetPaginationToggle(!resetPaginationToggle);
-        setFilterText("");
-      }
-    };
-
-    return (
-      <>
-        <Container maxW={"container.xxl"}>
-          <InputGroup float={"right"}>
-            <InputLeftElement
-              pointerEvents="none"
-              children={<SearchIcon color="gray.500" />}
-            />
-            <Input
-              placeholder="Filter By Name"
-              onChange={(e) => {
-                setFilterText(e.target.value);
-              }}
-              defaultValue={filterText}
-              fontSize={14}
-              width={350}
-              variant="flushed"
-            />
-          </InputGroup>
-        </Container>
-      </>
-    );
-  }, [filterText, resetPaginationToggle]);
-
   return (
     <>
       {" "}
-      <Container mt={10} maxW="container.xxl">
-        <Breadcrumb fontWeight="medium" mb={1} fontSize="sm" color={"blue.500"}>
-          <Stack>
-            <Link to="/Admin/Services">
+      <Container mt={5} p={[0, 5, 10]} maxW="container.xxl">
+        <Box p="7" bg={"cyan.50"} borderRadius="6">
+          <Box>
+            <Badge colorScheme={"linkedin"} mb={2}>
               {" "}
-              <Button
-                mb={5}
-                mr={2}
-                variant={"outline"}
-                color={"blackAlpha.700"}
-                size="sm"
-              >
-                Back
-              </Button>
-            </Link>
-          </Stack>
-
-          <BreadcrumbItem>
-            <Text>Services</Text>
-          </BreadcrumbItem>
-
-          <BreadcrumbItem>
-            <Text>{servicename}</Text>
-          </BreadcrumbItem>
-
-          <BreadcrumbItem isCurrentPage>
-            <Text>ServicesOffer</Text>
-          </BreadcrumbItem>
-        </Breadcrumb>
-        <Box p="10" bg={"cyan.50"} borderRadius="6">
+              <i className="fas fa-list"></i> JO Services
+            </Badge>
+          </Box>
           {alerts && (
             <Alert status="success" id="" variant="left-accent">
               <AlertIcon />
               <Text color={"blackAlpha.600"}>{alerts}</Text>
             </Alert>
           )}
-
-<<<<<<< HEAD
-=======
-          <Box>
-            <Badge colorScheme={"linkedin"} mb={2}>
-              {" "}
-              <i className="fas fa-list"></i> JO ServicesOffers
-            </Badge>
-          </Box>
-
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           <Add_Modal
             btnTitle="ADD"
-            title={"Add Services Offer for " + servicename}
+            title={"Add Services"}
             mbody={<Add_Modal_Body />}
           />
-
+          <Container maxW={"container.xxl"}>
+            <InputGroup float={"right"}>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<SearchIcon color="gray.500" />}
+              />
+              <Input
+                placeholder="Filter By Name"
+                onChange={(e) => {
+                  setFilterText(e.target.value);
+                }}
+                defaultValue={filterText}
+                fontSize={14}
+                width={350}
+                variant="filled"
+                autoFocus
+              />
+            </InputGroup>
+          </Container>
           <DataTable
             columns={columns}
             data={filteredItems}
             // paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
             subHeader
-            subHeaderComponent={subHeaderComponentMemo}
             persistTableHead
             theme="Jobrequest"
             customStyles={customStyles}
@@ -534,7 +428,7 @@ function RenderPage() {
   );
 }
 
-function Servicesoffer(props) {
+function A_Services() {
   return (
     <>
       <AdminLayout
@@ -546,4 +440,4 @@ function Servicesoffer(props) {
   );
 }
 
-export default Servicesoffer;
+export default A_Services;
