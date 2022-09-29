@@ -27,10 +27,6 @@ import {
   BreadcrumbSeparator,
   InputGroup,
   InputLeftElement,
-<<<<<<< HEAD
-=======
-  Badge,
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -40,10 +36,6 @@ import Add_Modal from "../../components/layouts/add_modal";
 import Edit_Modal from "../../components/layouts/edit_modal";
 import DataTable, { createTheme } from "react-data-table-component";
 import moment from "moment";
-<<<<<<< HEAD
-=======
-import url from "../../config";
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 
 function RenderPage() {
   const [servicesoffer, setServicesoffer] = useState([]);
@@ -51,18 +43,12 @@ function RenderPage() {
   const { serviceid, servicename } = useParams();
 
   useEffect(() => {
-<<<<<<< HEAD
     Axios.post(
       "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
       {
         serviceid: serviceid,
       }
     ).then((req) => {
-=======
-    Axios.post(url + "/api/admin/getServicesoffer_sorted.php", {
-      serviceid: serviceid,
-    }).then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
       if (req.data.length >= 1) {
         setServicesoffer(req.data);
       } else {
@@ -84,27 +70,17 @@ function RenderPage() {
     e.preventDefault();
 
     const service = e.target.services.value;
-<<<<<<< HEAD
     Axios.post(" http://localhost/JOBREQUEST/api/admin/saveservicesoffer.php", {
-=======
-    Axios.post(url + " /api/admin/saveservicesoffer.php", {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
       services: service,
       serviceid: serviceid,
     }).then((req) => {
       if (req.data.status == 1) {
-<<<<<<< HEAD
         Axios.post(
           "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
           {
             serviceid: serviceid,
           }
         ).then((req) => {
-=======
-        Axios.post(url + "/api/admin/getServicesoffer_sorted.php", {
-          serviceid: serviceid,
-        }).then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           if (req.data.length >= 1) {
             setServicesoffer(req.data);
           } else {
@@ -124,7 +100,6 @@ function RenderPage() {
 
     const service = e.target.services.value;
     const id = e.target.id.value;
-<<<<<<< HEAD
     Axios.post(
       " http://localhost/JOBREQUEST/api/admin/update_servicesOffer.php",
       {
@@ -140,17 +115,6 @@ function RenderPage() {
             serviceid: serviceid,
           }
         ).then((req) => {
-=======
-    Axios.post(url + "/api/admin/update_servicesOffer.php", {
-      service: service,
-      id: id,
-    }).then((req) => {
-      //setDepartments(req.data);
-      if (req.data.status == 1) {
-        Axios.post(url + "/api/admin/getServicesoffer_sorted.php", {
-          serviceid: serviceid,
-        }).then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           if (req.data.length >= 1) {
             setServicesoffer(req.data);
           } else {
@@ -252,28 +216,18 @@ function RenderPage() {
 
     if (value == "delete" || value == "DELETE") {
       // document.getElementById("btnmodalClose").click();
-<<<<<<< HEAD
       Axios.post("http://localhost/JOBREQUEST/api/admin/delete_data.php", {
-=======
-      Axios.post(url + "/api/admin/delete_data.php", {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
         delete: 1,
         id: id,
         table: table,
       }).then((req) => {
         if (req.data.status == 1) {
-<<<<<<< HEAD
           Axios.post(
             "http://localhost/JOBREQUEST/api/admin/getServicesoffer_sorted.php",
             {
               serviceid: serviceid,
             }
           ).then((req) => {
-=======
-          Axios.post(url + "/api/admin/getServicesoffer_sorted.php", {
-            serviceid: serviceid,
-          }).then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
             if (req.data.length >= 1) {
               setServicesoffer(req.data);
             } else {
@@ -500,16 +454,6 @@ function RenderPage() {
             </Alert>
           )}
 
-<<<<<<< HEAD
-=======
-          <Box>
-            <Badge colorScheme={"linkedin"} mb={2}>
-              {" "}
-              <i className="fas fa-list"></i> JO ServicesOffers
-            </Badge>
-          </Box>
-
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           <Add_Modal
             btnTitle="ADD"
             title={"Add Services Offer for " + servicename}

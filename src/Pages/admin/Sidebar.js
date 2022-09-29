@@ -87,11 +87,7 @@ function Sidebar(props) {
               <Container>
                 <span>
                   <i className="fas fa-users"></i> Accounts{" "}
-<<<<<<< HEAD
                   {props.alerto >= 1 && (
-=======
-                  {alerto >= 1 && (
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
                     <Badge ml="1" colorScheme="green">
                       New
                     </Badge>

@@ -44,13 +44,7 @@ function RenderPage() {
   const [services, setServices] = useState([]);
   const [department, setDepartments] = useState([]);
   const [userinfo, setUserinfo] = useState([]);
-<<<<<<< HEAD
   const { userid } = useParams();
-=======
-  const [sec, setSec] = useState();
-  const { userid } = useParams();
-
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
   useEffect(() => {
     Axios.post("http://localhost/JOBREQUEST/api/admin/getservices.php").then(
       (req) => {
@@ -62,10 +56,6 @@ function RenderPage() {
       userid: userid,
     }).then((req) => {
       setUserinfo(req.data);
-<<<<<<< HEAD
-=======
-      setSec(req.data[0].secretary);
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
     });
 
     Axios.post("http://localhost/JOBREQUEST/api/admin/getdepartment.php").then(
@@ -103,10 +93,6 @@ function RenderPage() {
       position: position,
       services: services,
       id: id,
-<<<<<<< HEAD
-=======
-      secretary: sec,
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
     }).then((req) => {
       console.log(req.data.status);
       if (req.data.status == 1) {
@@ -117,17 +103,6 @@ function RenderPage() {
       }
     });
   };
-<<<<<<< HEAD
-=======
-
-  const handleCheck = (e) => {
-    if (e.target.checked == true) {
-      setSec(1);
-    } else {
-      setSec(0);
-    }
-  };
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
   return (
     <>
       {" "}
@@ -191,55 +166,6 @@ function RenderPage() {
                           </Select>
                         </FormControl>
 
-<<<<<<< HEAD
-=======
-                        {row.user_type == "requestor" ? (
-                          <>
-                            {row.secretary == 1 ? (
-                              <>
-                                <Checkbox
-                                  size="sm"
-                                  color={"blackAlpha.700"}
-                                  colorScheme="blue"
-                                  fontSize={13}
-                                  borderWidth={2}
-                                  padding={3}
-                                  border={"1px solid #a8b2a8"}
-                                  borderRadius={5}
-                                  mb={2}
-                                  name="deptsec"
-                                  defaultChecked
-                                  onChange={handleCheck}
-                                >
-                                  Department Secretary
-                                </Checkbox>
-                              </>
-                            ) : (
-                              <>
-                                {" "}
-                                <Checkbox
-                                  size="sm"
-                                  color={"blackAlpha.700"}
-                                  colorScheme="blue"
-                                  fontSize={13}
-                                  borderWidth={2}
-                                  padding={3}
-                                  border={"1px solid #a8b2a8"}
-                                  borderRadius={5}
-                                  mb={2}
-                                  name="deptsec"
-                                  onChange={handleCheck}
-                                >
-                                  Department Secretary
-                                </Checkbox>
-                              </>
-                            )}
-                          </>
-                        ) : (
-                          ""
-                        )}
-
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
                         <FormControl isRequired mb={2} color="blackAlpha.700">
                           <FormLabel fontSize={14}>First name</FormLabel>
                           <Input

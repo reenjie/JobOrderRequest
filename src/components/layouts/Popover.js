@@ -36,10 +36,6 @@ function PopoverComponent(props) {
             borderColor={"blackAlpha.400"}
             size="sm"
             colorScheme={props.BtnColor}
-<<<<<<< HEAD
-=======
-            type="submit"
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           >
             {" "}
             {props.btntitle}
@@ -61,18 +57,6 @@ function PopoverComponent(props) {
                 size={"sm"}
                 variant={"outline"}
                 data-id={props.PassId}
-<<<<<<< HEAD
-=======
-                data-prioritization={props.prioritization}
-                data-typeofrepair={props.typeofrepair}
-                data-recommendation={props.recommendation}
-                data-remarks={props.remarks}
-                data-assessedby={props.assessedby}
-                data-years={props.years}
-                data-months={props.months}
-                data-weeks={props.weeks}
-                data-days={props.days}
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
               >
                 Yes
               </Button>

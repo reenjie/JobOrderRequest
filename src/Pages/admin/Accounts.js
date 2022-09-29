@@ -21,10 +21,6 @@ import {
   AlertIcon,
   InputGroup,
   InputLeftElement,
-<<<<<<< HEAD
-=======
-  Switch,
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -38,10 +34,7 @@ import PopoverComponent from "../../components/layouts/Popover";
 import { Link, useNavigate } from "react-router-dom";
 import { useDisclosure } from "@chakra-ui/react";
 import DataTable, { createTheme } from "react-data-table-component";
-<<<<<<< HEAD
-=======
 import url from "../../config";
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 function RenderPage() {
   const [users, setUsers] = useState([]);
   const [department, setDepartments] = useState([]);
@@ -50,7 +43,6 @@ function RenderPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-<<<<<<< HEAD
     Axios.post("http://localhost/JOBREQUEST/api/admin/getUsers.php").then(
       (req) => {
         if (req.data.length >= 1) {
@@ -58,15 +50,8 @@ function RenderPage() {
         } else {
           setUsers([]);
         }
-=======
-    Axios.post(url + "/api/admin/getUsers.php").then((req) => {
-      if (req.data.length >= 1) {
-        setUsers(req.data);
-      } else {
-        setUsers([]);
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
       }
-    });
+    );
 
     Axios.post(url + "/api/admin/getdepartment.php").then((req) => {
       setDepartments(req.data);
@@ -85,17 +70,12 @@ function RenderPage() {
 
     if (value == "delete" || value == "DELETE") {
       document.getElementById("btnmodalClose").click();
-<<<<<<< HEAD
       Axios.post("http://localhost/JOBREQUEST/api/admin/delete_data.php", {
-=======
-      Axios.post(url + "/api/admin/delete_data.php", {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
         delete: 1,
         id: id,
         table: table,
       }).then((req) => {
         if (req.data.status == 1) {
-<<<<<<< HEAD
           Axios.post("http://localhost/JOBREQUEST/api/admin/getUsers.php").then(
             (req) => {
               if (req.data.length >= 1) {
@@ -105,15 +85,6 @@ function RenderPage() {
               }
             }
           );
-=======
-          Axios.post(url + "/api/admin/getUsers.php").then((req) => {
-            if (req.data.length >= 1) {
-              setUsers(req.data);
-            } else {
-              setUsers([]);
-            }
-          });
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 
           document.getElementById("btnmodalClose").click();
 
@@ -144,7 +115,6 @@ function RenderPage() {
 
   function HandleConfirm(e) {
     const id = e.target.dataset.id;
-<<<<<<< HEAD
     Axios.post("http://localhost/JOBREQUEST/api/admin/verifyUser.php", {
       id: id,
     }).then((req) => {
@@ -158,19 +128,6 @@ function RenderPage() {
             }
           }
         );
-=======
-    Axios.post(url + "/api/admin/verifyUser.php", {
-      id: id,
-    }).then((req) => {
-      if (req.data.status == 1) {
-        Axios.post(url + "/api/admin/getUsers.php").then((req) => {
-          if (req.data.length >= 1) {
-            setUsers(req.data);
-          } else {
-            setUsers([]);
-          }
-        });
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 
         document.getElementById("closePopover").click();
 
@@ -259,7 +216,6 @@ function RenderPage() {
   const columns = [
     {
       name: "Email",
-<<<<<<< HEAD
       selector: (row) => <>{row.email}</>,
     },
     {
@@ -277,63 +233,13 @@ function RenderPage() {
           <Stack>
             <Box userSelect="text">{row.address}</Box>
             <Box userSelect="text">#{row.contact_no}</Box>
-=======
-      selector: (row) => (
-        <>
-          <Stack>
-            <Box>{row.email}</Box>
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           </Stack>
         </>
       ),
     },
     {
-<<<<<<< HEAD
       name: "Usertype",
       selector: (row) => <>{row.user_type}</>,
-=======
-      name: "Firstname",
-      selector: (row) => <>{row.firstname}</>,
-    },
-    {
-      name: "Lastname",
-      selector: (row) => <>{row.lastname}</>,
-    },
-    {
-      name: "Address|Contact",
-      selector: (row) => (
-        <>
-          <Stack>
-            <Box userSelect="text">{row.address}</Box>
-            <Box userSelect="text">#{row.contact_no}</Box>
-          </Stack>
-        </>
-      ),
-    },
-    {
-      name: "Usertype",
-      selector: (row) => (
-        <>
-          {row.user_type}
-
-          <Box>
-            {row.user_type == "requestor" ? (
-              <>
-                {row.secretary == 1 ? (
-                  <Badge variant="subtle" colorScheme="green">
-                    Secretary
-                  </Badge>
-                ) : (
-                  ""
-                )}
-              </>
-            ) : (
-              ""
-            )}
-          </Box>
-        </>
-      ),
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
     },
     {
       name: "Department|Services",
@@ -501,15 +407,6 @@ function RenderPage() {
           borderRadius="6"
           boxShadow="md"
         >
-<<<<<<< HEAD
-=======
-          <Box>
-            <Badge colorScheme={"linkedin"} mb={2}>
-              {" "}
-              <i className="fas fa-list"></i> JO Accounts
-            </Badge>
-          </Box>
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           {alerts && (
             <Alert mt={3} mb={3} status="success" id="" variant="left-accent">
               <AlertIcon />

@@ -18,10 +18,6 @@ import {
   CloseButton,
   InputGroup,
   InputLeftElement,
-<<<<<<< HEAD
-=======
-  Badge,
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -31,10 +27,7 @@ import Add_Modal from "../../components/layouts/add_modal";
 import Delete_Modal from "../../components/layouts/delete_modal";
 import Edit_Modal from "../../components/layouts/edit_modal";
 import DataTable, { createTheme } from "react-data-table-component";
-<<<<<<< HEAD
-=======
 import url from "../../config";
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 function RenderPage() {
   const [department, setDepartments] = useState([]);
   const [alerts, setAlerts] = useState();
@@ -44,7 +37,6 @@ function RenderPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-<<<<<<< HEAD
     Axios.post("http://localhost/JOBREQUEST/api/admin/getdepartment.php").then(
       (req) => {
         if (req.data.length >= 1) {
@@ -52,15 +44,8 @@ function RenderPage() {
         } else {
           setDepartments([]);
         }
-=======
-    Axios.post(url + "/api/admin/getdepartment.php").then((req) => {
-      if (req.data.length >= 1) {
-        setDepartments(req.data);
-      } else {
-        setDepartments([]);
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
       }
-    });
+    );
   }, []);
 
   //Delete Functions
@@ -77,13 +62,9 @@ function RenderPage() {
         table: table,
       }).then((req) => {
         if (req.data.status == 1) {
-<<<<<<< HEAD
           Axios.post(
             "http://localhost/JOBREQUEST/api/admin/getdepartment.php"
           ).then((req) => {
-=======
-          Axios.post(url + "/api/admin/getdepartment.php").then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
             if (req.data.length >= 1) {
               setDepartments(req.data);
             } else {
@@ -149,11 +130,7 @@ function RenderPage() {
     const wsu = e.target.wsu.value;
     const id = e.target.id.value;
 
-<<<<<<< HEAD
     Axios.post(" http://localhost/JOBREQUEST/api/admin/update_department.php", {
-=======
-    Axios.post(url + " /api/admin/update_department.php", {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
       dname: deptname,
       wsu: wsu,
       id: id,
@@ -331,11 +308,7 @@ function RenderPage() {
       name: "Department",
       selector: (row) => (
         <>
-<<<<<<< HEAD
           <Text fontWeight={"bold"} fontSize="14">
-=======
-          <Text fontWeight={"bold"} fontSize="16">
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
             {row.dept_name}
           </Text>
         </>
@@ -420,15 +393,6 @@ function RenderPage() {
       {" "}
       <Container mt={10} maxW="container.xxl">
         <Box p="10" bg={"cyan.50"} borderRadius="6" transition={"all ease 2s"}>
-<<<<<<< HEAD
-=======
-          <Box>
-            <Badge colorScheme={"linkedin"}>
-              {" "}
-              <i className="fas fa-list"></i> JO Departments
-            </Badge>
-          </Box>
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           {alerts && (
             <Alert status="success" id="" variant="left-accent">
               <AlertIcon />

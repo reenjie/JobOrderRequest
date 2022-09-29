@@ -22,10 +22,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.5",
-<<<<<<< HEAD
-=======
     "sweetalert": "^2.1.2",
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
     "web-vitals": "^2.1.4"
   },
   "scripts": {

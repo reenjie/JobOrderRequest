@@ -33,10 +33,6 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   PopoverAnchor,
-<<<<<<< HEAD
-=======
-  Badge,
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -46,19 +42,15 @@ import Table_striped from "../../components/layouts/table_striped";
 import Add_Modal from "../../components/layouts/add_modal";
 import Edit_Modal from "../../components/layouts/edit_modal";
 import DataTable, { createTheme } from "react-data-table-component";
+import url from "../../config";
 import moment from "moment";
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
-=======
-import url from "../../config";
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 
 function RenderPage() {
   const [services, setServices] = useState([]);
   const [servicesoffer, setServicesoffer] = useState([]);
   const [alerts, setAlerts] = useState();
   useEffect(() => {
-<<<<<<< HEAD
     Axios.post("http://localhost/JOBREQUEST/api/admin/getservices.php").then(
       (req) => {
         if (req.data.length >= 1) {
@@ -66,15 +58,8 @@ function RenderPage() {
         } else {
           setServices([]);
         }
-=======
-    Axios.post(url + "/api/admin/getservices.php").then((req) => {
-      if (req.data.length >= 1) {
-        setServices(req.data);
-      } else {
-        setServices([]);
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
       }
-    });
+    );
 
     Axios.post(url + "/api/admin/getservicesoffer.php").then((req) => {
       setServicesoffer(req.data);
@@ -90,13 +75,9 @@ function RenderPage() {
       services: service,
     }).then((req) => {
       if (req.data.status == 1) {
-<<<<<<< HEAD
         Axios.post(
           "http://localhost/JOBREQUEST/api/admin/getservices.php"
         ).then((req) => {
-=======
-        Axios.post(url + "/api/admin/getservices.php").then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           if (req.data.length >= 1) {
             setServices(req.data);
           } else {
@@ -117,23 +98,15 @@ function RenderPage() {
 
     const service = e.target.services.value;
     const id = e.target.id.value;
-<<<<<<< HEAD
     Axios.post(" http://localhost/JOBREQUEST/api/admin/update_services.php", {
-=======
-    Axios.post(url + " /api/admin/update_services.php", {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
       service: service,
       id: id,
     }).then((req) => {
       //setDepartments(req.data);
       if (req.data.status == 1) {
-<<<<<<< HEAD
         Axios.post(
           "http://localhost/JOBREQUEST/api/admin/getservices.php"
         ).then((req) => {
-=======
-        Axios.post(url + "/api/admin/getservices.php").then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           if (req.data.length >= 1) {
             setServices(req.data);
           } else {
@@ -277,22 +250,14 @@ function RenderPage() {
     const s_status = e.target.checked == false ? 0 : 1;
     const id = e.target.value;
 
-<<<<<<< HEAD
     Axios.post("http://localhost/JOBREQUEST/api/admin/changeStatus.php", {
-=======
-    Axios.post(url + "/api/admin/changeStatus.php", {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
       id: id,
       s_status: s_status,
     }).then((req) => {
       if (req.data.status == 1) {
-<<<<<<< HEAD
         Axios.post(
           "http://localhost/JOBREQUEST/api/admin/getservices.php"
         ).then((req) => {
-=======
-        Axios.post(url + "/api/admin/getservices.php").then((req) => {
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           setServices(req.data);
         });
       }
@@ -553,15 +518,6 @@ function RenderPage() {
       {" "}
       <Container mt={10} maxW="container.xxl">
         <Box p="10" bg={"cyan.50"} borderRadius="6">
-<<<<<<< HEAD
-=======
-          <Box>
-            <Badge colorScheme={"linkedin"}>
-              {" "}
-              <i className="fas fa-list"></i> JO Services
-            </Badge>
-          </Box>
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
           {alerts && (
             <Alert status="success" id="" variant="left-accent">
               <AlertIcon />

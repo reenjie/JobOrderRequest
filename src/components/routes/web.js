@@ -18,22 +18,13 @@ import Servicesoffer from "../../Pages/admin/Servicesoffer";
 import Add_User from "../../Pages/admin/Add_User";
 import Update_User from "../../Pages/admin/Update_User";
 import Worktype from "../../Pages/admin/Worktype";
-<<<<<<< HEAD
 import FrontPage from "../../Pages/frontpage/FrontPage";
-=======
-import NotFound from "../../Pages/NotFound";
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
 export default function Routing() {
   return (
     <BrowserRouter>
       <Routes>
-<<<<<<< HEAD
         {/* Landing Page */}
         <Route exact path="/" element={<FrontPage />} />
-=======
-        <Route path="*" element={<NotFound />} />
-        <Route path="/" element={<App />} />
->>>>>>> c4eeb9c66a5d1ba64304df20b3c04ad7981340ea
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         {/*  ADMINISTRATOR   */}
