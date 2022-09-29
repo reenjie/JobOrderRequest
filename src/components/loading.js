@@ -1,24 +1,62 @@
 import React from "react";
-import LoadingScreen from "react-loading-screen";
-import { Center, Heading, Image, Stack } from "@chakra-ui/react";
+import { ThreeCircles } from "react-loader-spinner";
+
+import {
+  Center,
+  Heading,
+  Image,
+  Stack,
+  Box,
+  Text,
+  Spinner,
+} from "@chakra-ui/react";
 import logo from "../images/zcmc_logo.png";
+import "../css/App.css";
 function Loading(props) {
   return (
-    <Center w={"100vw"} h={"100vh"} flexDirection={"column"}>
-      <Image src={logo} height="auto" width={"120px"} alt="ZCMC logo"></Image>
-      <LoadingScreen
+    <div id="loader">
+      <div id="loaderlogo">
+        <Stack>
+          {/*  <Center>
+            <Image
+              boxSize="100px"
+              height={"auto"}
+              src={logo}
+              alt="Dan Abramov"
+            />
+          </Center> */}
+
+          <Center>
+            <ThreeCircles
+              height="100"
+              width="100"
+              color="rgba(116, 139, 168, 0.86)"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              ariaLabel="three-circles-rotating"
+              outerCircleColor=""
+              innerCircleColor=""
+              middleCircleColor=""
+            />
+          </Center>
+
+          <Text fontWeight={"bold"} textAlign={"center"}>
+            JOB ORDER REQUEST
+          </Text>
+        </Stack>
+      </div>
+      {/*   <LoadingScreen
         loading={true}
-        bgColor="rgba(255,255,255,0.8)"
+        bgColor="rgba(91, 106, 107, 0.22)"
         spinnerColor="#008080"
-        textColor="#676767"
+        textColor="rgba(0, 52, 134, 0.86)"
         logoSrc=""
         text=""
       >
         {" "}
-      </LoadingScreen>
-
-      <Heading fontSize={20}>JOB ORDER REQUEST</Heading>
-    </Center>
+      </LoadingScreen> */}
+    </div>
   );
 }
 
